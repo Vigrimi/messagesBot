@@ -56,7 +56,7 @@ public class WatchEmailRunnable implements Runnable, AutoCloseable
             store = session.getStore("imap");
 
             //Подключаемся к почтовому ящику
-            store.connect("imap.yandex.ru", 993, "v.ru", "t5");
+            store.connect("imap.yandex.ru", 993, "v.ru", "t65");
 
             //Это папка, которую будем читать
             Folder inbox = null;
@@ -91,7 +91,9 @@ public class WatchEmailRunnable implements Runnable, AutoCloseable
                                 (message.getSubject().contains("Выпуск товаров разрешен. Решение по товарам")) ||
                                 (message.getSubject().contains("Запрос на предоставление оригинала")) ||
                                 (message.getSubject().contains("Уведомление о способе предоставления оригинала документа")) ||
-                                (message.getSubject().contains("Результат сканирования оригинала")) )
+                                (message.getSubject().contains("Результат сканирования оригинала")) ||
+                                (message.getSubject().contains("предусмотренными статьей 121 Таможенного кодекса Евразийского эконом. Решение по товарам")) ||
+                                message.getSubject().contains("предусмотренными статьей 122 Таможенного кодекса Евразийского эконом. Заключение") )
                         {
                             //От кого
                             String from = ((InternetAddress) message.getFrom()[0]).getAddress();

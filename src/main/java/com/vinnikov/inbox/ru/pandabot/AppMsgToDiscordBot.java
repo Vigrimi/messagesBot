@@ -22,7 +22,7 @@ public class AppMsgToDiscordBot implements Runnable,AutoCloseable
     {
         try
         {
-            JDABuilder jdaBuilder = JDABuilder.createDefault("");
+            JDABuilder jdaBuilder = JDABuilder.createDefault("1");
             JDA jda = jdaBuilder.build();
             jda.awaitReady().getCategories().get(1).getTextChannels().get(0) //категория 1 - это категории
                     .sendMessage(meToBot) //("1.0=testGr-1/0")            // (ТЕКСТОВЫЙ КАНАЛ) по порядку в дискорде, а

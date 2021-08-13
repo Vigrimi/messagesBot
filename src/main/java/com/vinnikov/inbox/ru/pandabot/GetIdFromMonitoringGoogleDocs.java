@@ -25,6 +25,7 @@ public class GetIdFromMonitoringGoogleDocs
         String[] words = msgToDiscord1.split(" ");
         //System.out.println("333 " + Arrays.toString(words));
         HashSet<String> foundIdFmMonitoringSet = new HashSet<>();
+        HashSet<String> nameOfGoodsSet = new HashSet<>();
         ArrayList<String> foundInfoFmMonitoringList = new ArrayList<>();
 
 System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe");
@@ -77,8 +78,28 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                         searchBox1.click();
                         Thread.sleep(500);  // Let the user actually see something!
 
+                        // для панды, чтобы взять НАЗВАНИЕ ТОВАРА, каретку влево на 4 позиций
+                        for (int k = 0; k < 4; k++)
+                        {
+                            Robot robot2 = null;
+                            try {
+                                robot2 = new Robot();
+                                robot2.keyPress(KeyEvent.VK_LEFT);
+                                Thread.sleep(200);
+                            } catch (AWTException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Thread.sleep(1_200);  // Let the user actually see something!
+                        // строка формул //*[@id="t-formula-bar-input"]/div
+                        WebElement strokaFormul = driver.findElement(By.xpath("//*[@id=\"t-formula-bar-input\"]/div"));
+                        // берём текст из ячейки
+                        String nameOfGood = strokaFormul.getText();
+                        foundInfoFmMonitoringList.add(nameOfGood);
+                        nameOfGoodsSet.add(nameOfGood);
+
                         // для панды, чтобы ID взять, каретку влево на 10 позиций
-                        for (int k = 0; k < 10; k++)
+                        for (int k = 0; k < 6; k++)
                         {
                             Robot robot1 = null;
                             try {
@@ -91,9 +112,6 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                         }
 
                         Thread.sleep(1_200);  // Let the user actually see something!
-
-                        // строка формул //*[@id="t-formula-bar-input"]/div
-                        WebElement strokaFormul = driver.findElement(By.xpath("//*[@id=\"t-formula-bar-input\"]/div"));
 
                         // берём текст из ячейки
                         String idFromYacheika = strokaFormul.getText();
@@ -124,10 +142,10 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                     WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"docs-findbar-input\"]/table/tbody/tr/td[1]/input"));
                     Thread.sleep(800);  // Let the user actually see something!
 
-                    //пробую искать существующий номер контейнера
+                    //пробую искать существующий номер авто
                     searchBox.sendKeys(autoNumber + Keys.RETURN); // существующий
 
-                    Thread.sleep(15_000);  // Let the user actually see something!
+                    Thread.sleep(20_000);  // Let the user actually see something!
 
                     // в окне поиска взять 1из1    //*[@id="docs-findbar-input"]/table/tbody/tr/td[2]/span
                     WebElement findBar1of1 = driver.findElement(By
@@ -140,8 +158,28 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                     searchBox1.click();
                     Thread.sleep(500);  // Let the user actually see something!
 
-                    // для панды, чтобы ID взять, каретку влево на 10 позиций
-                    for (int k = 0; k < 10; k++)
+                // для панды, чтобы взять НАЗВАНИЕ ТОВАРА, каретку влево на 4 позиций
+                for (int k = 0; k < 4; k++)
+                {
+                    Robot robot2 = null;
+                    try {
+                        robot2 = new Robot();
+                        robot2.keyPress(KeyEvent.VK_LEFT);
+                        Thread.sleep(200);
+                    } catch (AWTException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Thread.sleep(1_200);  // Let the user actually see something!
+                // строка формул //*[@id="t-formula-bar-input"]/div
+                WebElement strokaFormul = driver.findElement(By.xpath("//*[@id=\"t-formula-bar-input\"]/div"));
+                // берём текст из ячейки
+                String nameOfGood = strokaFormul.getText();
+                foundInfoFmMonitoringList.add(nameOfGood);
+                nameOfGoodsSet.add(nameOfGood);
+
+                // для панды, чтобы ID взять, каретку влево на 10 позиций
+                for (int k = 0; k < 6; k++)
                     {
                         Robot robot1 = null;
                         try {
@@ -152,11 +190,7 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                             e.printStackTrace();
                         }
                     }
-
                     Thread.sleep(1_200);  // Let the user actually see something!
-
-                    // строка формул //*[@id="t-formula-bar-input"]/div
-                    WebElement strokaFormul = driver.findElement(By.xpath("//*[@id=\"t-formula-bar-input\"]/div"));
 
                     // берём текст из ячейки
                     String idFromYacheika = strokaFormul.getText();
@@ -168,11 +202,18 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
             }
         }
         //System.out.println("444444 " + foundIdFmMonitoringSet);
+        // формируем номера айди для текста
         for (String s : foundIdFmMonitoringSet)
         {
             idFromYacheika1 = idFromYacheika1 + s + ", ";
         }
         if(indexIdInArr > 0) idFromYacheika1 = idFromYacheika1 + "(возможно это старый id), ";
+
+        // формируем товары после айди для текста
+        for (String st : nameOfGoodsSet)
+        {
+            idFromYacheika1 = idFromYacheika1 + st + ", ";
+        }
 
         driver.quit(); // закрывает окно
         //System.out.println("idFromYacheika1 " + idFromYacheika1);
