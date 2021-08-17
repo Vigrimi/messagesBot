@@ -47,9 +47,17 @@ public class EditTextsFmEmail
                 arrTextsFmEmail[i] = null;
 
                 // присоединить айди из мониторинга
-                String idNumbersFmMonitoring = GetIdFromMonitoringGoogleDocs
-                        .getIdFromMonitoringGoogleDocs(msgToDiscord1);
-                msgToDiscord1 = idNumbersFmMonitoring + msgToDiscord1;
+                if(!msgToDiscord1.contains("РАС"))
+                {
+                    String idNumbersFmMonitoring = GetIdFromMonitoringGoogleDocs
+                            .getIdFromMonitoringGoogleDocs(msgToDiscord1);
+                    msgToDiscord1 = idNumbersFmMonitoring + msgToDiscord1;
+                } else if(msgToDiscord1.contains("РАС"))
+                {
+                    String idNumbersFmMonitoring = GetPACIdFromMonitoringGoogleDocs
+                            .getPACIdFromMonitoringGoogleDocs(msgToDiscord1);
+                    msgToDiscord1 = idNumbersFmMonitoring + msgToDiscord1;
+                }
 
                 // передаём для отправки в дискорд
     System.out.println("\n------------!!!!!!!!!!---888 " + msgToDiscord1);
@@ -69,11 +77,11 @@ public class EditTextsFmEmail
                             new AppMsgToDiscordBot("@декларант ВНИМАНИЕ!!! Ватсап не работает. Надо проверить " +
                                     "подключён ли ватсап на компьютере при помощи QR-кода? ");
                     bot1.run();
-                    sleep(160_000); //160 СЕКУНД
-                    bot1.close();
+//                    sleep(160_000); //160 СЕКУНД
+//                    bot1.close();
                 }
-                sleep(60_000); //60 СЕКУНД
-                bot.close(); //!!!!!!!!!!!! пробую закрывать канал дискорда, чтобы не зависало !!!!!!!!!!
+//                sleep(60_000); //60 СЕКУНД
+//                bot.close(); //!!!!!!!!!!!! пробую закрывать канал дискорда, чтобы не зависало !!!!!!!!!!
             } else if(arrSubjectFmEmail[i] == null) break;
         }
     }
@@ -83,6 +91,7 @@ public class EditTextsFmEmail
         int a = 0;
         if(text.contains("Контейнер")) a = 1 ;
         if(!text.contains("Контейнер")) a = 2 ;
+        String conosamentPAC = "";
 
         // берём нужное из темы
         String[] arrTema = tema.split(" ");
@@ -112,10 +121,20 @@ System.out.println("--------------911 " + Arrays.toString(arrText));
             if(arrText[j].contains("Контейнер") && a == 1)
             {
                 msgToDiscord1 = getAllContainersNumbers(arrText);
-            } else if(arrText[j].contains("ТС:") && a == 2)
+            } else if(arrText[j].contains("ТС:") && a == 2 && !tema.contains("РУСАГРО"))
             {
                 msgToDiscord1 = msgToDiscord1 + " " + arrText[j-1].replaceAll("/>","") +
                         " " + arrText[j] + " " + arrText[j+1].replaceAll("<br","") + ". ";
+            } else if(arrText[j].contains("ТС:") && a == 2 && tema.contains("РУСАГРО"))
+            {
+                for (int w = 0; w < arrText.length; w++)
+                {
+                    if(arrText[w].contains("TH:"))
+                    {
+                        conosamentPAC = arrText[w+1];
+                        msgToDiscord1 = msgToDiscord1 + " " + arrText[w] + " " + conosamentPAC + ", ";
+                    }
+                }
             }
 
             if(arrText[j].contains("Инспектор"))
@@ -203,6 +222,7 @@ System.out.println("---getAllAboutScanni arrText " + Arrays.toString(arrText));
 
     public String getMessageReleased(String tema,String text) // сообщение если выпуск разрешён
     {
+        String conosamentPAC = "";
         int a = 0;
         if(text.contains("Контейнер")) a = 1 ;
         if(!text.contains("Контейнер")) a = 2 ;
@@ -237,10 +257,20 @@ System.out.println("----!!!--159 " + Arrays.toString(arrText));
             {
                 msgToDiscord1 = getAllContainersNumbers(arrText);
 System.out.println("---!!!--160 " + msgToDiscord1);
-            } else if(arrText[j].contains("ТС:") && a == 2)
+            } else if(arrText[j].contains("ТС:") && a == 2 && !tema.contains("РУСАГРО"))
             {
                 msgToDiscord1 = msgToDiscord1 + " " + arrText[j-1].replaceAll("/>","") +
                         " " + arrText[j] + " " + arrText[j+1].replaceAll("<br","") + ". ";
+            } else if(arrText[j].contains("ТС:") && a == 2 && tema.contains("РУСАГРО"))
+            {
+                for (int w = 0; w < arrText.length; w++)
+                {
+                    if(arrText[w].contains("TH:"))
+                    {
+                        conosamentPAC = arrText[w+1];
+                        msgToDiscord1 = msgToDiscord1 + " " + arrText[w] + " " + conosamentPAC + ", ";
+                    }
+                }
             }
 
             if(arrText[j].contains("Инспектор"))
@@ -376,7 +406,7 @@ System.out.println("****getAllContainersNumb arrText" + Arrays.toString(arrText)
         return msgToDiscord1;
     }
 
-    public String getRoleFmCompanyName(String companyNameFmMail)
+    public String getRoleFmCompanyName(String companyNameFmMail) // ООО "МАКАЛПАЙН РУС", glatfelter
     {
         String roleForDiscord = "@" + companyNameFmMail + ",";
         System.out.println("----------getRoleFmCompanyNam " + roleForDiscord);
@@ -394,7 +424,8 @@ System.out.println("****getAllContainersNumb arrText" + Arrays.toString(arrText)
         if (roleForDiscord.contains("ЛЕКС")) roleForDiscord = "@ЛЕКС";
         if (roleForDiscord.contains("ТД") && roleForDiscord.contains("ДОКТОР")) roleForDiscord = "@ДОКТОР АППЕТИТ";
         if (roleForDiscord.contains("@И") && roleForDiscord.contains("ГРУПП")) roleForDiscord = "@И Групп";
-        if (roleForDiscord.equals("@ГЛАТФЕЛТЕР,")) roleForDiscord = "@Контейнершипс";
+        if (roleForDiscord.contains("ГЛАТФЕЛТЕР")) roleForDiscord = "@Контейнершипс (ГЛАТФЕЛТЕР)";
+        if (roleForDiscord.contains("МАКАЛПАЙН")) roleForDiscord = "@Контейнершипс (МАКАЛПАЙН)";
         if (roleForDiscord.contains("ТД") && roleForDiscord.contains("АПРИКО")) roleForDiscord = "@Априко";
         if (roleForDiscord.contains("ФЕС") && roleForDiscord.contains("ПРОДУКТ")) roleForDiscord = "@ФЕС ПРОДУКТ ООО";
         if (roleForDiscord.contains("АУТСПАН") && roleForDiscord.contains("ИНТЕРНЕШНЛ")) roleForDiscord = "@АУТСПАН";

@@ -56,7 +56,7 @@ public class WatchEmailRunnable implements Runnable, AutoCloseable
             store = session.getStore("imap");
 
             //Подключаемся к почтовому ящику
-            store.connect("imap.yandex.ru", 993, "v.ru", "t65");
+            store.connect("imap.yandex.ru", 993, "v.ru", "t5");
 
             //Это папка, которую будем читать
             Folder inbox = null;

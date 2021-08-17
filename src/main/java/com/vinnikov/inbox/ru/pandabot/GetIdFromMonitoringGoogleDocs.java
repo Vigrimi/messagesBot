@@ -22,6 +22,8 @@ public class GetIdFromMonitoringGoogleDocs
     {
         String idFromYacheika1 = "";
         int indexIdInArr = 0;
+        int a0iz0 = 0;
+        int to = 0;
         String[] words = msgToDiscord1.split(" ");
         //System.out.println("333 " + Arrays.toString(words));
         HashSet<String> foundIdFmMonitoringSet = new HashSet<>();
@@ -70,6 +72,26 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                         WebElement findBar1of1 = driver.findElement(By
                                 .xpath("//*[@id=\"docs-findbar-input\"]/table/tbody/tr/td[2]/span"));
                         String findBar1of1String = findBar1of1.getText();
+                        if(findBar1of1String.equalsIgnoreCase("0 из 0")) a0iz0++;
+
+                        try
+                        {
+                            if ((!findBar1of1String.equalsIgnoreCase("0 из 0")) &&
+                                    (!findBar1of1String.equalsIgnoreCase("1 из 1")))
+                            {
+                                String[] arrFindBar1of1String = findBar1of1String.split(" ");
+                                if (arrFindBar1of1String.length >= 2)
+                                {
+                                    to = Integer.parseInt(arrFindBar1of1String[2]);
+                                }
+                                if (to > 1) indexIdInArr++;
+                            }
+                        } catch (NumberFormatException e)
+                        {
+                            System.out.println("--- при поиске в окошке вместо надписи 1 из 1 какой-то текст " +
+                                    "получился - findBar1of1String: " + findBar1of1String + "е: " + e);
+                        }
+
                         Thread.sleep(1_000);  // Let the user actually see something!
 
                         // крестик в поле поиск //*[@id="docs-findbar-id"]/div/div/div[1]/div[2]/div/div/div
@@ -115,12 +137,13 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
 
                         // берём текст из ячейки
                         String idFromYacheika = strokaFormul.getText();
+                        if(idFromYacheika.length() > 5) idFromYacheika = "";
                         foundInfoFmMonitoringList.add(idFromYacheika);
                         foundIdFmMonitoringSet.add(idFromYacheika);
                         //System.out.println("********* " + foundIdFmMonitoringSet);
                         Thread.sleep(1_000);  // Let the user actually see something!
 
-                        if(!findBar1of1String.equalsIgnoreCase("1 из 1")) indexIdInArr++;
+                        //if(!findBar1of1String.equalsIgnoreCase("1 из 1")) indexIdInArr++;
                     }
                     if(a == words.length-1) break;
                 }
@@ -151,6 +174,25 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                     WebElement findBar1of1 = driver.findElement(By
                             .xpath("//*[@id=\"docs-findbar-input\"]/table/tbody/tr/td[2]/span"));
                     String findBar1of1String = findBar1of1.getText();
+                    if(findBar1of1String.equalsIgnoreCase("0 из 0")) a0iz0++;
+
+                try
+                {
+                    if ((!findBar1of1String.equalsIgnoreCase("0 из 0")) &&
+                            (!findBar1of1String.equalsIgnoreCase("1 из 1")))
+                    {
+                        String[] arrFindBar1of1String = findBar1of1String.split(" ");
+                        if (arrFindBar1of1String.length >= 2)
+                        {
+                            to = Integer.parseInt(arrFindBar1of1String[2]);
+                        }
+                        if (to > 1) indexIdInArr++;
+                    }
+                } catch (NumberFormatException e)
+                {
+                    System.out.println("--- при поиске в окошке вместо надписи 1 из 1 какой-то текст " +
+                            "получился - findBar1of1String: " + findBar1of1String + "е: " + e);
+                }
 
                     // крестик в поле поиск //*[@id="docs-findbar-id"]/div/div/div[1]/div[2]/div/div/div
                     WebElement searchBox1 = driver.findElement(By
@@ -194,10 +236,11 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
 
                     // берём текст из ячейки
                     String idFromYacheika = strokaFormul.getText();
+                    if(idFromYacheika.length() > 5) idFromYacheika = "";
                     foundInfoFmMonitoringList.add(idFromYacheika);
                     foundIdFmMonitoringSet.add(idFromYacheika);
 
-                    if(!findBar1of1String.equalsIgnoreCase("1 из 1")) indexIdInArr++;
+
                 //}
             }
         }
@@ -208,6 +251,7 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
             idFromYacheika1 = idFromYacheika1 + s + ", ";
         }
         if(indexIdInArr > 0) idFromYacheika1 = idFromYacheika1 + "(возможно это старый id), ";
+        if(a0iz0 > 0) idFromYacheika1 = idFromYacheika1 + "(не нашёл id), ";
 
         // формируем товары после айди для текста
         for (String st : nameOfGoodsSet)

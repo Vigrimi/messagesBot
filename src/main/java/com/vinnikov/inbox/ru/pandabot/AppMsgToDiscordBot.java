@@ -8,7 +8,7 @@ import javax.security.auth.login.LoginException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class AppMsgToDiscordBot implements Runnable,AutoCloseable
+public class AppMsgToDiscordBot implements Runnable //,AutoCloseable
 {
 //    public static void main(String[] args) throws LoginException, InterruptedException { }
     private String meToBot;
@@ -22,11 +22,11 @@ public class AppMsgToDiscordBot implements Runnable,AutoCloseable
     {
         try
         {
-            JDABuilder jdaBuilder = JDABuilder.createDefault("1");
+            JDABuilder jdaBuilder = JDABuilder.createDefault("");
             JDA jda = jdaBuilder.build();
             jda.awaitReady().getCategories().get(1).getTextChannels().get(0) //категория 1 - это категории
                     .sendMessage(meToBot) //("1.0=testGr-1/0")            // (ТЕКСТОВЫЙ КАНАЛ) по порядку в дискорде, а
-                    .timeout(3, TimeUnit.SECONDS).submit();    // канал - это по порядку в дискорде тема внутри
+                    .timeout(3, TimeUnit.SECONDS).queue(); //.submit();    // канал - это по порядку в дискорде тема внутри
         } catch (LoginException | InterruptedException e) {      // текстового канала
             e.printStackTrace();
         }
@@ -38,8 +38,8 @@ public class AppMsgToDiscordBot implements Runnable,AutoCloseable
 //                .timeout(3, TimeUnit.SECONDS).submit();
     }
 
-    @Override
-    public void close() throws Exception {
-
-    }
+//    @Override
+//    public void close() throws Exception {
+//
+//    }
 }
