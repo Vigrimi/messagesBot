@@ -87,7 +87,7 @@ public class GetPACIdFromMonitoringGoogleDocs
                 Thread.sleep(500);  // Let the user actually see something!
 
                 // для панды, чтобы взять НАЗВАНИЕ ТОВАРА, каретку влево на 4 позиций
-                for (int k = 0; k < 3; k++)
+                for (int k = 0; k < 4; k++)
                 {
                     Robot robot2 = null;
                     try {
@@ -130,6 +130,7 @@ public class GetPACIdFromMonitoringGoogleDocs
                 break;
             }
         }
+        driver.quit(); // закрывает окно
         // формируем номера айди для текста
         idFromYacheika1 = idFromYacheika + ", " + nameOfGood + ", " ;
         return idFromYacheika1;

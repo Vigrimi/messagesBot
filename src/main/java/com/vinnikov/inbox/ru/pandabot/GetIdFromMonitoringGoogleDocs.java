@@ -100,8 +100,8 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                         searchBox1.click();
                         Thread.sleep(500);  // Let the user actually see something!
 
-                        // для панды, чтобы взять НАЗВАНИЕ ТОВАРА, каретку влево на 4 позиций
-                        for (int k = 0; k < 4; k++)
+   // для панды, чтобы взять НАЗВАНИЕ ТОВАРА, каретку влево на нужное кол-во позиций - до колонки I
+                        for (int k = 0; k < 6; k++)
                         {
                             Robot robot2 = null;
                             try {
@@ -120,7 +120,7 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                         foundInfoFmMonitoringList.add(nameOfGood);
                         nameOfGoodsSet.add(nameOfGood);
 
-                        // для панды, чтобы ID взять, каретку влево на 10 позиций
+ // для панды, чтобы ID взять, каретку влево на нужное кол-во позиций - до колонки C
                         for (int k = 0; k < 6; k++)
                         {
                             Robot robot1 = null;
@@ -152,7 +152,7 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                 //for (int j = 2; j < 4; j++)
                 //{
                     int a = i + 2;
-                    String qwe = words[a];
+                    String qwe = words[a].replaceAll(" ","").replaceAll(",","");
                 //System.out.println("qwe " + qwe);
                     String autoNumber = qwe.replace(".","");
                     //System.out.println("7777777000 " + autoNumber);
@@ -201,7 +201,7 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                     Thread.sleep(500);  // Let the user actually see something!
 
                 // для панды, чтобы взять НАЗВАНИЕ ТОВАРА, каретку влево на 4 позиций
-                for (int k = 0; k < 4; k++)
+                for (int k = 0; k < 6; k++)
                 {
                     Robot robot2 = null;
                     try {
@@ -244,7 +244,7 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                 //}
             }
         }
-        //System.out.println("444444 " + foundIdFmMonitoringSet);
+        System.out.println("444444 " + foundIdFmMonitoringSet);
         // формируем номера айди для текста
         for (String s : foundIdFmMonitoringSet)
         {
