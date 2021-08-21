@@ -115,7 +115,7 @@ System.out.println("--------------900 " + Arrays.toString(arrTema));
             if(arrTema[3+i].startsWith("10"))
             {
                 numberDT = arrTema[3+i];
-                msgToDiscord1 = role + " " + numberDT + " , " + arrTema[3+i+1] + " " + arrTema[3+i+2] ;
+                msgToDiscord1 = role + " " + numberDT + ", " + arrTema[3+i+1] + " " + arrTema[3+i+2] ;
                 break;
             }
         }
@@ -134,12 +134,14 @@ System.out.println("--------------911 " + Arrays.toString(arrText));
                         " " + arrText[j] + " " + arrText[j+1].replaceAll("<br","") + ". ";
             } else if(arrText[j].contains("ТС:") && a == 2 && tema.contains("РУСАГРО"))
             {
+                System.out.println("присвоено ищу конос РАС");
                 for (int w = 0; w < arrText.length; w++)
                 {
-                    if(arrText[w].contains("TH:"))
+                    if( (arrText[w].contains("ТН:")) || (arrText[w].contains("TH:")) ) // сначала на рус + на англ
                     {
                         conosamentPAC = arrText[w+1];
                         msgToDiscord1 = msgToDiscord1 + " " + arrText[w] + " " + conosamentPAC + ", ";
+                        System.out.println("---------msgToDiscord1 " + msgToDiscord1);
                     }
                 }
             }
@@ -191,11 +193,11 @@ System.out.println("---getAllAboutScanni arrTema " + Arrays.toString(arrTema));
         }
 
         if(tema.contains("Запрос на предоставление оригинала"))
-        {msgToDiscord1 = role + " " + numberDT /*номерДТ*/ + " . Таможня запросила фА. ";}
+        {msgToDiscord1 = role + " " + numberDT /*номерДТ*/ + ". Таможня запросила фА. ";}
         else if(tema.contains("Уведомление о способе предоставления оригинала документа"))
-        {msgToDiscord1 = role + " " + numberDT /*номерДТ*/ + " . Мы запросили тпфк сканирование. ";}
+        {msgToDiscord1 = role + " " + numberDT /*номерДТ*/ + ". Мы запросили тпфк сканирование. ";}
         else if(tema.contains("Результат сканирования оригинала"))
-        {msgToDiscord1 = role + " " + numberDT /*номерДТ*/ + " . Скан фА прилетел. ";}
+        {msgToDiscord1 = role + " " + numberDT /*номерДТ*/ + ". Скан фА прилетел. ";}
 
         // берём нужное из тела письма
         String[] arrText = text.split(" ");
@@ -249,7 +251,7 @@ System.out.println("---getAllAboutScanni arrText " + Arrays.toString(arrText));
             if(arrTema[3+i].startsWith("10"))
             {
                 numberDT = arrTema[3+i];
-                msgToDiscord1 = role + " " + numberDT + " , " + arrTema[3+i+1] + ". "/* + arrTema[3+i+3]*/ ; // просто
+                msgToDiscord1 = role + " " + numberDT + ", " + arrTema[3+i+1] + ". "/* + arrTema[3+i+3]*/ ; // просто
                 //слово Выпуск, разрешён - сейчас скрыто
                 break;
             }
@@ -272,7 +274,7 @@ System.out.println("---!!!--160 " + msgToDiscord1);
             {
                 for (int w = 0; w < arrText.length; w++)
                 {
-                    if(arrText[w].contains("TH:"))
+                    if( (arrText[w].contains("ТН:")) || (arrText[w].contains("TH:")) ) // сначала на рус + на англ
                     {
                         conosamentPAC = arrText[w+1];
                         msgToDiscord1 = msgToDiscord1 + " " + arrText[w] + " " + conosamentPAC + ", ";
@@ -323,11 +325,11 @@ System.out.println("---!!!--160 " + msgToDiscord1);
                 numberDT = arrTema[3+i];
                 if(statya == 121)
                 {
-                    msgToDiscord1 = role + " " + numberDT + " , Выпуск условный по стоимости. " ;
+                    msgToDiscord1 = role + " " + numberDT + ", Выпуск условный по стоимости. " ;
                     break;
                 } else if(statya == 122)
                 {
-                    msgToDiscord1 = role + " " + numberDT + " , Выпуск условный по экспертизе. " ;
+                    msgToDiscord1 = role + " " + numberDT + ", Выпуск условный по экспертизе. " ;
                     break;
                 }
             }
