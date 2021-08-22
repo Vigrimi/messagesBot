@@ -35,8 +35,8 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
         WebDriver driverMonitoring = new ChromeDriver();
         driverMonitoring.manage().window().maximize();
 
-// панда мониторинг https://docs.google.com/spreadsheets/d/18rj1wk5k8-7lthDGSlQYxiTFwskgUSwF1s5YI5W8C5k/edit?usp=sharing
-        driverMonitoring.get("https://docs.google.com/spreadsheets/d/18rj1wk5k8-7lthDGSlQYxiTFwskgUSwF1s5YI5W8C5k/edit?usp=sharing");
+// пандамониторинг
+        driverMonitoring.get("");
 
         Thread.sleep(14_000);  // Let the user actually see something!
 
@@ -380,7 +380,7 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
         {
             // буфер - мой эксель
             WebDriver driverBuffer = new ChromeDriver();
-            driverBuffer.get("https://docs.google.com/spreadsheets/d/11kc0xpiVTHTMwhGTdSU94qaULSAIAGKArfswg5_gauE/edit?usp=sharing");
+            driverBuffer.get("");
             Thread.sleep(4_100);  // Let the user actually see something!
             // идём в буфер вставить ссылку в строку формул и получить её в переменную
             WebElement strokaFormulBuffer = driverBuffer
@@ -394,7 +394,7 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
             String[] arrSsylka = ssylkaFmBuffer.split("=");
             driverBuffer.quit();
 
-            //[https://docs.google.com/spreadsheets/d/18rj1wk5k8-7lthDGSlQYxiTFwskgUSwF1s5YI5W8C5k/edit#gid, 0&range, C8616]
+            //[https://docs.google.com/spreadsheets/d/18rj1I5W8C5k/edit#gid, 0&range, C8616]
 //                            System.out.println(Arrays.toString(arrSsylka));
             System.out.println("**" + arrSsylka[arrSsylka.length-1] + "**");
             yacheyka1 = arrSsylka[arrSsylka.length-1];

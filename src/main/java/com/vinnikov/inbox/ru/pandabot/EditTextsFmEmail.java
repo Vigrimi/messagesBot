@@ -390,7 +390,7 @@ System.out.println("---!!!--160 " + msgToDiscord1);
                 numberDT = arrTema[3+i];
                 if(tema.contains("Досмотр товара"))
                 {
-                    msgToDiscord1 = role + " " + numberDT + " , ДОСМОТР! " ;
+                    msgToDiscord1 = role + " " + numberDT + ", ДОСМОТР! " ;
                 } else if (tema.contains("Результаты фактического контроля"))
                 {
                     msgToDiscord1 = role + " " + numberDT + " . Прилетел акт досмотра. " ;
