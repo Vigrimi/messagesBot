@@ -95,7 +95,11 @@ public class WatchEmailRunnable implements Runnable, AutoCloseable
                                 (message.getSubject().contains("предусмотренными статьей 121 Таможенного кодекса Евразийского эконом. Решение по товарам")) ||
                                 message.getSubject().contains("предусмотренными статьей 122 Таможенного кодекса Евразийского эконом. Заключение") ||
                                 message.getSubject().contains("Досмотр товара. Уведомление о принятии решения по проведению фактического контроля") ||
-                                message.getSubject().contains("Результаты фактического контроля") )
+                                message.getSubject().contains("Результаты фактического контроля") ||
+                                message.getSubject().contains("ТД зарегистрирована. Регистрация ЭТД") ||
+                                message.getSubject().contains("Выпуск товара. Выпуск товар") ||
+                                message.getSubject().contains("Подтверждение о прибытии. Подтверждение о прибытии") ||
+                                message.getSubject().contains("Транзит завершен. Завершение таможенного транзит") )
                         {
                             //От кого
                             String from = ((InternetAddress) message.getFrom()[0]).getAddress();

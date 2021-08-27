@@ -19,6 +19,7 @@ public class ChromeWhatsappThread
     public static WebDriver driver;
     public static WebElement loginField;
     public static WebElement loginField1;
+    private static final String nameOfGroupInWhatsApp = "Статусы";
 
     public ChromeWhatsappThread() {
     }
@@ -55,7 +56,7 @@ public class ChromeWhatsappThread
         WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"side\"]/div[1]/div/label/div/div[2]"));
         // встать в поле поиск
         searchBox.click(); // и кликнуть в поле поиска
-        searchBox.sendKeys("FmMailToWhatsApp" + Keys.RETURN); // ввести текст в поиске и энтер
+        searchBox.sendKeys(nameOfGroupInWhatsApp + Keys.RETURN); // ввести текст в поиске и энтер // "FmMailToWhatsApp"
         /*WebElement*/ loginField = driver.findElement(By
                 .xpath("//*[@id=\"main\"]/footer/div[1]/div[2]/div/div[1]/div/div[2]"));
         loginField.sendKeys("Автоматически сформированное сообщение. Программа ДискордБот " +
@@ -80,7 +81,7 @@ public class ChromeWhatsappThread
         // встать вверх на название группы
         WebElement searchBox1 = driver.findElement(By.xpath("//*[@id=\"main\"]/header/div[2]/div[1]/div/span"));
         String nameOfEqualAbonent = searchBox1.getText(); // взять название текущей группы
-        if(nameOfEqualAbonent.contains("FmMailToWhatsApp"))
+        if(nameOfEqualAbonent.contains(nameOfGroupInWhatsApp)) //"FmMailToWhatsApp"
         {
             // встать в поле для отправки текста и отправить нужное сообщение
             loginField1 = driver.findElement(By
@@ -97,7 +98,7 @@ public class ChromeWhatsappThread
             WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"side\"]/div[1]/div/label/div/div[2]"));
             // встать в поле поиск
             searchBox.click(); // и кликнуть в поле поиска
-            searchBox.sendKeys("FmMailToWhatsApp" + Keys.RETURN); // ввести текст в поиске и энтер
+            searchBox.sendKeys(nameOfGroupInWhatsApp + Keys.RETURN); // ввести текст в поиске и энтер //"FmMailToWhatsApp"
             // встать в поле для отправки текста и отправить нужное сообщение
             loginField1 = driver.findElement(By
                     .xpath("//*[@id=\"main\"]/footer/div[1]/div[2]/div/div[1]/div/div[2]"));

@@ -48,20 +48,34 @@ public class EditTextsFmEmail
                 {msgToDiscord1 = getMessageDosmotr(tema,text);}
                 else if(tema.contains("Результаты фактического контроля") )
                 {msgToDiscord1 = getMessageDosmotr(tema,text);}
+                else if(tema.contains("ТД зарегистрирована. Регистрация ЭТД") )
+                {msgToDiscord1 = getMessageRegistered(tema,text);}
+                else if(tema.contains("Выпуск товара. Выпуск товар") ) // BTT
+                {msgToDiscord1 = getMessageReleased(tema,text);}
+                else if(tema.contains("Подтверждение о прибытии. Подтверждение о прибытии") ) // BTT
+                {msgToDiscord1 = getMessageReleased(tema,text);}
+                else if(tema.contains("Транзит завершен. Завершение таможенного транзит") ) // BTT
+                {msgToDiscord1 = getMessageReleased(tema,text);}
 
                 arrSubjectFmEmail[i] = null;
                 arrTextsFmEmail[i] = null;
 
                 // присоединить айди из мониторинга
-                if(!msgToDiscord1.contains("РАС"))
+                if(msgToDiscord1.contains("ВТТ"))
                 {
-                    String idNumbersFmMonitoring = GetIdFromMonitoringGoogleDocs
-                            .getIdFromMonitoringGoogleDocs(msgToDiscord1);
+                    String idNumbersFmMonitoring = GetBTTIdFromMonitoringGoogleDocs
+                            .getBTTIdFromMonitoringGoogleDocs(msgToDiscord1);
                     msgToDiscord1 = idNumbersFmMonitoring + msgToDiscord1;
+                    msgToDiscord1 = msgToDiscord1.replaceAll("ПАНДА ТРАНС","");
                 } else if(msgToDiscord1.contains("РАС"))
                 {
                     String idNumbersFmMonitoring = GetPACIdFromMonitoringGoogleDocs
                             .getPACIdFromMonitoringGoogleDocs(msgToDiscord1);
+                    msgToDiscord1 = idNumbersFmMonitoring + msgToDiscord1;
+                } else
+                {
+                    String idNumbersFmMonitoring = GetIdFromMonitoringGoogleDocs
+                            .getIdFromMonitoringGoogleDocs(msgToDiscord1);
                     msgToDiscord1 = idNumbersFmMonitoring + msgToDiscord1;
                 }
 
@@ -103,11 +117,13 @@ public class EditTextsFmEmail
         // берём нужное из темы
         String[] arrTema = tema.split(" ");
 System.out.println("--------------900 " + Arrays.toString(arrTema));
+
         // слова из названия импортёра
         String companyName = arrTema[2].replaceAll("\"","");
-        if (!arrTema[3].contains("10")) companyName = companyName + " " + arrTema[3].replaceAll("\"","")
+        if (!arrTema[3].contains("10")) companyName = companyName + ", " + arrTema[3].replaceAll("\"","")
                 .replaceAll(" ","").replaceAll(",","");
         String role = getRoleFmCompanyName(companyName); // "@" + companyName + ",";
+
         // получить номер ДТ
         String numberDT = "";
         for (int i = 0; i < 10; i++)
@@ -115,7 +131,8 @@ System.out.println("--------------900 " + Arrays.toString(arrTema));
             if(arrTema[3+i].startsWith("10"))
             {
                 numberDT = arrTema[3+i];
-                msgToDiscord1 = role + " " + numberDT + ", " + arrTema[3+i+1] + " " + arrTema[3+i+2] ;
+                if(arrTema[3+i+1].contains("ТД")) msgToDiscord1 = role + " " + numberDT + ", присвоили ВТТ.";
+                else msgToDiscord1 = role + " " + numberDT + ", " + arrTema[3+i+1] + " " + arrTema[3+i+2] ;
                 break;
             }
         }
@@ -134,14 +151,14 @@ System.out.println("--------------911 " + Arrays.toString(arrText));
                         " " + arrText[j] + " " + arrText[j+1].replaceAll("<br","") + ". ";
             } else if(arrText[j].contains("ТС:") && a == 2 && tema.contains("РУСАГРО"))
             {
-                System.out.println("присвоено ищу конос РАС");
+  System.out.println("присвоено ищу конос РАС");
                 for (int w = 0; w < arrText.length; w++)
                 {
                     if( (arrText[w].contains("ТН:")) || (arrText[w].contains("TH:")) ) // сначала на рус + на англ
                     {
                         conosamentPAC = arrText[w+1];
-                        msgToDiscord1 = msgToDiscord1 + " " + arrText[w] + " " + conosamentPAC + ", ";
-                        System.out.println("---------msgToDiscord1 " + msgToDiscord1);
+                        msgToDiscord1 = msgToDiscord1 + " " + arrText[w] + " " + conosamentPAC + ",";
+ System.out.println("---------msgToDiscord1 " + msgToDiscord1);
                     }
                 }
             }
@@ -176,7 +193,7 @@ System.out.println("--------------911 " + Arrays.toString(arrText));
 System.out.println("---getAllAboutScanni arrTema " + Arrays.toString(arrTema));
         // слова из названия импортёра
         String companyName = arrTema[2].replaceAll("\"","");
-        if (!arrTema[3].contains("10")) companyName = companyName + " " + arrTema[3].replaceAll("\"","")
+        if (!arrTema[3].contains("10")) companyName = companyName + ", " + arrTema[3].replaceAll("\"","")
                 .replaceAll(" ","").replaceAll(",","");
         String role = getRoleFmCompanyName(companyName); //  "@" + companyName + ",";
 
@@ -238,12 +255,14 @@ System.out.println("---getAllAboutScanni arrText " + Arrays.toString(arrText));
 
         // берём нужное из темы
         String[] arrTema = tema.split(" ");
+
         // слова из названия импортёра
         String companyName = arrTema[2].replaceAll("\"","");
-        if (!arrTema[3].contains("10")) companyName = companyName + " " + arrTema[3].replaceAll("\"","")
+        if (!arrTema[3].contains("10")) companyName = companyName + ", " + arrTema[3].replaceAll("\"","")
                 .replaceAll(" ","").replaceAll(",","");
         String role = getRoleFmCompanyName(companyName); // "@" + companyName + ",";
         //msgToDiscord1 = role + " " + arrTema[3] /*номерДТ*/ + " , " + arrTema[4] + " " + arrTema[6] ;
+
         // получить номер ДТ
         String numberDT = "";
         for (int i = 0; i < 10; i++)
@@ -251,7 +270,12 @@ System.out.println("---getAllAboutScanni arrText " + Arrays.toString(arrText));
             if(arrTema[3+i].startsWith("10"))
             {
                 numberDT = arrTema[3+i];
-                msgToDiscord1 = role + " " + numberDT + ", " + arrTema[3+i+1] + ". "/* + arrTema[3+i+3]*/ ; // просто
+                if(tema.contains("Выпуск товара. Выпуск товар")) msgToDiscord1 = role + " " + numberDT + ", Выпуск ВТТ.";
+                else if(tema.contains("Подтверждение о прибытии. Подтверждение о прибытии")) msgToDiscord1 = role + " "
+                        + numberDT + ", ВТТ в пункте назначения.";
+                else if(tema.contains("Транзит завершен. Завершение таможенного транзит")) msgToDiscord1 = role + " "
+                        + numberDT + ", ВТТ завершён.";
+                else msgToDiscord1 = role + " " + numberDT + ", " + arrTema[3+i+1] + ". "/* + arrTema[3+i+3]*/ ; // просто
                 //слово Выпуск, разрешён - сейчас скрыто
                 break;
             }
@@ -277,7 +301,7 @@ System.out.println("---!!!--160 " + msgToDiscord1);
                     if( (arrText[w].contains("ТН:")) || (arrText[w].contains("TH:")) ) // сначала на рус + на англ
                     {
                         conosamentPAC = arrText[w+1];
-                        msgToDiscord1 = msgToDiscord1 + " " + arrText[w] + " " + conosamentPAC + ", ";
+                        msgToDiscord1 = msgToDiscord1 + arrText[w] + " " + conosamentPAC + ",";
                     }
                 }
             }
@@ -312,7 +336,7 @@ System.out.println("---!!!--160 " + msgToDiscord1);
         String[] arrTema = tema.split(" ");
         // слова из названия импортёра
         String companyName = arrTema[2].replaceAll("\"","");
-        if (!arrTema[3].contains("10")) companyName = companyName + " " + arrTema[3].replaceAll("\"","")
+        if (!arrTema[3].contains("10")) companyName = companyName + ", " + arrTema[3].replaceAll("\"","")
                 .replaceAll(" ","").replaceAll(",","");
         String role = getRoleFmCompanyName(companyName); // "@" + companyName + ",";
         //msgToDiscord1 = role + " " + arrTema[3] /*номерДТ*/ + " , " + arrTema[4] + " " + arrTema[6] ;
@@ -378,7 +402,7 @@ System.out.println("---!!!--160 " + msgToDiscord1);
         System.out.println("--------------900 " + Arrays.toString(arrTema));
         // слова из названия импортёра
         String companyName = arrTema[2].replaceAll("\"","");
-        if (!arrTema[3].contains("10")) companyName = companyName + " " + arrTema[3].replaceAll("\"","")
+        if (!arrTema[3].contains("10")) companyName = companyName + ", " + arrTema[3].replaceAll("\"","")
                 .replaceAll(" ","").replaceAll(",","");
         String role = getRoleFmCompanyName(companyName); // "@" + companyName + ",";
         // получить номер ДТ
@@ -511,10 +535,13 @@ System.out.println("****getAllContainersNumb arrText" + Arrays.toString(arrText)
         if (roleForDiscord.contains("@И") && roleForDiscord.contains("ГРУПП")) roleForDiscord = "@И Групп";
         if (roleForDiscord.contains("ГЛАТФЕЛТЕР")) roleForDiscord = "@Контейнершипс (ГЛАТФЕЛТЕР)";
         if (roleForDiscord.contains("МАКАЛПАЙН")) roleForDiscord = "@Контейнершипс (МАКАЛПАЙН)";
+        if (roleForDiscord.contains("САМАРАМАЛТ")) roleForDiscord = "@Контейнершипс (САМАРАМАЛТ)";
         if (roleForDiscord.contains("ТД") && roleForDiscord.contains("АПРИКО")) roleForDiscord = "@Априко";
         if (roleForDiscord.contains("ФЕС") && roleForDiscord.contains("ПРОДУКТ")) roleForDiscord = "@ФЕС ПРОДУКТ ООО";
         if (roleForDiscord.contains("АУТСПАН") && roleForDiscord.contains("ИНТЕРНЕШНЛ")) roleForDiscord = "@АУТСПАН";
+        if (roleForDiscord.contains("ТОРГОВЫЙ") && roleForDiscord.contains("ДОМ")) roleForDiscord = "@ТДМ";
 
         return roleForDiscord;
     }
+
 }

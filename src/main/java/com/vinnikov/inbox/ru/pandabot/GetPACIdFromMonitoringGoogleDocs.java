@@ -24,7 +24,7 @@ public class GetPACIdFromMonitoringGoogleDocs
         int a0iz0 = 0;
         int to = 0;
         String[] words = msgToDiscord1.split(" ");
-        System.out.println("333 " + Arrays.toString(words));
+System.out.println("------333 " + Arrays.toString(words));
         HashSet<String> foundIdFmMonitoringSet = new HashSet<>();
         HashSet<String> nameOfGoodsSet = new HashSet<>();
         ArrayList<String> foundInfoFmMonitoringList = new ArrayList<>();
@@ -34,7 +34,7 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
         driverMonitoring.manage().window().maximize();
 
 // пандамониторинг
-        driverMonitoring.get("");
+        driverMonitoring.get("https://docs.google.com/spreadsheets/d/18rj1wk5k8-7lthDGSlQYxiTFwskgUSwF1s5YI5W8C5k/edit?usp=sharing");
 
         Thread.sleep(14_000);  // Let the user actually see something!
 
@@ -43,8 +43,8 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
         {
             if(words[i].contains("TH:") || words[i].contains("ТН:")) // англ и рус написание
             {
-                String conosament = words[i+1];
-                System.out.println("conosament " + conosament);
+                String conosament = words[i+1].replaceAll(",","");
+                System.out.println("conosament:" + conosament + "!");
                 boolean flag = true;
                 // открыть окно поиска для ввода номера контейнера
                 driverMonitoring.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL +"f");
@@ -113,7 +113,7 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
 
                     // буфер - мой эксель
                     WebDriver driverBuffer = new ChromeDriver();
-driverBuffer.get("");
+driverBuffer.get("https://docs.google.com/spreadsheets/d/11kc0xpiVTHTMwhGTdSU94qaULSAIAGKArfswg5_gauE/edit?usp=sharing");
                     Thread.sleep(3100);  // Let the user actually see something!
                     // идём в буфер вставить ссылку в строку формул и получить её в переменную
                     WebElement strokaFormulBuffer = driverBuffer
@@ -189,7 +189,7 @@ driverBuffer.get("");
         if(a0iz0 > 0) idFromYacheika1 = idFromYacheika1 + "(не нашёл id), ";
 
         // формируем товары после айди для текста
-        idFromYacheika1 = idFromYacheika + nameOfGood + ", " ;
+        idFromYacheika1 = idFromYacheika1 + nameOfGood + ", " ;
 
         driverMonitoring.quit(); // закрывает окно
 
