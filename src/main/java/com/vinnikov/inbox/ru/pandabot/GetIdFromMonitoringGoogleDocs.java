@@ -25,8 +25,10 @@ public class GetIdFromMonitoringGoogleDocs
         int indexIdInArr = 0;
         int a0iz0 = 0;
         int to = 0;
+        int a = 0;
+        int zavislo = 0;
         String[] words = msgToDiscord1.split(" ");
-        //System.out.println("333 " + Arrays.toString(words));
+System.out.println("333 " + Arrays.toString(words));
         HashSet<String> foundIdFmMonitoringSet = new HashSet<>();
         HashSet<String> nameOfGoodsSet = new HashSet<>();
         ArrayList<String> foundInfoFmMonitoringList = new ArrayList<>();
@@ -43,19 +45,26 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
         // перебираем мониторинг, вдруг есть одинаковые записи по контейнеру или фуре
         for (int i = 0; i < words.length; i++)
         {
-            if (words[i].contains("онтейнер") || (words[i].contains("Номер") && words[i+1].contains("ТС")) )
+            if (words[i].contains("онтейнеры") || (words[i].contains("Номер") && words[i+1].contains("ТС")) )
             {
                 //System.out.println("99999999000 " + words[i]);
-                for (int j = 1; j < 100; j++)
+                for (int j = 1; j < words.length; j++)
                 {
-                    if (words[i].contains("Номер") && words[i+1].contains("ТС") ) j++;
-                    int a = i + j;
-                    String contNumber = words[a].replaceAll(",","").replace(".","");
+                    String contNumber = "";
+                    try {
+                        if (words[i].contains("Номер") && words[i+1].contains("ТС") ) j++;
+                        a = i + j;
+                        contNumber = words[a].replaceAll(",","").replace(".","");
+                    } catch (ArrayIndexOutOfBoundsException ae){
+                        System.out.println("57 getIDfmMONI мистика, вышли из массива: " + ae);
+                        break;
+                    }
 
-                    //System.out.println("99999999222 " + words[a]);
+                    System.out.println("99999999222 " + words[a]);
                     //System.out.println("99999999444 " + contNumber + " ** " + contNumber.length());
-                    if(msgToDiscord1.contains("онтейнер") && contNumber.length() != 11) break;
-                    if(words[a].contains("нспектор") ) break;
+                    if(msgToDiscord1.contains("онтейнеры") && contNumber.length() != 11) break;
+                    if(words[a].contains("нспектор") || words[a].contains("АВТОРЕГИСТРАЦ")
+                            || words[a].contains("АВТОВЫПУС") ) break;
                     else
                     {
                         boolean flag = true;
@@ -113,20 +122,20 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                                     robott.keyRelease(KeyEvent.VK_LEFT);
                                     Thread.sleep(200);
                                 }
-
+                                Thread.sleep(500);  // Let the user actually see something!
                             // получаю ссылку с номером ячейки
                             robott.keyPress(KeyEvent.VK_SHIFT);
                             robott.keyPress(KeyEvent.VK_F10);
-                            Thread.sleep(200);  // Let the user actually see something!
+                            Thread.sleep(900);  // Let the user actually see something!
                             robott.keyRelease(KeyEvent.VK_F10);
                             robott.keyRelease(KeyEvent.VK_SHIFT);
                             Thread.sleep(400);  // Let the user actually see something!
                             robott.keyPress(KeyEvent.VK_DOWN);
-                            Thread.sleep(100);  // Let the user actually see something!
+                            Thread.sleep(700);  // Let the user actually see something!
                             robott.keyRelease(KeyEvent.VK_DOWN);
                             Thread.sleep(100);  // Let the user actually see something!
                             robott.keyPress(KeyEvent.VK_ENTER);
-                            Thread.sleep(100);  // Let the user actually see something!
+                            Thread.sleep(700);  // Let the user actually see something!
                             robott.keyRelease(KeyEvent.VK_ENTER);
                             Thread.sleep(1100);  // Let the user actually see something!
 
@@ -190,16 +199,16 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                                         // получаю ссылку с номером ячейки
                                         robott1.keyPress(KeyEvent.VK_SHIFT);
                                         robott1.keyPress(KeyEvent.VK_F10);
-                                        Thread.sleep(200);  // Let the user actually see something!
+                                        Thread.sleep(900);  // Let the user actually see something!
                                         robott1.keyRelease(KeyEvent.VK_F10);
                                         robott1.keyRelease(KeyEvent.VK_SHIFT);
                                         Thread.sleep(400);  // Let the user actually see something!
                                         robott1.keyPress(KeyEvent.VK_DOWN);
-                                        Thread.sleep(100);  // Let the user actually see something!
+                                        Thread.sleep(700);  // Let the user actually see something!
                                         robott1.keyRelease(KeyEvent.VK_DOWN);
                                         Thread.sleep(100);  // Let the user actually see something!
                                         robott1.keyPress(KeyEvent.VK_ENTER);
-                                        Thread.sleep(100);  // Let the user actually see something!
+                                        Thread.sleep(700);  // Let the user actually see something!
                                         robott1.keyRelease(KeyEvent.VK_ENTER);
                                         Thread.sleep(1100);  // Let the user actually see something!
                                     } catch (AWTException | NullPointerException e) {
@@ -260,16 +269,16 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                                         // получаю ссылку с номером ячейки
                                         robott1.keyPress(KeyEvent.VK_SHIFT);
                                         robott1.keyPress(KeyEvent.VK_F10);
-                                        Thread.sleep(200);  // Let the user actually see something!
+                                        Thread.sleep(900);  // Let the user actually see something!
                                         robott1.keyRelease(KeyEvent.VK_F10);
                                         robott1.keyRelease(KeyEvent.VK_SHIFT);
                                         Thread.sleep(400);  // Let the user actually see something!
                                         robott1.keyPress(KeyEvent.VK_DOWN);
-                                        Thread.sleep(100);  // Let the user actually see something!
+                                        Thread.sleep(700);  // Let the user actually see something!
                                         robott1.keyRelease(KeyEvent.VK_DOWN);
                                         Thread.sleep(100);  // Let the user actually see something!
                                         robott1.keyPress(KeyEvent.VK_ENTER);
-                                        Thread.sleep(100);  // Let the user actually see something!
+                                        Thread.sleep(700);  // Let the user actually see something!
                                         robott1.keyRelease(KeyEvent.VK_ENTER);
                                         Thread.sleep(1100);  // Let the user actually see something!
                                     } catch (AWTException | NullPointerException e) {
@@ -370,8 +379,11 @@ System.out.println("------------------344 findBar1of1String:" + findBar1of1Strin
                 { // если начинается с А или В, то проверяем есть ли вторая буква в индексе
                     for (int j = 27; j < arr.length; j++)
                     {
-                        if(yacheyka.contains(arr[j])) coordinataYacheyki = j;
-                        else coordinataYacheyki = i;
+                        if(yacheyka.contains(arr[j]))
+                        {
+                            coordinataYacheyki = j;
+                            break;
+                        }
                     }
                 } else
                 {
@@ -381,7 +393,7 @@ System.out.println("------------------344 findBar1of1String:" + findBar1of1Strin
             }
         }
 
-        System.out.println("coordinataYacheyki " + coordinataYacheyki);
+System.out.println("coordinataYacheyki " + coordinataYacheyki);
         return coordinataYacheyki;
     }
 
@@ -409,7 +421,7 @@ System.out.println("------------------344 findBar1of1String:" + findBar1of1Strin
 
             //[https://docs.google.com/spreadsheets/d/18rj1I5W8C5k/edit#gid, 0&range, C8616]
 //                            System.out.println(Arrays.toString(arrSsylka));
-            System.out.println("**" + arrSsylka[arrSsylka.length-1] + "**");
+System.out.println("**" + arrSsylka[arrSsylka.length-1] + "**");
             yacheyka1 = arrSsylka[arrSsylka.length-1];
         } catch (NoSuchElementException | NoSuchSessionException ne) {
             System.out.println("ЧТО-ТО С ГУГЛ-ЭКСЕЛЕМ: " + ne + " ** " + LocalDateTime.now());

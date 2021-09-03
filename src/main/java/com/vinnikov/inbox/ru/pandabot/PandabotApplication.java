@@ -1,10 +1,7 @@
 package com.vinnikov.inbox.ru.pandabot;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import javax.security.auth.login.LoginException;
-import static java.lang.Thread.sleep;
-
 
 /*
  * 		+10. нужен логин+пароль от мэйла яндекс, куда приходят мэйлы из таможенной программы - внести
@@ -24,15 +21,10 @@ import static java.lang.Thread.sleep;
 @SpringBootApplication
 public class PandabotApplication
 {
-
-	public static void main(String[] args) throws InterruptedException {
-		//SpringApplication.run(PandabotApplication.class, args);
-		System.out.println("qwerty");
-
-		ChromeWhatsappThread chromeWhatsappThread = new ChromeWhatsappThread();
-		chromeWhatsappThread.runWhatsapWeb();
-		sleep(60_000); //60 СЕКУНД
-		new WatchDirectory().run();
+	public static void main(String[] args) throws LoginException, InterruptedException
+	{
+		ProjectMainWindow window = new ProjectMainWindow();
+		window.setVisible(true); //все настройки рамки надо писать до того, как вы сделаете её видимой
 	}
 
 }

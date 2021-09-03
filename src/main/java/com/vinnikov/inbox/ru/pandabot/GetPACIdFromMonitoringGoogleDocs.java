@@ -20,7 +20,7 @@ public class GetPACIdFromMonitoringGoogleDocs
         String findBar1of1String = "";
         String nameOfGood = "";
         String yacheyka = "";
-        int indexIdInArr = 0;
+        //int indexIdInArr = 0;
         int a0iz0 = 0;
         int to = 0;
         String[] words = msgToDiscord1.split(" ");
@@ -123,11 +123,11 @@ driverBuffer.get("https://docs.google.com/spreadsheets/d/11kc0xpiVTHTMwhGTdSU94q
                     Thread.sleep(1_000);  // Let the user actually see something!
                     strokaFormulBuffer.sendKeys(Keys.CONTROL +"v");
                     String ssylkaFmBuffer = strokaFormulBuffer.getText();
-//                            System.out.println("ssylka1->" + ssylkaFmBuffer);
+// System.out.println("ssylka1->" + ssylkaFmBuffer);
                     String[] arrSsylka = ssylkaFmBuffer.split("=");
                     driverBuffer.quit();
                     //[https://docs.google.com/spreadsheets/d/18rj1wk5I5W8C5k/edit#gid, 0&range, C8616]
-//                            System.out.println(Arrays.toString(arrSsylka));
+// System.out.println(Arrays.toString(arrSsylka));
                     System.out.println("**" + arrSsylka[arrSsylka.length-1] + "**");
                     yacheyka = arrSsylka[arrSsylka.length-1];
                     } catch (AWTException e) {
@@ -154,6 +154,7 @@ driverBuffer.get("https://docs.google.com/spreadsheets/d/11kc0xpiVTHTMwhGTdSU94q
                     }
                 }
 
+                /*// если найдено типа 1 из 2х или из 3х или из 4х или из 5х и тп
                 try
                 {
                     if ((!findBar1of1String.equalsIgnoreCase("0 из 0")) &&
@@ -170,7 +171,7 @@ driverBuffer.get("https://docs.google.com/spreadsheets/d/11kc0xpiVTHTMwhGTdSU94q
                 {
                     System.out.println("--- при поиске в окошке вместо надписи 1 из 1 какой-то текст " +
                             "получился - findBar1of1String: " + findBar1of1String + "е: " + e);
-                }
+                }*/
 
                 foundInfoFmMonitoringList.add(nameOfGood);
                 nameOfGoodsSet.add(nameOfGood);
@@ -185,7 +186,7 @@ driverBuffer.get("https://docs.google.com/spreadsheets/d/11kc0xpiVTHTMwhGTdSU94q
         }
         System.out.println("444444 " + foundIdFmMonitoringSet);
         idFromYacheika1 = idFromYacheika + ", "; // + nameOfGood + ", " ;
-        if(indexIdInArr > 0) idFromYacheika1 = idFromYacheika1 + "(возможно это старый id), ";
+        //if(indexIdInArr > 0) idFromYacheika1 = idFromYacheika1 + "(возможно это старый id), ";
         if(a0iz0 > 0) idFromYacheika1 = idFromYacheika1 + "(не нашёл id), ";
 
         // формируем товары после айди для текста

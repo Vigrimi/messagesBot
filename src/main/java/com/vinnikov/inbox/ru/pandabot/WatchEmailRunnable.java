@@ -99,7 +99,10 @@ public class WatchEmailRunnable implements Runnable, AutoCloseable
                                 message.getSubject().contains("ТД зарегистрирована. Регистрация ЭТД") ||
                                 message.getSubject().contains("Выпуск товара. Выпуск товар") ||
                                 message.getSubject().contains("Подтверждение о прибытии. Подтверждение о прибытии") ||
-                                message.getSubject().contains("Транзит завершен. Завершение таможенного транзит") )
+                                message.getSubject().contains("Транзит завершен. Завершение таможенного транзит") ||
+                                message.getSubject().contains("Отказано в выпуске товаров. Решение по товарам ДТ") ||
+                                message.getSubject().contains("Запрос документов и сведений. Уведомление о проведении таможенной экспертизы") ||
+                                message.getSubject().contains("Отказано в выпуске товаров на осн. пп") )
                         {
                             //От кого
                             String from = ((InternetAddress) message.getFrom()[0]).getAddress();
