@@ -14,7 +14,8 @@ public class ProjectMainWindow extends JFrame
 {
     private Image img = new ImageIcon("infoPng.png").getImage();
     private ImageIcon imgIcon = new ImageIcon("rob1Png.png"); //.getImage();
-    private final String helloMsgToDiscord = "@декларант ВНИМАНИЕ! ПандаБОТ перезапустился! Надо войти в ватсап-вэб по QR-коду!";
+    private final String helloMsgToDiscord =
+            "<@&785778541060292628> ВНИМАНИЕ! ПандаБОТ перезапустился! Надо войти в ватсап-вэб по QR-коду!";
 
     public ProjectMainWindow()
     {
@@ -41,7 +42,7 @@ public class ProjectMainWindow extends JFrame
         {
             System.out.println("let's start it");
             // передаём для отправки в дискорд сообщение о перезапуске программы
-            AppHelloMsgToDiscordBot bot = new AppHelloMsgToDiscordBot(helloMsgToDiscord);
+            AppMsgToDiscordBot bot = new AppMsgToDiscordBot(helloMsgToDiscord);
             bot.run();
             //запускаем всё
             ChromeWhatsappThread chromeWhatsappThread = new ChromeWhatsappThread();

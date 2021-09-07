@@ -54,9 +54,11 @@ public class ChromeWhatsappThread
         driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
         System.out.println("16 " + LocalDateTime.now());
         WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"side\"]/div[1]/div/label/div/div[2]"));
+
         // встать в поле поиск
         searchBox.click(); // и кликнуть в поле поиска
         searchBox.sendKeys(nameOfGroupInWhatsApp + Keys.RETURN); // ввести текст в поиске и энтер // "FmMailToWhatsApp"
+
         /*WebElement*/ loginField = driver.findElement(By
                 .xpath("//*[@id=\"main\"]/footer/div[1]/div[2]/div/div[1]/div/div[2]"));
         loginField.sendKeys("Автоматическое сообщение. Программа ПандаБОТ работает. " +
@@ -70,6 +72,18 @@ public class ChromeWhatsappThread
     {
         try
         {
+System.out.println("--------911 обновил вкладку, жду 10 сек");
+            driver.navigate().refresh(); // обновить вкладку и жду 10 секунд
+            sleep(10_000);
+System.out.println("--------912 обновилась вкладка");
+
+            // встать в поле поиск
+            WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"side\"]/div[1]/div/label/div/div[2]"));
+            searchBox.click(); // и кликнуть в поле поиска
+            sleep(1_000);
+            searchBox.sendKeys(nameOfGroupInWhatsApp + Keys.RETURN); // ввести текст в поиске и энтер
+System.out.println("--------913 в поиске выбрал нужную группу");
+
             // вэбэлемент уведомление Зарядить смартфон //*[@id="side"]/span/div/div/div[2]
             // или //*[@id="side"]/span/div/div/div[2]/div[1] + //*[@id="side"]/span/div/div/div[2]/div[2]
             WebElement lowBattery1 = driver.findElement(By.xpath("//*[@id=\"side\"]/span/div/div/div[2]"));
@@ -77,7 +91,7 @@ public class ChromeWhatsappThread
             WebElement lowBattery3 = driver.findElement(By.xpath("//*[@id=\"side\"]/span/div/div/div[2]/div[2]"));
             String chargeTheBattery = "ВНИМАНИЕ!!! У смартфона " + lowBattery2.getText().toLowerCase() + "! "
                     + lowBattery3.getText() + " на компьютере!" ;
-//            System.out.println("lowBattery1 " + lowBattery1.getText());
+System.out.println("--------914 lowBattery1 " + lowBattery1.getText());
 //            System.out.println("lowBattery2 " + lowBattery2.getText());
 //            System.out.println("lowBattery3 " + lowBattery3.getText());
 
@@ -98,7 +112,7 @@ public class ChromeWhatsappThread
                 }
             } else
             {
-                WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"side\"]/div[1]/div/label/div/div[2]"));
+                //WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"side\"]/div[1]/div/label/div/div[2]"));
                 // встать в поле поиск
                 searchBox.click(); // и кликнуть в поле поиска
                 searchBox.sendKeys(nameOfGroupInWhatsApp + Keys.RETURN); // ввести текст в поиске и энтер //"FmMailToWhatsApp"
@@ -113,7 +127,7 @@ public class ChromeWhatsappThread
                     loginField1.sendKeys(chargeTheBattery + Keys.RETURN);
                 }
             }
-        } catch (NoSuchWindowException nw)
+        } catch (NoSuchWindowException | NoSuchElementException nw)
         {
             System.out.println("----хром ватсапвэб обвалился: " + nw);
             driver.navigate().refresh(); // обновить вкладку

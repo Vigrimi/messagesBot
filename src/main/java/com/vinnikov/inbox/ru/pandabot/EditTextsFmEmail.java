@@ -66,6 +66,8 @@ System.out.println("----EditTextsFmEmail-----commentFmTKS:" + commentFmTKS);
                 else if(tema.contains("предусмотренными статьей 122 Таможенного кодекса") //  121 Таможенного
         && tema.contains("Выпуск товаров") && tema.contains("Заключение") && tema.contains("таможенной экспертизы"))
                 {msgToDiscord1 = getMessageUslovnoReleased(tema,text);}
+                else if(tema.contains("Выпуск товаров с особенностями, предусмотренными статьей 122 Таможенного кодекса Евразийского эконом. Решение по тов"))
+                {msgToDiscord1 = getMessageUslovnoReleased(tema,text);}
                 else if(tema.contains("Досмотр товара")
                         && tema.contains("Уведомление о принятии решения по проведению фактического контроля")
                         && tema.contains("Требование о предъявлении товаров") )
@@ -82,6 +84,8 @@ System.out.println("----EditTextsFmEmail-----commentFmTKS:" + commentFmTKS);
                 {msgToDiscord1 = getMessageReleased(tema,text);}
                 else if(tema.contains("Транзит завершен. Завершение таможенного транзит") ) // BTT
                 {msgToDiscord1 = getMessageReleased(tema,text);}
+                else if(tema.contains("Выпуск при условии обеспечения уплаты таможенных платежей. Решение по товарам") )
+                {msgToDiscord1 = getMessageUslovnoReleased(tema,text);}
 
                 arrSubjectFmEmail[i] = null;
                 arrTextsFmEmail[i] = null;
@@ -111,14 +115,29 @@ System.out.println("----EditTextsFmEmail-----commentFmTKS:" + commentFmTKS);
                     }
                 }
 
-                // передаём для отправки в дискорд и меняем звёздочки в названии фирмы для ватсапа на собачку
-                String textDisc = msgToDiscord1
-                        , regEx = "\\*", rep = "@";
-                textDisc = textDisc.replaceFirst(regEx, rep);
-                System.out.println("5:" + textDisc);
+                //передаём для отправки в дискорд Вариант если есть айди ролей
+                String textDisc = EditRoleForDiscord.getRoleForDiscord(msgToDiscord1);
+                // если не получилось найти айди такой роли
+                if(!textDisc.contains("<@&"))
+                {
+//Вариант без айди ролей: передаём для отправки в дискорд и меняем звёздочки в названии фирмы для ватсапа на собачку
+                    String textDiscBuffer = msgToDiscord1, regEx = "\\*", rep = "@";
+                    textDiscBuffer = textDiscBuffer.replaceFirst(regEx, rep);
+                    System.out.println("5-1:" + textDiscBuffer);
+                    textDiscBuffer = textDiscBuffer.replaceAll(regEx, "");
+                    textDisc = textDiscBuffer;
+                    System.out.println("5-2:" + textDiscBuffer);
+                    System.out.println("6:" + textDisc);
+                }
 
-                textDisc = textDisc.replaceAll(regEx, "");
-                System.out.println("6:" + textDisc);
+                // если ДОСМОТР на балтика или санпит - добавить роль ПОРТ
+                if(textDisc.contains("ДОСМОТР") )
+                {
+                    if(textDisc.contains("10216170") && textDisc.contains("10228010"))
+                    {
+                        textDisc = textDisc + " <@&785808375782309908>";
+                    }
+                }
 
     System.out.println("\n------------!!!!!!!!!!-textDisc--888 " + textDisc);
     System.out.println("\n------------!!!!!!!!!!-msgToDiscord1-whatsap-999 " + msgToDiscord1);
@@ -136,8 +155,8 @@ System.out.println("----EditTextsFmEmail-----commentFmTKS:" + commentFmTKS);
                 {
                 System.out.println("!!!!** ватсап не работает: ___" + e);
                     AppMsgToDiscordBot bot1 =
-                            new AppMsgToDiscordBot("@декларант ВНИМАНИЕ!!! Ватсап не работает. Надо проверить " +
-                                    "подключён ли ватсап на компьютере при помощи QR-кода? ");
+                            new AppMsgToDiscordBot("<@&785778541060292628> ВНИМАНИЕ!!! Ватсап не работает. " +
+                                    "Надо проверить подключён ли ватсап на компьютере при помощи QR-кода? "); // @декларант
                     bot1.run();
 //                    sleep(160_000); //160 СЕКУНД
 //                    bot1.close();
@@ -172,8 +191,8 @@ System.out.println("--------------900 " + Arrays.toString(arrTema));
             if(arrTema[3+i].startsWith("10"))
             {
                 numberDT = arrTema[3+i];
-                if(arrTema[3+i+1].contains("ТД")) msgToDiscord1 = role + ", " + numberDT + ", присвоили ВТТ.";
-                else msgToDiscord1 = role + ", " + numberDT + ", " + arrTema[3+i+1] + " " + arrTema[3+i+2] ;
+                if(arrTema[3+i+1].contains("ТД")) msgToDiscord1 = role + ", " + numberDT + ", присвоили ВТТ,";
+                else msgToDiscord1 = role + ", " + numberDT + ", " + arrTema[3+i+1] + " " + arrTema[3+i+2] + "," ;
                 break;
             }
         }
@@ -189,7 +208,7 @@ System.out.println("--------------911 " + Arrays.toString(arrText));
             } else if(arrText[j].contains("ТС:") && a == 2 && !tema.contains("РУСАГРО"))
             {
                 msgToDiscord1 = msgToDiscord1 + " " + arrText[j-1].replaceAll("/>","") +
-                        " " + arrText[j] + " " + arrText[j+1].replaceAll("<br","") + ".";
+                        " " + arrText[j] + " " + arrText[j+1].replaceAll("<br","") + ",";
             } else if(arrText[j].contains("ТС:") && a == 2 && tema.contains("РУСАГРО"))
             {
   System.out.println("присвоено ищу конос РАС");
@@ -212,7 +231,7 @@ System.out.println("--------------911 " + Arrays.toString(arrText));
 
                 if (arrText[j+1].contains("АВТОРЕГИСТРАЦ"))
                 {
-                    msgToDiscord1 = msgToDiscord1 + " " + arrText[j+1] + ". ";
+                    msgToDiscord1 = msgToDiscord1 + " " + arrText[j+1] + ", ";
                 } else if (!arrText[j+1].contains("АВТОРЕГИСТРАЦ"))
                 {
                     msgToDiscord1 = msgToDiscord1 + " " + inspektor + " " + arrText[j+1] + " " + arrText[j+2]
@@ -251,11 +270,11 @@ System.out.println("---getAllAboutScanni arrTema " + Arrays.toString(arrTema));
         }
 
         if(tema.contains("Запрос на предоставление оригинала"))
-        {msgToDiscord1 = role + ", " + numberDT /*номерДТ*/ + ". Таможня запросила фА.";}
+        {msgToDiscord1 = role + ", " + numberDT /*номерДТ*/ + ". Таможня запросила фА,";}
         else if(tema.contains("Уведомление о способе предоставления оригинала документа"))
-        {msgToDiscord1 = role + ", " + numberDT /*номерДТ*/ + ". Мы запросили тпфк сканирование.";}
+        {msgToDiscord1 = role + ", " + numberDT /*номерДТ*/ + ". Мы запросили тпфк сканирование,";}
         else if(tema.contains("Результат сканирования оригинала"))
-        {msgToDiscord1 = role + ", " + numberDT /*номерДТ*/ + ". Скан фА прилетел.";}
+        {msgToDiscord1 = role + ", " + numberDT /*номерДТ*/ + ". Скан фА прилетел,";}
 
         // берём нужное из тела письма
         String[] arrText = text.split(" ");
@@ -268,7 +287,7 @@ System.out.println("---getAllAboutScanni arrText " + Arrays.toString(arrText));
             } else if(arrText[j].contains("ТС:") && a == 2)
             {
                 msgToDiscord1 = msgToDiscord1 + " " + arrText[j-1].replaceAll("/>","") +
-                        " " + arrText[j] + " " + arrText[j+1].replaceAll("<br","") + ".";
+                        " " + arrText[j] + " " + arrText[j+1].replaceAll("<br","") + ",";
             }
 
             if(arrText[j].contains("Инспектор"))
@@ -276,7 +295,7 @@ System.out.println("---getAllAboutScanni arrText " + Arrays.toString(arrText));
                 String inspektor = arrText[j].replaceAll("/>","");
                 if (arrText[j+1].contains("АВТОРЕГИСТРАЦ"))
                 {
-                    msgToDiscord1 = msgToDiscord1 + " " + arrText[j+1] + ". ";
+                    msgToDiscord1 = msgToDiscord1 + " " + arrText[j+1] + ", ";
                 } else if (!arrText[j+1].contains("АВТОРЕГИСТРАЦ"))
                 {
                     msgToDiscord1 = msgToDiscord1 + " " + inspektor + " " + arrText[j+1] + " " + arrText[j+2]
@@ -311,14 +330,14 @@ System.out.println("---getAllAboutScanni arrText " + Arrays.toString(arrText));
             if(arrTema[3+i].startsWith("10"))
             {
                 numberDT = arrTema[3+i];
-                if(tema.contains("Выпуск товара. Выпуск товар")) msgToDiscord1 = role + ", " + numberDT + ", Выпуск ВТТ.";
+                if(tema.contains("Выпуск товара. Выпуск товар")) msgToDiscord1 = role + ", " + numberDT + ", Выпуск ВТТ,";
                 else if(tema.contains("Отказано в выпуске товаров. Решение по товарам ДТ"))
-                    msgToDiscord1 = role + ", " + numberDT + ", Отказано в выпуске ДТ.";
+                    msgToDiscord1 = role + ", " + numberDT + ", Отказано в выпуске ДТ,";
                 else if(tema.contains("Подтверждение о прибытии. Подтверждение о прибытии")) msgToDiscord1 = role + ", "
-                        + numberDT + ", ВТТ в пункте назначения.";
+                        + numberDT + ", ВТТ в пункте назначения,";
                 else if(tema.contains("Транзит завершен. Завершение таможенного транзит")) msgToDiscord1 = role + ", "
-                        + numberDT + ", ВТТ завершён.";
-                else msgToDiscord1 = role + ", " + numberDT + ", " + arrTema[3+i+1] + ". "/* + arrTema[3+i+3]*/ ; // просто
+                        + numberDT + ", ВТТ завершён,";
+                else msgToDiscord1 = role + ", " + numberDT + ", " + arrTema[3+i+1] + ", "/* + arrTema[3+i+3]*/ ; // просто
                 //слово Выпуск, разрешён - сейчас скрыто
                 break;
             }
@@ -336,7 +355,7 @@ System.out.println("---!!!--160 " + msgToDiscord1);
             } else if(arrText[j].contains("ТС:") && a == 2 && !tema.contains("РУСАГРО"))
             {
                 msgToDiscord1 = msgToDiscord1 + " " + arrText[j-1].replaceAll("/>","") +
-                        " " + arrText[j] + " " + arrText[j+1].replaceAll("<br","") + ". ";
+                        " " + arrText[j] + " " + arrText[j+1].replaceAll("<br","") + ", ";
             } else if(arrText[j].contains("ТС:") && a == 2 && tema.contains("РУСАГРО"))
             {
                 for (int w = 0; w < arrText.length; w++)
@@ -371,7 +390,7 @@ System.out.println("---!!!--160 " + msgToDiscord1);
         if(text.contains("Контейнеры")) a = 1 ;
         if(!text.contains("Контейнеры")) a = 2 ;
 
-        int statya = 0; // предусмотренными статьей 121 Таможенного
+        int statya = 0; // Выпуск при условии обеспечения уплаты таможенных платежей. Решение по товарам
         if(tema.contains("предусмотренными статьей 121 Таможенного")) statya = 121 ;
         if(tema.contains("предусмотренными статьей 122 Таможенного")) statya = 122 ;
 
@@ -392,11 +411,15 @@ System.out.println("---!!!--160 " + msgToDiscord1);
                 numberDT = arrTema[3+i];
                 if(statya == 121)
                 {
-                    msgToDiscord1 = role + ", " + numberDT + ", Выпуск условный по стоимости. " ;
+                    msgToDiscord1 = role + ", " + numberDT + ", Выпуск условный по стоимости, " ;
                     break;
                 } else if(statya == 122)
                 {
-                    msgToDiscord1 = role + ", " + numberDT + ", Выпуск условный по экспертизе. " ;
+                    msgToDiscord1 = role + ", " + numberDT + ", Выпуск условный по экспертизе, " ;
+                    break;
+                } else //if(statya == 0)
+                {
+                    msgToDiscord1 = role + ", " + numberDT + ", Выпуск при условии обеспечения уплаты таможенных платежей, " ;
                     break;
                 }
             }
@@ -414,7 +437,7 @@ System.out.println("---!!!--160 " + msgToDiscord1);
             } else if(arrText[j].contains("ТС:") && a == 2)
             {
                 msgToDiscord1 = msgToDiscord1 + " " + arrText[j-1].replaceAll("/>","") +
-                        " " + arrText[j] + " " + arrText[j+1].replaceAll("<br","") + ". ";
+                        " " + arrText[j] + " " + arrText[j+1].replaceAll("<br","") + ", ";
             }
 
             if(arrText[j].contains("Инспектор"))
@@ -460,10 +483,10 @@ System.out.println("---!!!--160 " + msgToDiscord1);
                     msgToDiscord1 = role + ", " + numberDT + ", ДОСМОТР! " ;
                 } else if (tema.contains("Результаты фактического контроля"))
                 {
-                    msgToDiscord1 = role + ", " + numberDT + " . Прилетел акт досмотра. " ;
+                    msgToDiscord1 = role + ", " + numberDT + " , Прилетел акт досмотра, " ;
                 } else if (tema.contains("Запрос документов и сведений. Уведомление о проведении таможенной экспертизы"))
                 {
-                    msgToDiscord1 = role + ", " + numberDT + " . *Таможенная экспертиза!* " ;
+                    msgToDiscord1 = role + ", " + numberDT + " , *Проведение Таможенной экспертизы!* " ;
                 }
                 break;
             }
@@ -480,7 +503,7 @@ System.out.println("---!!!--160 " + msgToDiscord1);
             } else if(arrText[j].contains("ТС:") && a == 2 && !tema.contains("РУСАГРО"))
             {
                 msgToDiscord1 = msgToDiscord1 + " " + arrText[j-1].replaceAll("/>","") +
-                        " " + arrText[j] + " " + arrText[j+1].replaceAll("<br","") + ". ";
+                        " " + arrText[j] + " " + arrText[j+1].replaceAll("<br","") + ", ";
             } else if(arrText[j].contains("ТС:") && a == 2 && tema.contains("РУСАГРО"))
             {
                 for (int w = 0; w < arrText.length; w++)
@@ -501,7 +524,7 @@ System.out.println("---!!!--160 " + msgToDiscord1);
 
                 if (arrText[j+1].contains("АВТОРЕГИСТРАЦ"))
                 {
-                    msgToDiscord1 = msgToDiscord1 + " " + arrText[j+1] + ". ";
+                    msgToDiscord1 = msgToDiscord1 + " " + arrText[j+1] + ", ";
                 } else if (!arrText[j+1].contains("АВТОРЕГИСТРАЦ"))
                 {
                     msgToDiscord1 = msgToDiscord1 + " " + inspektor + " " + arrText[j+1] + " " + arrText[j+2]
@@ -561,7 +584,7 @@ System.out.println("****getAllContainersNumb arrText" + Arrays.toString(arrText)
         return msgToDiscord1;
     }
 
-    public String getRoleFmCompanyName(String companyNameFmMail) // ООО "МАКАЛПАЙН РУС", glatfelter
+    public String getRoleFmCompanyName(String companyNameFmMail)
     {
         String roleForDiscord = "*" + companyNameFmMail + "*";
         System.out.println("----------getRoleFmCompanyNam " + roleForDiscord);
@@ -583,7 +606,7 @@ System.out.println("****getAllContainersNumb arrText" + Arrays.toString(arrText)
         if (roleForDiscord.contains("МАКАЛПАЙН")) roleForDiscord = "*Контейнершипс (МАКАЛПАЙН)*";
         if (roleForDiscord.contains("САМАРАМАЛТ")) roleForDiscord = "*Контейнершипс (САМАРАМАЛТ)*";
         if (roleForDiscord.contains("ТД") && roleForDiscord.contains("АПРИКО")) roleForDiscord = "*Априко*";
-        if (roleForDiscord.contains("ФЕС") && roleForDiscord.contains("ПРОДУКТ")) roleForDiscord = "*ФЕС ПРОДУКТ ООО*";
+        if (roleForDiscord.contains("ФЕС") && roleForDiscord.contains("ПРОДУКТ")) roleForDiscord = "*ФЕС ПРОДУКТ*";
         if (roleForDiscord.contains("АУТСПАН") && roleForDiscord.contains("ИНТЕРНЕШНЛ")) roleForDiscord = "*АУТСПАН*";
         if (roleForDiscord.contains("ТОРГОВЫЙ") && roleForDiscord.contains("ДОМ")) roleForDiscord = "*ТДМ*";
 

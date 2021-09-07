@@ -94,6 +94,7 @@ public class WatchEmailRunnable implements Runnable, AutoCloseable
                                 (message.getSubject().contains("Результат сканирования оригинала")) ||
                                 (message.getSubject().contains("предусмотренными статьей 121 Таможенного кодекса Евразийского эконом. Решение по товарам")) ||
                                 message.getSubject().contains("предусмотренными статьей 122 Таможенного кодекса Евразийского эконом. Заключение") ||
+                                message.getSubject().contains("Выпуск товаров с особенностями, предусмотренными статьей 122 Таможенного кодекса Евразийского эконом. Решение по тов") ||
                                 message.getSubject().contains("Досмотр товара. Уведомление о принятии решения по проведению фактического контроля") ||
                                 message.getSubject().contains("Результаты фактического контроля") ||
                                 message.getSubject().contains("ТД зарегистрирована. Регистрация ЭТД") ||
@@ -102,7 +103,9 @@ public class WatchEmailRunnable implements Runnable, AutoCloseable
                                 message.getSubject().contains("Транзит завершен. Завершение таможенного транзит") ||
                                 message.getSubject().contains("Отказано в выпуске товаров. Решение по товарам ДТ") ||
                                 message.getSubject().contains("Запрос документов и сведений. Уведомление о проведении таможенной экспертизы") ||
-                                message.getSubject().contains("Отказано в выпуске товаров на осн. пп") )
+                                message.getSubject().contains("Отказано в выпуске товаров на осн. пп") ||
+                                message.getSubject().contains("Выпуск при условии обеспечения уплаты таможенных платежей. Решение по товарам")
+                                 )
                         {
                             //От кого
                             String from = ((InternetAddress) message.getFrom()[0]).getAddress();
