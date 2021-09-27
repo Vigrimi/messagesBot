@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.NoSuchElementException;
 
-// TLLU5171430 1800 . FCIU2822167 1799 . H871KO32/AM878132 1801 . 822MPF/417YHV 1802 . MSKU8109652 1803 .
+import static com.vinnikov.inbox.ru.pandabot.PandabotApplication.LOGGER;
+
 public class GetIdFromMonitoringGoogleDocs
 {
-    //private String msgToDiscord1;
     private static int coordinataYacheyki;
 
     public static String getIdFromMonitoringGoogleDocs(String msgToDiscord1) throws InterruptedException
@@ -26,9 +26,9 @@ public class GetIdFromMonitoringGoogleDocs
         int a0iz0 = 0;
         int to = 0;
         int a = 0;
-        int zavislo = 0;
         String[] words = msgToDiscord1.split(" ");
-System.out.println("333 " + Arrays.toString(words));
+        LOGGER.info("---getIdFromMonitoring 30-> " + LocalDateTime.now() + "\n" + Arrays.toString(words));
+
         HashSet<String> foundIdFmMonitoringSet = new HashSet<>();
         HashSet<String> nameOfGoodsSet = new HashSet<>();
         ArrayList<String> foundInfoFmMonitoringList = new ArrayList<>();
@@ -56,11 +56,12 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                         a = i + j;
                         contNumber = words[a].replaceAll(",","").replace(".","");
                     } catch (ArrayIndexOutOfBoundsException ae){
-                        System.out.println("57 getIDfmMONI мистика, вышли из массива: " + ae);
+                        LOGGER.error("---getIdFromMonitoring 59 мистика, вышли из массива-> " + LocalDateTime.now()
+                                + "\n" + ae);
                         break;
                     }
 
-                    System.out.println("99999999222 " + words[a]);
+                    LOGGER.info("---getIdFromMonitoring 64-> " + LocalDateTime.now() + "\n" + words[a]);
                     //System.out.println("99999999444 " + contNumber + " ** " + contNumber.length());
                     if(msgToDiscord1.contains("онтейнеры") && contNumber.length() != 11) break;
                     if(words[a].contains("нспектор") || words[a].contains("АВТОРЕГИСТРАЦ")
@@ -90,13 +91,15 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                             WebElement findBar1of1 = driverMonitoring.findElement(By
                                     .xpath("//*[@id=\"docs-findbar-input\"]/table/tbody/tr/td[2]/span"));
                             findBar1of1String = findBar1of1.getText();
-                            System.out.println("------------------84 findBar1of1String:" + findBar1of1String);
+                            LOGGER.info("---getIdFromMonitoring 94 findBar1of1String-> " + LocalDateTime.now()
+                                    + "\n" + findBar1of1String);
                             if(!findBar1of1String.equalsIgnoreCase("0 из 0")) break;
                         }
                         // если всё же не нашлось ничего
                         if(findBar1of1String.equalsIgnoreCase("0 из 0"))
                         {
-                            System.out.println("------------------90 findBar1of1String:" + findBar1of1String);
+                            LOGGER.info("---getIdFromMonitoring 101 findBar1of1String-> " + LocalDateTime.now()
+                                    + "\n" + findBar1of1String);
                             a0iz0++;
                             break;
                         }
@@ -143,9 +146,10 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                             yacheyka = getYacheykaFmBuffer();
 
                             } catch (AWTException | NullPointerException e) {
-                                e.printStackTrace();
+                                LOGGER.error("---getIdFromMonitoring 149 catch-> " + LocalDateTime.now() + "\n" + e);
                             } catch (NoSuchElementException | NoSuchSessionException ne) {
-                                System.out.println("ЧТО-ТО С ГУГЛ-ЭКСЕЛЕМ: " + ne + " ** " + LocalDateTime.now());
+                                LOGGER.error("---getIdFromMonitoring 152 ЧТО-ТО С ГУГЛ-ЭКСЕЛЕМ-> "
+                                        + LocalDateTime.now() + "\n" + ne);
                             }
 
                             // если ячейка начинается с I - это название товара, если с С - это айди
@@ -177,7 +181,8 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                                                 robott1.keyRelease(KeyEvent.VK_LEFT);
                                                 Thread.sleep(200);
                                             } catch (AWTException | NullPointerException e) {
-                                                e.printStackTrace();
+                                                LOGGER.error("---getIdFromMonitoring 184 catch-> "
+                                                        + LocalDateTime.now() + "\n" + e);
                                             }
                                         } else if (where < 9)
                                         {
@@ -189,7 +194,8 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                                                 robott1.keyRelease(KeyEvent.VK_RIGHT);
                                                 Thread.sleep(200);
                                             } catch (AWTException | NullPointerException e) {
-                                                e.printStackTrace();
+                                                LOGGER.error("---getIdFromMonitoring 196 catch-> "
+                                                        + LocalDateTime.now() + "\n" + e);
                                             }
                                         }
                                     }
@@ -212,7 +218,8 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                                         robott1.keyRelease(KeyEvent.VK_ENTER);
                                         Thread.sleep(1100);  // Let the user actually see something!
                                     } catch (AWTException | NullPointerException e) {
-                                        e.printStackTrace();
+                                        LOGGER.error("---getIdFromMonitoring 219 catch-> " + LocalDateTime.now()
+                                                + "\n" + e);
                                     }
 
                                     yacheyka = getYacheykaFmBuffer();
@@ -247,7 +254,8 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                                                 robott1.keyRelease(KeyEvent.VK_LEFT);
                                                 Thread.sleep(200);
                                             } catch (AWTException | NullPointerException e) {
-                                                e.printStackTrace();
+                                                LOGGER.error("---getIdFromMonitoring 254 catch-> "
+                                                        + LocalDateTime.now() + "\n" + e);
                                             }
                                         } else if (where < 3)
                                         {
@@ -259,7 +267,8 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                                                 robott1.keyRelease(KeyEvent.VK_RIGHT);
                                                 Thread.sleep(200);
                                             } catch (AWTException | NullPointerException e) {
-                                                e.printStackTrace();
+                                                LOGGER.error("---getIdFromMonitoring 266 catch-> "
+                                                        + LocalDateTime.now() + "\n" + e);
                                             }
                                         }
                                     }
@@ -282,7 +291,8 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                                         robott1.keyRelease(KeyEvent.VK_ENTER);
                                         Thread.sleep(1100);  // Let the user actually see something!
                                     } catch (AWTException | NullPointerException e) {
-                                        e.printStackTrace();
+                                        LOGGER.error("---getIdFromMonitoring 289 catch-> " + LocalDateTime.now()
+                                                + "\n" + e);
                                     }
 
                                     yacheyka = getYacheykaFmBuffer();
@@ -312,7 +322,8 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                             if ((!findBar1of1String.equalsIgnoreCase("0 из 0")) &&
                                     (!findBar1of1String.equalsIgnoreCase("1 из 1")))
                             {
-System.out.println("--------306 idFMoni findBar1of1String:" + findBar1of1String + "!");
+                                LOGGER.info("---getIdFromMonitoring 319 findBar1of1String-> " + LocalDateTime.now()
+                                        + "\n" + findBar1of1String);
                                 String[] arrFindBar1of1String = findBar1of1String.split(" ");
                                 if (arrFindBar1of1String.length >= 2)
                                 {
@@ -322,8 +333,9 @@ System.out.println("--------306 idFMoni findBar1of1String:" + findBar1of1String 
                             }
                         } catch (NumberFormatException e)
                         {
-                            System.out.println("--- при поиске в окошке вместо надписи 1 из 1 какой-то текст " +
-                                    "получился - findBar1of1String: " + findBar1of1String + "е: " + e);
+                            LOGGER.error("---getIdFromMonitoring 330 catch - при поиске в окошке вместо надписи 1 из 1 " +
+                                    "какой-то текст получился - findBar1of1String-> " + LocalDateTime.now() + "\n"
+                                    + findBar1of1String + "е: " + e);
                         }
 
                         foundInfoFmMonitoringList.add(nameOfGood);
@@ -338,19 +350,20 @@ System.out.println("--------306 idFMoni findBar1of1String:" + findBar1of1String 
                 }
             }
         }
-        System.out.println("444444 " + foundIdFmMonitoringSet);
+        LOGGER.info("---getIdFromMonitoring 347 foundIdFmMonitoringSet-> " + LocalDateTime.now() + "\n"
+                + foundIdFmMonitoringSet);
         // формируем номера айди для текста
         for (String s : foundIdFmMonitoringSet)
         {
             idFromYacheika1 = idFromYacheika1 + s + ", ";
         }
         if(indexIdInArr > 0) idFromYacheika1 = idFromYacheika1 + "(возможно это старый id), ";
-System.out.println("--------339 idFMoni indexIdInArr:" + indexIdInArr + "!");
+        LOGGER.info("---getIdFromMonitoring 355 indexIdInArr-> " + LocalDateTime.now() + "\n" + indexIdInArr);
 
         if(a0iz0 > 0) idFromYacheika1 = idFromYacheika1 + "(не нашёл id), ";
-System.out.println("--------342 idFMoni a0iz0:" + a0iz0 + "!");
+        LOGGER.info("---getIdFromMonitoring 358 a0iz0-> " + LocalDateTime.now() + "\n" + a0iz0);
 
-System.out.println("------------------344 findBar1of1String:" + findBar1of1String);
+        LOGGER.info("---getIdFromMonitoring 360 findBar1of1String-> " + LocalDateTime.now() + "\n" + findBar1of1String);
 
         // формируем товары после айди для текста
         for (String st : nameOfGoodsSet)
@@ -392,8 +405,8 @@ System.out.println("------------------344 findBar1of1String:" + findBar1of1Strin
                 break;
             }
         }
-
-System.out.println("coordinataYacheyki " + coordinataYacheyki);
+        LOGGER.info("---getIdFromMonitoring checkWhereItIs 402 coordinataYacheyki-> " + LocalDateTime.now()
+                + "\n" + coordinataYacheyki);
         return coordinataYacheyki;
     }
 
@@ -421,10 +434,12 @@ System.out.println("coordinataYacheyki " + coordinataYacheyki);
 
             //[https://docs.google.com/spreadsheets/d/18rj1I5W8C5k/edit#gid, 0&range, C8616]
 //                            System.out.println(Arrays.toString(arrSsylka));
-System.out.println("**" + arrSsylka[arrSsylka.length-1] + "**");
+            LOGGER.info("---getIdFromMonitoring getYacheykaFmBuffer 431 arrSsylka[arrSsylka.length-1]-> "
+                    + LocalDateTime.now() + "\n" + arrSsylka[arrSsylka.length-1]);
             yacheyka1 = arrSsylka[arrSsylka.length-1];
         } catch (NoSuchElementException | NoSuchSessionException ne) {
-            System.out.println("ЧТО-ТО С ГУГЛ-ЭКСЕЛЕМ: " + ne + " ** " + LocalDateTime.now());
+            LOGGER.error("---getIdFromMonitoring getYacheykaFmBuffer 435 ЧТО-ТО С ГУГЛ-ЭКСЕЛЕМ catch-> "
+                    + LocalDateTime.now() + "\n" + ne);
         }
         return yacheyka1;
     }

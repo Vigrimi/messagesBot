@@ -8,6 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+
+import static com.vinnikov.inbox.ru.pandabot.PandabotApplication.LOGGER;
 import static java.lang.Thread.sleep;
 
 public class ProjectMainWindow extends JFrame
@@ -19,6 +22,7 @@ public class ProjectMainWindow extends JFrame
 
     public ProjectMainWindow()
     {
+        LOGGER.info("--------------------ProjectMainWindow 1 -> " + LocalDateTime.now());
         setTitle("PandaBot");
         setSize(400,400); //2 метод. Размеры окна
 
@@ -33,6 +37,7 @@ public class ProjectMainWindow extends JFrame
     { // вставил инфокартинку
         g.drawImage(img, 0, 0,/*frame.getWidth()*/ 400, /*frame.getHeight()*/ 360, null);
         sleep(3_000);
+        LOGGER.info("--------------------ProjectMainWindow 2 -> " + LocalDateTime.now());
         startPandaBot();
     }
 
@@ -40,7 +45,7 @@ public class ProjectMainWindow extends JFrame
     {
         try
         {
-            System.out.println("let's start it");
+            LOGGER.info("-----ProjectMainWindow let's start it -> " + LocalDateTime.now());
             // передаём для отправки в дискорд сообщение о перезапуске программы
             AppMsgToDiscordBot bot = new AppMsgToDiscordBot(helloMsgToDiscord);
             bot.run();
@@ -53,14 +58,14 @@ public class ProjectMainWindow extends JFrame
             System.out.println("555");
         } catch (NoSuchElementException ns)
         {
-            System.out.println("----надо войти в ватсап-вэб! NoSuchElementException: " + ns);
+            LOGGER.error("----надо войти в ватсап-вэб! NoSuchElementException -> " + LocalDateTime.now() + "\n" + ns);
         } catch (WebDriverException wd)
         {
-            System.out.println("----надо войти в ватсап-вэб! WebDriverException: " + wd);
+            LOGGER.error("-----надо войти в ватсап-вэб! WebDriverExceptio -> " + LocalDateTime.now() + "\n" + wd);
         } finally {
-            System.out.println("aaa");
+            LOGGER.info("--aaa---ProjectMainWindow finally rebooting new WatchDirectory().run() -> " + LocalDateTime.now());
             new WatchDirectory().run();
-            System.out.println("bbb");
+            LOGGER.info("--bbb---ProjectMainWindow finally rebooting new WatchDirectory().run() -> " + LocalDateTime.now());
         }
     }
 }

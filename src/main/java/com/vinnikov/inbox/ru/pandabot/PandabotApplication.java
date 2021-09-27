@@ -2,6 +2,7 @@ package com.vinnikov.inbox.ru.pandabot;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import javax.security.auth.login.LoginException;
+import java.time.LocalDateTime;
 
 /*
  * 		+10. нужен логин+пароль от мэйла яндекс, куда приходят мэйлы из таможенной программы - внести
@@ -21,8 +22,13 @@ import javax.security.auth.login.LoginException;
 @SpringBootApplication
 public class PandabotApplication
 {
+	// LOGGER.info("BOT стартовал -> " + LocalDateTime.now()); // logger.error
+	public static org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(PandabotApplication.class);
+
 	public static void main(String[] args) throws LoginException, InterruptedException
 	{
+		LOGGER.info("==> BOT стартовал -> " + LocalDateTime.now());
+
 		ProjectMainWindow window = new ProjectMainWindow();
 		window.setVisible(true); //все настройки рамки надо писать до того, как вы сделаете её видимой
 	}

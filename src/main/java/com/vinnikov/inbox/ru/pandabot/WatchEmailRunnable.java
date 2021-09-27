@@ -5,13 +5,18 @@ import javax.activation.MailcapCommandMap;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeUtility;
+import javax.management.RuntimeErrorException;
+import javax.management.RuntimeOperationsException;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Properties;
 
-public class WatchEmailRunnable implements Runnable, AutoCloseable
+import static com.vinnikov.inbox.ru.pandabot.PandabotApplication.LOGGER;
+
+public class WatchEmailRunnable implements Runnable//, AutoCloseable
 {
     public int countOld;
     private String textFmEmail;
@@ -22,8 +27,8 @@ public class WatchEmailRunnable implements Runnable, AutoCloseable
     public WatchEmailRunnable(int countOld) {
         this.countOld = countOld;
         textFmEmail = "";
-        arrSubjectFmEmail = new String[100];
-        arrTextsFmEmail = new String[500];
+        arrSubjectFmEmail = new String[300];
+        arrTextsFmEmail = new String[700];
         fileWriteInOldCountEmails = new FileWriteInOldCountEmails (new File("countOld.txt"));
 ///////
         MailcapCommandMap mc = (MailcapCommandMap) CommandMap.getDefaultCommandMap();
@@ -38,7 +43,7 @@ public class WatchEmailRunnable implements Runnable, AutoCloseable
     public void run()
     {
         String textFmEmail = "";
-        System.out.println("поехали WatchEmailRunnable");
+        LOGGER.info("---поехали WatchEmailRunnable-> " + LocalDateTime.now());
         //Объект properties содержит параметры соединения
         Properties properties = new Properties();
         //Так как для чтения Yandex требует SSL-соединения - нужно использовать фабрику SSL-сокетов
@@ -49,18 +54,22 @@ public class WatchEmailRunnable implements Runnable, AutoCloseable
         //Это хранилище почтовых сообщений. По сути - это и есть почтовый ящик=)
         Store store = null;
 
-        try {
+        try
+        {
+            //Это папка, которую будем читать
+            Folder inbox = null;
             //Для чтения почтовых сообщений используем протокол IMAP.
             //Почему? Так Yandex сказал: https://yandex.ru/support/mail/mail-clients.html
             //см. раздел "Входящая почта"
             store = session.getStore("imap");
+            try
+            {
+                LOGGER.info("---Подключаемся к почтовому ящику-> " + LocalDateTime.now());
+                //Подключаемся к почтовому ящику
+                store.connect("imap.yandex.ru", 993, "vru", "t5");
+                LOGGER.info("---Подключились к почтовому ящику-> " + LocalDateTime.now());
 
-            //Подключаемся к почтовому ящику
-            store.connect("imap.yandex.ru", 993, "v.ru", "tv5");
-
-            //Это папка, которую будем читать
-            Folder inbox = null;
-            try {
+                LOGGER.info("---Читаем папку Входящие сообщения-> " + LocalDateTime.now());
                 //Читаем папку "Входящие сообщения"
                 inbox = store.getFolder("INBOX");
                 //Будем только читать сообщение, не меняя их
@@ -68,25 +77,28 @@ public class WatchEmailRunnable implements Runnable, AutoCloseable
 
                 //Получаем количество сообщения в папке
                 int countNew = inbox.getMessageCount();
-
+                LOGGER.info("---Получили количество сообщений во входящих-> " + LocalDateTime.now());
                 if(countNew == countOld)
                 {
-                    System.out.println("НЕТ НОВЫХ ПИСЕМ _ " + LocalTime.now());
+                    LOGGER.info("---НЕТ НОВЫХ ПИСЕМ _ -> " + LocalDateTime.now());
                 } else if(countNew > countOld)
                 {
-                    //System.out.println("88-> " + countOld);
-                    System.out.println("countOld = QuantityEmails.getCountOldQuantityEmails()-> " + countOld +
-                            "old ** new" + countNew);
+                    LOGGER.info("---countOld = QuantityEmails.getCountOldQuantityEmails()-> " + LocalDateTime.now()
+                            + "\n" + countOld + "old ** new" + countNew);
+
                     //Вытаскиваем сообщения в диапазоне
                     Message[] messages = inbox.getMessages(countOld+1, countNew);
 
-//                    System.out.println("countOld = countNew;-> " + countOld + "old ** new" + countNew);
                     fileWriteInOldCountEmails.writeToFileString(countNew);
 
                     int index = 0;
                     //Циклом пробегаемся по всем сообщениям
                     for (Message message : messages)
                     {
+                        if(message.getSubject().contains("ДТ подана. Регистрационный номер заявления о выпуске товаров до подачи"))
+                        { // ЗВ, пока не обрабатывается, просто увеличить кол-во присвоенных ДТ
+                            CalculateQtyGTDPerMonth.getCalculateQtyGTDPerMonth();
+                        } else
                         if( (message.getSubject().contains("ДТ зарегистрирована. Регистрационный номер ДТ")) ||
                                 (message.getSubject().contains("Выпуск товаров разрешен. Решение по товарам")) ||
                                 (message.getSubject().contains("Запрос на предоставление оригинала")) ||
@@ -105,7 +117,7 @@ public class WatchEmailRunnable implements Runnable, AutoCloseable
                                 message.getSubject().contains("Запрос документов и сведений. Уведомление о проведении таможенной экспертизы") ||
                                 message.getSubject().contains("Отказано в выпуске товаров на осн. пп") ||
                                 message.getSubject().contains("Выпуск при условии обеспечения уплаты таможенных платежей. Решение по товарам")
-                                 )
+                        )
                         {
                             //От кого
                             String from = ((InternetAddress) message.getFrom()[0]).getAddress();
@@ -113,26 +125,31 @@ public class WatchEmailRunnable implements Runnable, AutoCloseable
 
                             //Тема письма
                             String TEXTgetSubject = message.getSubject();
-                            System.out.println("String TEXTgetSubject: " + TEXTgetSubject);
+                            LOGGER.info("---WatchEmailRunnable TEXTgetSubject-> " + LocalDateTime.now() + "\n"
+                                    + TEXTgetSubject);
                             arrSubjectFmEmail[index] = TEXTgetSubject;
                             // тело письма
                             String TEXTgetContent = message.getContent().toString();
                             arrTextsFmEmail[index] = TEXTgetContent;
-                            System.out.println("String TEXTgetContent: " + TEXTgetContent); // да, для панды так как
-                            // хтмл и показывает, а простой текст нет
+                            LOGGER.info("---WatchEmailRunnable TEXTgetContent-> " + LocalDateTime.now() + "\n"
+                                    + TEXTgetContent); // да, для панды так как хтмл и показывает, а простой текст нет
 
                             //System.out.println("TEXTgetDisposition: " + message.getDisposition()); // Нет
                             //System.out.println("TEXTgetFlags: " + message.getFlags()); // Нет
                             //System.out.println("TEXTgetContent.toString: " + message.getContent().toString()); // Нет
                             String TEXTgetContentType = message.getContentType();
-                            System.out.println("TEXTgetContentType: " + TEXTgetContentType); // нет
+                            LOGGER.info("---WatchEmailRunnable TEXTgetContentType-> " + LocalDateTime.now() + "\n"
+                                    + TEXTgetContentType); // нет
                             if(TEXTgetContentType.contains("multipart"))
                             {
+                                LOGGER.info("---WatchEmailRunnable if(TEXTgetContentType.contains(\"multipart\")-> "
+                                        + LocalDateTime.now());
                                 //parseMultiparted(part);
                                 TextGetContentTypeMultipart textGetContentTypeMultipart = new TextGetContentTypeMultipart();
                                 Multipart part = (Multipart) message.getContent();
                                 arrTextsFmEmail[index] = textGetContentTypeMultipart.parseMultiparted(part);
-                                System.out.println("222-> " + arrTextsFmEmail[index]);
+                                LOGGER.info("---WatchEmailRunnable if(TEXTgetContentType.contains(\"multipart\") 222 -> "
+                                        + LocalDateTime.now() + "\n" + arrTextsFmEmail[index]);
                             }
 
                             //System.out.println("TEXTgetDescription: " + message.getDescription()); //TEXTgetDescription: null
@@ -194,38 +211,55 @@ public class WatchEmailRunnable implements Runnable, AutoCloseable
                     }
 
                     // *************************************   */
-                            System.out.println("приехали1 WatchEmailRunnable");
+                            LOGGER.info("---приехали1 WatchEmailRunnable-> " + LocalDateTime.now());
                             index++;
                         }
                     }
-                    System.out.println("154WER-> " + Arrays.toString(arrSubjectFmEmail));
-                    System.out.println("155WER-> " + Arrays.toString(arrTextsFmEmail));
-//                    Antonims antonims = new Antonims();
-//                    antonims.getResult(arrTextsFmEmail);
+// !!!!!!!!!!!!!! тут по идее можно закрыть сторе и инбокс
+                    LOGGER.info("---WatchEmailRunnable 154WER-> " + LocalDateTime.now() + "\n"
+                            + Arrays.toString(arrSubjectFmEmail));
+                    LOGGER.info("---WatchEmailRunnable 155WER-> " + LocalDateTime.now() + "\n"
+                            + Arrays.toString(arrTextsFmEmail));
                     EditTextsFmEmail editTextsFmEmail = new EditTextsFmEmail();
                     editTextsFmEmail.getResult(arrSubjectFmEmail,arrTextsFmEmail);
                 }
             } catch (InterruptedException | ClassCastException e) {
-                e.printStackTrace();
+                LOGGER.error("---WatchEmailRunnable 226 catch-> " + LocalDateTime.now() + "\n" + e);
+            } catch (RuntimeErrorException | RuntimeOperationsException re)
+            {
+                LOGGER.error("---WatchEmailRunnable 229 catch-> " + LocalDateTime.now() + "\n" + re);
             } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (inbox != null) {
+                LOGGER.error("---WatchEmailRunnable 231 catch-> " + LocalDateTime.now() + "\n" + e);
+            } finally
+            {
+                if (inbox != null)
+                {
                     //Не забываем закрыть собой папку сообщений.
+                    LOGGER.info("---WatchEmailRunnable 233 Не забываем закрыть собой папку сообщений. начало " +
+                            "inbox.close-> " + LocalDateTime.now());
                     inbox.close(false);
+                    LOGGER.info("---WatchEmailRunnable 235 Не забываем закрыть собой папку сообщений. конец " +
+                            "inbox.close-> " + LocalDateTime.now());
                 }
             }
         } catch (MessagingException /*| IOException*/ e) {
-            e.printStackTrace();
+            fileWriteInOldCountEmails.writeToFileString(countOld);
+            LOGGER.error("---WatchEmailRunnable 247 catch-> " + LocalDateTime.now() + "\n" + e);
         } catch (ClassCastException cse) {
-            System.out.println(cse);
-        } finally {
-            if (store != null) {
+            LOGGER.error("---WatchEmailRunnable 249 catch-> " + LocalDateTime.now() + "\n" + cse);
+        } finally
+        {
+            if (store != null)
+            {
                 //И сам почтовый ящик тоже закрываем
                 try {
+                    LOGGER.info("---WatchEmailRunnable 248 И сам почтовый ящик тоже закрываем начало " +
+                            "store.close-> " + LocalDateTime.now());
                     store.close();
+                    LOGGER.info("---WatchEmailRunnable 250 И сам почтовый ящик тоже закрываем конец " +
+                            "store.close-> " + LocalDateTime.now());
                 } catch (MessagingException e) {
-                    e.printStackTrace();
+                    LOGGER.error("---WatchEmailRunnable 262 catch-> " + LocalDateTime.now() + "\n" + e);
                 }
             }
         }
@@ -272,8 +306,8 @@ public class WatchEmailRunnable implements Runnable, AutoCloseable
         }
     }*/
 
-    @Override
+    /*@Override
     public void close() throws Exception {
 
-    }
+    }*/
 }

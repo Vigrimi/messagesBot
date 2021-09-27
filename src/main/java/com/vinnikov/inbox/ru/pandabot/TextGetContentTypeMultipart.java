@@ -6,6 +6,9 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.MimeUtility;
 import java.io.IOException;
+import java.time.LocalDateTime;
+
+import static com.vinnikov.inbox.ru.pandabot.PandabotApplication.LOGGER;
 
 public class TextGetContentTypeMultipart
 {
@@ -24,6 +27,7 @@ public class TextGetContentTypeMultipart
       //  если в тексте html то этот блок не нужен
      public /*static*/ /*void*/ String parseMultiparted(/*String text, */Multipart part) throws MessagingException, IOException
     {
+        LOGGER.info("---TextGetContentTypeMultipart started-> " + LocalDateTime.now());
         //String text = "";
         for (int i = 0; i < 1 /*part.getCount()*/; i++)
         {
@@ -35,7 +39,8 @@ public class TextGetContentTypeMultipart
             {
                 //System.out.println( parseMultiparted((Multipart)part.getContent()) );
                 parseMultiparted((Multipart) part1.getContent());
-                System.out.println("96-> " + part1.getContent().toString());
+                LOGGER.info("---TextGetContentTypeMultipart 42-> " + LocalDateTime.now() + "\n"
+                        + part1.getContent().toString());
             }
             else if (type.contains("text/"))
             {
@@ -46,9 +51,11 @@ public class TextGetContentTypeMultipart
             } else if (Part.ATTACHMENT.equalsIgnoreCase(part1.getDisposition()))
             {
                 //System.out.println("");
-                System.out.println("99-> " + MimeUtility.decodeText(part1.getFileName()));
+                LOGGER.info("---TextGetContentTypeMultipart 54-> " + LocalDateTime.now() + "\n"
+                        + MimeUtility.decodeText(part1.getFileName()));
             }
         }
+        LOGGER.info("---TextGetContentTypeMultipart 58 text-> " + LocalDateTime.now() + "\n" + text);
         return text;
     }
 

@@ -1,6 +1,8 @@
 package com.vinnikov.inbox.ru.pandabot;
 
 import java.io.*;
+import java.time.LocalDateTime;
+import static com.vinnikov.inbox.ru.pandabot.PandabotApplication.LOGGER;
 
 public class FileReadFromOldCountEmails
 {
@@ -13,6 +15,7 @@ public class FileReadFromOldCountEmails
 
     public void setFile(File file)
     { // типа это txt файл - объект который хранит путь к файлу
+        LOGGER.info("---FileReadFromOldCountEmails setFile стартовал-> " + LocalDateTime.now());
         if (file == null || !file.getName().endsWith("txt") || file.isDirectory() )
         // проверяем на НАЛ, гетнэйм - имя файла строкой, или директория
         {
@@ -25,20 +28,21 @@ public class FileReadFromOldCountEmails
             if ( this.file.createNewFile() ) //надо делать эксепшин трай-кетч
             // новая диерктория, если уже такая есть - то фолз, если нет то создаст и вернёт тру
             {  // если файла не существует, то прочитать из него не получится
-                System.out.println(this.file.getName() + " создан");
+                LOGGER.info("---FileReadFromOldCountEmails setFile файл создан-> " + LocalDateTime.now());
             } else
             {
-                System.out.println(/*this.file.getName() + */"."); //уже существует
+                LOGGER.info("---FileReadFromOldCountEmails setFile файл уже существует . -> " + LocalDateTime.now());
             }
         } catch (IOException e)
-        {
-            System.out.println("файл не был создан " + e.getMessage()); // если вообще никак не создаётся
+        { // если вообще никак не создаётся
+            LOGGER.error("---FileReadFromOldCountEmails setFile файл не был создан-> " + LocalDateTime.now() + "\n" + e);
         }
     }
 
     public byte[] readFromFile() // читать из файла частями
     {
-        byte[] result = null; // если не удастся прочитать то нал так и останется
+        LOGGER.info("---FileReadFromOldCountEmails readFromFile файл создан-> " + LocalDateTime.now());
+        byte[] result = null; // если не удастся прочитать, то нал так и останется
         try (FileInputStream fileInput = new FileInputStream(file);
              ByteArrayOutputStream byteArray = new ByteArrayOutputStream() )
         // some text in file // читать текст в массив промежуточный byte[] частями и перекладываем в
@@ -56,10 +60,12 @@ public class FileReadFromOldCountEmails
             result = byteArray.toByteArray();
         } catch (FileNotFoundException e)
         {
-            System.out.println("файл не был найден");
+            LOGGER.error("---FileReadFromOldCountEmails readFromFile файл не был создан-> " + LocalDateTime.now()
+                    + "\n" + e);
         } catch (IOException e) //что-то пошло не так
         {
-            System.out.println("ошибка чтения из файла");
+            LOGGER.error("---FileReadFromOldCountEmails readFromFile ошибка чтения из файла-> " + LocalDateTime.now()
+                    + "\n" + e);
         }
         return result;
         // если надо прочитать всё из файла - есть специальные ниопакеты и не надо изобретать велосипед

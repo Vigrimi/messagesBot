@@ -1,10 +1,12 @@
 package com.vinnikov.inbox.ru.pandabot;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import static com.vinnikov.inbox.ru.pandabot.PandabotApplication.LOGGER;
 
 public class EditRoleForDiscord
-{
+{ // формирование специальной формы роли для дискорда
     private static final HashMap<String, String> companyAndRole1 = new HashMap<>((Map.of(
             "АБ МАРКЕТ","<@&786263954664980522>",
             "АВЕНТА","<@&786263759110537266>",
@@ -54,9 +56,10 @@ public class EditRoleForDiscord
     private static final HashMap<String, String> companyAndRole5 = new HashMap<>((Map.of(
             "РАС","<@&788359650046640160>",
             "РОТ-ФРОНТ","<@&788065936129130526>",
+            "РФ","<@&788065936129130526>",
             "СМАРТТУЛЗ","<@&788318404258955326>",
             "СТАР ПРЕМИУМ","<@&860478614645374996>",
-            "СЕЛЛ","<@&786265460055212122>",
+            "СЕЛЛ-СЕРВИС","<@&786265460055212122>",
             "СЕМУШКА","<@&786265800775827476>",
             "СОЮЗАГРО","<@&801802702148468737>",
             "СПЕКТР ФУД","<@&808217270593257473>",
@@ -87,6 +90,9 @@ public class EditRoleForDiscord
     public static String getRoleForDiscord(String msgToEdit)
     {
         companyAndRole2.put("ИМПЭНЕРГО","<@&788359646204395531>");
+        companyAndRole3.put("КОНКОРД","<@&789137474609479690>");
+        companyAndRole4.put("ПК АЗОВСКИЙ","<@&867777557063008347>");
+        companyAndRole5.put("РосПродукт","<@&849651401071525948>");
         String msgToDiscordWithRole = "";
 
         // из сообщения взять название фирмы
@@ -212,10 +218,9 @@ public class EditRoleForDiscord
                 msgToDiscordWithRole = msgToDiscordWithRole + arrWordsFmMsgToEdit[i];
             }
         }
-System.out.println("---EditRoleForDiscord---compNameRoleToDiscord:" + compNameRoleToDiscord
-        + "\n---msgToDiscordWithRole:" + msgToDiscordWithRole);
+        LOGGER.info("---EditRoleForDiscord---compNameRoleToDiscord-> " + LocalDateTime.now() + "_" + compNameRoleToDiscord +
+                "\n---msgToDiscordWithRole:" + msgToDiscordWithRole);
 
         return msgToDiscordWithRole;
-
     }
 }

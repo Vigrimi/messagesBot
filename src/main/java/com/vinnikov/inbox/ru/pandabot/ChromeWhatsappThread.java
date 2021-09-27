@@ -6,7 +6,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
+import static com.vinnikov.inbox.ru.pandabot.PandabotApplication.LOGGER;
 import static java.lang.Thread.sleep;
 
 public class ChromeWhatsappThread
@@ -20,6 +20,8 @@ public class ChromeWhatsappThread
     public static WebElement loginField;
     public static WebElement loginField1;
     private static final String nameOfGroupInWhatsApp = "Статусы";
+    private static final String xpathPoleDlyaOtpravkiTeksta
+            = "//*[@id=\"main\"]/footer/div[1]/div/div/div[2]/div[1]/div/div[2]"; // в хроме 93
 
     public ChromeWhatsappThread() {
     }
@@ -50,9 +52,10 @@ public class ChromeWhatsappThread
         //получение ссылки на страницу входа из файла настроек
         driver.get( "https://web.whatsapp.com/" ); // сюда сайт написать ConfProperties.getProperty("loginpage"));
         //driver.switchTo().window(availableWindows.get(1));
-        System.out.println("15 " + LocalDateTime.now());
+        LOGGER.info("---runWhatsapWeb 15 -> " + LocalDateTime.now());
+
         driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
-        System.out.println("16 " + LocalDateTime.now());
+        LOGGER.info("---runWhatsapWeb 16 -> " + LocalDateTime.now());
         WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"side\"]/div[1]/div/label/div/div[2]"));
 
         // встать в поле поиск
@@ -60,11 +63,14 @@ public class ChromeWhatsappThread
         searchBox.sendKeys(nameOfGroupInWhatsApp + Keys.RETURN); // ввести текст в поиске и энтер // "FmMailToWhatsApp"
 
         /*WebElement*/ loginField = driver.findElement(By
-                .xpath("//*[@id=\"main\"]/footer/div[1]/div[2]/div/div[1]/div/div[2]"));
+                .xpath( xpathPoleDlyaOtpravkiTeksta
+                        //"//*[@id=\"main\"]/footer/div[1]/div/div/div[2]/div[1]/div/div[2]" // в хроме 93
+                        //"//*[@id=\"main\"]/footer/div[1]/div[2]/div/div[1]/div/div[2]" // в хроме 92
+                ));
         loginField.sendKeys("Автоматическое сообщение. Программа ПандаБОТ работает. " +
                 "Ватсап успешно подключён.\r\t" + Keys.RETURN);
         //loginPage.inputLogin("testFmComp\r\t");
-        System.out.println("17 " + LocalDateTime.now());
+        LOGGER.info("---runWhatsapWeb 17 -> " + LocalDateTime.now());
     }
 
     @SneakyThrows
@@ -72,17 +78,16 @@ public class ChromeWhatsappThread
     {
         try
         {
-System.out.println("--------911 обновил вкладку, жду 10 сек");
+/*System.out.println("--------911 обновил вкладку, жду 10 сек");
             driver.navigate().refresh(); // обновить вкладку и жду 10 секунд
             sleep(10_000);
-System.out.println("--------912 обновилась вкладка");
-
+System.out.println("--------912 обновилась вкладка");*/
             // встать в поле поиск
             WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"side\"]/div[1]/div/label/div/div[2]"));
-            searchBox.click(); // и кликнуть в поле поиска
+            /*searchBox.click(); // и кликнуть в поле поиска
             sleep(1_000);
             searchBox.sendKeys(nameOfGroupInWhatsApp + Keys.RETURN); // ввести текст в поиске и энтер
-System.out.println("--------913 в поиске выбрал нужную группу");
+System.out.println("--------913 в поиске выбрал нужную группу");*/
 
             // вэбэлемент уведомление Зарядить смартфон //*[@id="side"]/span/div/div/div[2]
             // или //*[@id="side"]/span/div/div/div[2]/div[1] + //*[@id="side"]/span/div/div/div[2]/div[2]
@@ -91,7 +96,8 @@ System.out.println("--------913 в поиске выбрал нужную гру
             WebElement lowBattery3 = driver.findElement(By.xpath("//*[@id=\"side\"]/span/div/div/div[2]/div[2]"));
             String chargeTheBattery = "ВНИМАНИЕ!!! У смартфона " + lowBattery2.getText().toLowerCase() + "! "
                     + lowBattery3.getText() + " на компьютере!" ;
-System.out.println("--------914 lowBattery1 " + lowBattery1.getText());
+            LOGGER.info("---runWhatsapWeb -914 lowBattery1-> " + LocalDateTime.now() + lowBattery1.getText());
+
 //            System.out.println("lowBattery2 " + lowBattery2.getText());
 //            System.out.println("lowBattery3 " + lowBattery3.getText());
 
@@ -102,7 +108,7 @@ System.out.println("--------914 lowBattery1 " + lowBattery1.getText());
             {
                 // встать в поле для отправки текста и отправить нужное сообщение
                 loginField1 = driver.findElement(By
-                        .xpath("//*[@id=\"main\"]/footer/div[1]/div[2]/div/div[1]/div/div[2]"));
+                        .xpath(xpathPoleDlyaOtpravkiTeksta));
                 loginField1.sendKeys(message + Keys.RETURN);
 
                 // если аккум разряжен - отправить уведомление
@@ -118,7 +124,7 @@ System.out.println("--------914 lowBattery1 " + lowBattery1.getText());
                 searchBox.sendKeys(nameOfGroupInWhatsApp + Keys.RETURN); // ввести текст в поиске и энтер //"FmMailToWhatsApp"
                 // встать в поле для отправки текста и отправить нужное сообщение
                 loginField1 = driver.findElement(By
-                        .xpath("//*[@id=\"main\"]/footer/div[1]/div[2]/div/div[1]/div/div[2]"));
+                        .xpath(xpathPoleDlyaOtpravkiTeksta));
                 loginField1.sendKeys(message + Keys.RETURN);
 
                 // если аккум разряжен - отправить уведомление
@@ -129,13 +135,22 @@ System.out.println("--------914 lowBattery1 " + lowBattery1.getText());
             }
         } catch (NoSuchWindowException | NoSuchElementException nw)
         {
-            System.out.println("----хром ватсапвэб обвалился: " + nw);
+            LOGGER.error("---runWhatsapWeb--хром ватсапвэб обвалился-> " + LocalDateTime.now() + nw);
             driver.navigate().refresh(); // обновить вкладку
-            System.out.println("--------11 обновил вкладку, жду 10 сек");
+            LOGGER.info("---runWhatsapWeb---11 обновил вкладку, жду 10 сек-> " + LocalDateTime.now());
             sleep(10_000);
             driver.navigate().refresh(); // обновить вкладку
-            System.out.println("------12 обновил вкладку ещё раз, жду 11 сек, запускаю отправку снова");
+            LOGGER.info("---runWhatsapWeb---12 обновил вкладку ещё раз, жду 11 сек, запускаю отправку снова-> "
+                    + LocalDateTime.now());
             sleep(11_000);
+
+            // встать в поле поиск
+            WebElement searchBox2 = driver.findElement(By.xpath("//*[@id=\"side\"]/div[1]/div/label/div/div[2]"));
+            searchBox2.click(); // и кликнуть в поле поиска
+            sleep(1_000);
+            searchBox2.sendKeys(nameOfGroupInWhatsApp + Keys.RETURN); // ввести текст в поиске и энтер
+            LOGGER.info("---runWhatsapWeb---913 в поиске выбрал нужную группу и снова запускаю " +
+                    "sendInWatsapWeb(message)-> " + LocalDateTime.now());
             sendInWatsapWeb(message);
         }
     }

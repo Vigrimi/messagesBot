@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 
+import static com.vinnikov.inbox.ru.pandabot.PandabotApplication.LOGGER;
+
 public class GetPACIdFromMonitoringGoogleDocs
 {
     public static String getPACIdFromMonitoringGoogleDocs(String msgToDiscord1) throws InterruptedException
@@ -20,11 +22,11 @@ public class GetPACIdFromMonitoringGoogleDocs
         String findBar1of1String = "";
         String nameOfGood = "";
         String yacheyka = "";
-        //int indexIdInArr = 0;
         int a0iz0 = 0;
-        int to = 0;
+        //int to = 0;
         String[] words = msgToDiscord1.split(" ");
-System.out.println("------333 " + Arrays.toString(words));
+        LOGGER.info("---getPACIdFromMonitoring 28-> " + LocalDateTime.now() + "\n" + Arrays.toString(words));
+
         HashSet<String> foundIdFmMonitoringSet = new HashSet<>();
         HashSet<String> nameOfGoodsSet = new HashSet<>();
         ArrayList<String> foundInfoFmMonitoringList = new ArrayList<>();
@@ -73,6 +75,8 @@ System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome
                 // если всё же не нашлось ничего
                 if(findBar1of1String.equalsIgnoreCase("0 из 0"))
                 {
+                    LOGGER.info("---getPACIdFromMonitoring 78 findBar1of1String-> " + LocalDateTime.now()
+                            + "\n" + findBar1of1String);
                     a0iz0++;
                     break;
                 }
@@ -128,12 +132,14 @@ driverBuffer.get("https://docs.google.com/spreadsheets/d/11kc0xpiVTHTMwhGTdSU94q
                     driverBuffer.quit();
                     //[https://docs.google.com/spreadsheets/d/18rj1wk5I5W8C5k/edit#gid, 0&range, C8616]
 // System.out.println(Arrays.toString(arrSsylka));
-                    System.out.println("**" + arrSsylka[arrSsylka.length-1] + "**");
+                    LOGGER.info("---getPACIdFromMonitoring 135 arrSsylka[arrSsylka.length-1]-> " + LocalDateTime.now()
+                                + "\n" + arrSsylka[arrSsylka.length-1]);
                     yacheyka = arrSsylka[arrSsylka.length-1];
                     } catch (AWTException e) {
-                        e.printStackTrace();
+                        LOGGER.error("---getIdFromMonitoring 139 catch-> " + LocalDateTime.now() + "\n" + e);
                     } catch (NoSuchElementException | NoSuchSessionException ne) {
-                        System.out.println("ЧТО-ТО С ГУГЛ-ЭКСЕЛЕМ: " + ne + " ** " + LocalDateTime.now());
+                        LOGGER.error("---getIdFromMonitoring 142 ЧТО-ТО С ГУГЛ-ЭКСЕЛЕМ-> "
+                                + LocalDateTime.now() + "\n" + ne);
                     }
 
                     // если ячейка начинается с I - это название товара, если с С - это айди
@@ -184,7 +190,8 @@ driverBuffer.get("https://docs.google.com/spreadsheets/d/11kc0xpiVTHTMwhGTdSU94q
                 break;
             }
         }
-        System.out.println("444444 " + foundIdFmMonitoringSet);
+        LOGGER.info("---getPACIdFromMonitoring 193 foundIdFmMonitoringSet-> " + LocalDateTime.now() + "\n"
+                + foundIdFmMonitoringSet);
         idFromYacheika1 = idFromYacheika + ", "; // + nameOfGood + ", " ;
         //if(indexIdInArr > 0) idFromYacheika1 = idFromYacheika1 + "(возможно это старый id), ";
         if(a0iz0 > 0) idFromYacheika1 = idFromYacheika1 + "(не нашёл id), ";

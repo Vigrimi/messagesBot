@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+
+import static com.vinnikov.inbox.ru.pandabot.PandabotApplication.LOGGER;
 
 public class FileWriteInOldCountEmails
 {
@@ -17,6 +20,7 @@ public class FileWriteInOldCountEmails
 
     public void setFile(File file)
     { // типа это txt файл - объект который хранит путь к файлу
+        LOGGER.info("---FileWriteInOldCountEmails setFile стартовал-> " + LocalDateTime.now());
         if (file == null || !file.getName().endsWith("txt") || file.isDirectory() )
         // проверяем на НАЛ, гетнэйм - имя файла строкой, или директория
         {
@@ -29,19 +33,21 @@ public class FileWriteInOldCountEmails
             if ( this.file.createNewFile() ) //надо делать эксепшин трай-кетч
             // новая диерктория, если уже такая есть - то фолз, если нет то создаст и вернёт тру
             {  // если файла не существует, то прочитать из него не получится
-                System.out.println(this.file.getName() + " создан");
+                LOGGER.info("---FileWriteInOldCountEmails setFile файл создан-> " + LocalDateTime.now());
             } else
             {
-                System.out.println(/*this.file.getName() + */"."); //уже существует
+                LOGGER.info("---FileWriteInOldCountEmails setFile файл уже существует . -> " + LocalDateTime.now());
             }
         } catch (IOException e)
-        {
-            System.out.println("файл не был создан " + e.getMessage()); // если вообще никак не создаётся
+        { // если вообще никак не создаётся
+            LOGGER.error("---FileWriteInOldCountEmails setFile файл не был создан-> " + LocalDateTime.now()
+            + "\n" + e.getMessage());
         }
     }
 
     public boolean writeToFileString(int b)
     {
+        LOGGER.info("---FileWriteInOldCountEmails writeToFileString стартовал-> " + LocalDateTime.now());
         boolean result = false;
         try (FileOutputStream outputStream = new FileOutputStream(file,false))  // данные из программы в файл
         // FileOutputStream outputStream = new FileOutputStream(file,true) - это создание объекта,
@@ -57,10 +63,12 @@ public class FileWriteInOldCountEmails
             result = true;
         } catch (FileNotFoundException e) // нет файла
         {
-            System.out.println("файл не был найден");
+            LOGGER.error("---FileWriteInOldCountEmails writeToFileString файл не был найден-> " + LocalDateTime.now()
+                    + "\n" + e);
         } catch (IOException e) //что-то пошло не так
         {
-            System.out.println("ошибка записи в файл");
+            LOGGER.error("---FileWriteInOldCountEmails writeToFileString ошибка записи в файл-> " + LocalDateTime.now()
+                    + "\n" + e);
         }
         return result;
     }

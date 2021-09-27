@@ -11,9 +11,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Properties;
 
+import static com.vinnikov.inbox.ru.pandabot.PandabotApplication.LOGGER;
+import static java.lang.Thread.sleep;
+
 public class WatchDirectory implements Runnable
 {
-    public String[] arrTextsFmEmail;
+    //public String[] arrTextsFmEmail;
     private FileReadFromOldCountEmails fileReadFromOldCountEmails;
 
     public WatchDirectory()
@@ -25,7 +28,6 @@ public class WatchDirectory implements Runnable
         public void run()
         {
             int countOld = 0;
-            int a = 0;
         try
         {
             WatchService watchService = FileSystems.getDefault().newWatchService();
@@ -33,23 +35,36 @@ public class WatchDirectory implements Runnable
             path.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
             WatchKey key;
             // получаем ключ
-            System.out.println("watchService запущен");
+            LOGGER.info("--WatchDirectory-watchService запущен-> " + LocalDateTime.now());
             while ((key = watchService.take()) != null)  // получаем событие и смотрим как на него отреагировать
             {
                 // получаем список произошедших событий
-                for (WatchEvent<?> event : key.pollEvents()) {
+                for (WatchEvent<?> event : key.pollEvents())
+                {
                     if(event.context().toString().contains("vasilii@pandatrans.ru - 1"))
                     {
                         countOld = Integer.parseInt( new String(fileReadFromOldCountEmails.readFromFile()) );
-                            new WatchEmailRunnable(countOld).run();
-                            System.out.println("wwwwwwwwwwwwwwww");
-                        a++;
+                        new WatchEmailRunnable(countOld).run();
+                        int hoursRightNow = LocalDateTime.now().getHour();
+                        // если ночь, то тайм-аут делать 15 минут, днём = 45 секунд
+                        if(hoursRightNow <= 7 || hoursRightNow >= 23)
+                        {
+                            LOGGER.info("-WatchDirectory-НОЧЬ тайм-аут 15 минут (900 секунд), чтобы яндекс не " +
+                                    "расценил как ддос атака-> " + LocalDateTime.now());
+                            sleep(900_000);
+                        } else
+                        {
+                            LOGGER.info("-WatchDirectory-тайм-аут 45 секунд, чтобы яндекс не расценил как ддос " +
+                                    "атака-> " + LocalDateTime.now());
+                            sleep(45_000);
+                        }
+                        LOGGER.info("wwwwwwwwwwwwwwww-> " + LocalDateTime.now());
                     }
                 }
                 key.reset();
             }
         } catch (IOException | InterruptedException /*| MessagingException*/ e) {
-            e.printStackTrace();
+            LOGGER.error("---WatchDirectory-что-то пошло не так catch-> " + LocalDateTime.now() + "\n" + e);
         }
     }
 }
