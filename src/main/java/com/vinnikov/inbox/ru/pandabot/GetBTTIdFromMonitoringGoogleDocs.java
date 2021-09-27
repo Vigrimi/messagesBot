@@ -8,9 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
-
 import static com.vinnikov.inbox.ru.pandabot.PandabotApplication.LOGGER;
-import static com.vinnikov.inbox.ru.pandabot.ProjectMainWindow.localDateTime;
 
 public class GetBTTIdFromMonitoringGoogleDocs
 {
@@ -55,7 +53,7 @@ public class GetBTTIdFromMonitoringGoogleDocs
                     try {
                         contNumber = words[a].replaceAll(",","").replace(".","");
                     } catch (ArrayIndexOutOfBoundsException ae){
-                        LOGGER.error("----getBTTIdFromMonit 60мистика, вышли из массива-> " + localDateTime + ae);
+                        LOGGER.error("----getBTTIdFromMonit 60мистика, вышли из массива-> " + LocalDateTime.now() + ae);
                         break;
                     }
 
@@ -88,13 +86,15 @@ public class GetBTTIdFromMonitoringGoogleDocs
                             WebElement findBar1of1 = driverMonitoring.findElement(By
                                     .xpath("//*[@id=\"docs-findbar-input\"]/table/tbody/tr/td[2]/span"));
                             findBar1of1String = findBar1of1.getText();
-                            LOGGER.info("----getBTTIdFromMonit--84 findBar1of1String-> " + localDateTime + findBar1of1String);
+                            LOGGER.info("----getBTTIdFromMonit--84 findBar1of1String-> " + LocalDateTime.now()
+                                    + findBar1of1String);
                             if(!findBar1of1String.equalsIgnoreCase("0 из 0")) break;
                         }
                         // если всё же не нашлось ничего
                         if(findBar1of1String.equalsIgnoreCase("0 из 0"))
                         {
-                            LOGGER.info("----getBTTIdFromMonit--90 findBar1of1String-> " + localDateTime + findBar1of1String);
+                            LOGGER.info("----getBTTIdFromMonit--90 findBar1of1String-> " + LocalDateTime.now()
+                                    + findBar1of1String);
                             a0iz0++;
                             break;
                         }
@@ -142,9 +142,9 @@ public class GetBTTIdFromMonitoringGoogleDocs
                                 yacheyka = getBTTYacheykaFmBuffer();
 
                             } catch (AWTException | NullPointerException e) {
-                                LOGGER.error("----getBTTIdFromMonit 147 catch-> " + localDateTime + e);
+                                LOGGER.error("----getBTTIdFromMonit 147 catch-> " + LocalDateTime.now() + e);
                             } catch (NoSuchElementException | NoSuchSessionException ne) {
-                                LOGGER.error("----getBTTIdFromMonit 149 catch-> " + localDateTime + ne);
+                                LOGGER.error("----getBTTIdFromMonit 149 catch-> " + LocalDateTime.now() + ne);
                             }
 
                             // если ячейка начинается с I - это название товара, если с С - это айди
@@ -166,7 +166,7 @@ public class GetBTTIdFromMonitoringGoogleDocs
                                         robott1.keyRelease(KeyEvent.VK_RIGHT);
                                         Thread.sleep(200);
                                     } catch (AWTException | NullPointerException e) {
-                                        LOGGER.error("----getBTTIdFromMonit 169 catch-> " + localDateTime + e);
+                                        LOGGER.error("----getBTTIdFromMonit 169 catch-> " + LocalDateTime.now() + e);
                                     }
                                 }
                             } else if (!yacheyka.startsWith("I") && nameOfGood == null) // если не попали в I и
@@ -191,7 +191,8 @@ public class GetBTTIdFromMonitoringGoogleDocs
                                                 robott1.keyRelease(KeyEvent.VK_LEFT);
                                                 Thread.sleep(200);
                                             } catch (AWTException | NullPointerException e) {
-                                                LOGGER.error("----getBTTIdFromMonit 194 catch-> " + localDateTime + e);
+                                                LOGGER.error("----getBTTIdFromMonit 194 catch-> "
+                                                        + LocalDateTime.now() + e);
                                             }
                                         } else if (where < 9)
                                         {
@@ -203,7 +204,8 @@ public class GetBTTIdFromMonitoringGoogleDocs
                                                 robott1.keyRelease(KeyEvent.VK_RIGHT);
                                                 Thread.sleep(200);
                                             } catch (AWTException | NullPointerException e) {
-                                                LOGGER.error("----getBTTIdFromMonit 206 catch-> " + localDateTime + e);
+                                                LOGGER.error("----getBTTIdFromMonit 206 catch-> "
+                                                        + LocalDateTime.now() + e);
                                             }
                                         }
                                     }
@@ -226,7 +228,7 @@ public class GetBTTIdFromMonitoringGoogleDocs
                                         robott1.keyRelease(KeyEvent.VK_ENTER);
                                         Thread.sleep(1100);  // Let the user actually see something!
                                     } catch (AWTException | NullPointerException e) {
-                                        LOGGER.error("----getBTTIdFromMonit 229 catch-> " + localDateTime + e);
+                                        LOGGER.error("----getBTTIdFromMonit 229 catch-> " + LocalDateTime.now() + e);
                                     }
 
                                     yacheyka = getBTTYacheykaFmBuffer();
@@ -250,7 +252,8 @@ public class GetBTTIdFromMonitoringGoogleDocs
                                                 robott11.keyRelease(KeyEvent.VK_RIGHT);
                                                 Thread.sleep(200);
                                             } catch (AWTException | NullPointerException e) {
-                                                LOGGER.error("----getBTTIdFromMonit 253 catch-> " + localDateTime + e);
+                                                LOGGER.error("----getBTTIdFromMonit 253 catch-> "
+                                                        + LocalDateTime.now() + e);
                                             }
                                         }
                                     }
@@ -278,7 +281,8 @@ public class GetBTTIdFromMonitoringGoogleDocs
                                                 robott1.keyRelease(KeyEvent.VK_LEFT);
                                                 Thread.sleep(200);
                                             } catch (AWTException | NullPointerException e) {
-                                                LOGGER.error("----getBTTIdFromMonit 281 catch-> " + localDateTime + e);
+                                                LOGGER.error("----getBTTIdFromMonit 281 catch-> "
+                                                        + LocalDateTime.now() + e);
                                             }
                                         } else if (where < 7)
                                         {
@@ -290,7 +294,8 @@ public class GetBTTIdFromMonitoringGoogleDocs
                                                 robott1.keyRelease(KeyEvent.VK_RIGHT);
                                                 Thread.sleep(200);
                                             } catch (AWTException | NullPointerException e) {
-                                                LOGGER.error("----getBTTIdFromMonit 293 catch-> " + localDateTime + e);
+                                                LOGGER.error("----getBTTIdFromMonit 293 catch-> "
+                                                        + LocalDateTime.now() + e);
                                             }
                                         }
                                     }
@@ -313,7 +318,7 @@ public class GetBTTIdFromMonitoringGoogleDocs
                                         robott1.keyRelease(KeyEvent.VK_ENTER);
                                         Thread.sleep(1100);  // Let the user actually see something!
                                     } catch (AWTException | NullPointerException e) {
-                                        LOGGER.error("----getBTTIdFromMonit 316 catch-> " + localDateTime + e);
+                                        LOGGER.error("----getBTTIdFromMonit 316 catch-> " + LocalDateTime.now() + e);
                                     }
 
                                     yacheyka = getBTTYacheykaFmBuffer();
@@ -337,7 +342,8 @@ public class GetBTTIdFromMonitoringGoogleDocs
                                                 robott2.keyRelease(KeyEvent.VK_RIGHT);
                                                 Thread.sleep(200);
                                             } catch (AWTException | NullPointerException e) {
-                                                LOGGER.error("----getBTTIdFromMonit 340 catch-> " + localDateTime + e);
+                                                LOGGER.error("----getBTTIdFromMonit 340 catch-> "
+                                                        + LocalDateTime.now() + e);
                                             }
                                         }
                                     }
@@ -361,7 +367,7 @@ public class GetBTTIdFromMonitoringGoogleDocs
                                         robott1.keyRelease(KeyEvent.VK_RIGHT);
                                         Thread.sleep(200);
                                     } catch (AWTException | NullPointerException e) {
-                                        LOGGER.error("----getBTTIdFromMonit 364 catch-> " + localDateTime + e);
+                                        LOGGER.error("----getBTTIdFromMonit 364 catch-> " + LocalDateTime.now() + e);
                                     }
                                 }
                             }
@@ -386,7 +392,8 @@ public class GetBTTIdFromMonitoringGoogleDocs
                                                 robott1.keyRelease(KeyEvent.VK_LEFT);
                                                 Thread.sleep(200);
                                             } catch (AWTException | NullPointerException e) {
-                                                LOGGER.error("----getBTTIdFromMonit 389 catch-> " + localDateTime + e);
+                                                LOGGER.error("----getBTTIdFromMonit 389 catch-> "
+                                                        + LocalDateTime.now() + e);
                                             }
                                         } else if (where < 3)
                                         {
@@ -398,7 +405,8 @@ public class GetBTTIdFromMonitoringGoogleDocs
                                                 robott1.keyRelease(KeyEvent.VK_RIGHT);
                                                 Thread.sleep(200);
                                             } catch (AWTException | NullPointerException e) {
-                                                LOGGER.error("----getBTTIdFromMonit 401 catch-> " + localDateTime + e);
+                                                LOGGER.error("----getBTTIdFromMonit 401 catch-> "
+                                                        + LocalDateTime.now() + e);
                                             }
                                         }
                                     }
@@ -421,7 +429,7 @@ public class GetBTTIdFromMonitoringGoogleDocs
                                         robott1.keyRelease(KeyEvent.VK_ENTER);
                                         Thread.sleep(1100);  // Let the user actually see something!
                                     } catch (AWTException | NullPointerException e) {
-                                        LOGGER.error("----getBTTIdFromMonit 424 catch-> " + localDateTime + e);
+                                        LOGGER.error("----getBTTIdFromMonit 424 catch-> " + LocalDateTime.now() + e);
                                     }
 
                                     yacheyka = getBTTYacheykaFmBuffer();
@@ -463,7 +471,7 @@ public class GetBTTIdFromMonitoringGoogleDocs
                         {
                             LOGGER.error("----getBTTIdFromMonit 464 catch-BTT-- при поиске в окошке вместо надписи " +
                                     "1 из 1 какой-то текст получился - findBar1of1String: " + findBar1of1String + "\n"
-                                     + localDateTime + e);
+                                     + LocalDateTime.now() + e);
                             System.out.println("-BTT-- при поиске в окошке вместо надписи 1 из 1 какой-то текст " +
                                     "получился - findBar1of1String: " + findBar1of1String + "е: " + e);
                         }
@@ -542,7 +550,7 @@ public class GetBTTIdFromMonitoringGoogleDocs
                         contNumber = words[a].replaceAll(",","").replace(".","");
                     } catch (ArrayIndexOutOfBoundsException ae){
                         LOGGER.error("----getBTTIdFromMonit getBTTCompanyName 544 catch мистика, вышли из массива-> "
-                                + localDateTime + ae);
+                                + LocalDateTime.now() + ae);
                         break;
                     }
 
