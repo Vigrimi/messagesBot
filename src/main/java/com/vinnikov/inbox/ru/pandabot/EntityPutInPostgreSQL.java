@@ -49,16 +49,16 @@ public class EntityPutInPostgreSQL
         entity.setCommentWithMonitorID(commentWithMonitorID);
 
         // private String companyName;
-        String companyName = arrWords[indexNumbGTD - 1].replaceAll("\\*","");
+        String companyName = arrWords[indexNumbGTD - 1].replaceAll("\\*","").trim();
         entity.setCompanyName(companyName);
 
         // private String numberGTD; 10216170/250921/0287469
-        String numberGTD = arrWords[indexNumbGTD];
+        String numberGTD = arrWords[indexNumbGTD].trim();
         entity.setNumberGTD(numberGTD);
 
         // private String prefixNumberGTD;
         String[] arrNumberGTD = numberGTD.split("/");
-        String prefixNumberGTD = arrNumberGTD[0];
+        String prefixNumberGTD = arrNumberGTD[0].trim();
         entity.setPrefixNumberGTD(prefixNumberGTD);
 
         // private long digitsNumberGTD;
@@ -74,7 +74,7 @@ public class EntityPutInPostgreSQL
         entity.setDateRegistred(dateReg);
 
         // private String dateReleased;
-        String statusRegistReleas = arrWords[indexNumbGTD + 1];
+        String statusRegistReleas = arrWords[indexNumbGTD + 1].trim();
         String dateReleased = null;
         if(statusRegistReleas.contains("ыпус"))
         {
@@ -99,22 +99,23 @@ public class EntityPutInPostgreSQL
         }
         for (int i = (indexNumbGTD + 2); i < indexInspektorAvtoRegVyp; i++)
         {
-            containerNumber = containerNumber + arrWords[i] + ", ";
+            containerNumber = containerNumber + arrWords[i].trim() + ", ";
         }
         entity.setContainerNumber(containerNumber);
 
         // private String inspector;
         String inspector = "";
         if(flagIsThereInspector == 2) inspector = ".";
-        else inspector = arrWords[indexInspektorAvtoRegVyp];
+        else inspector = arrWords[indexInspektorAvtoRegVyp].trim();
         entity.setInspector(inspector);
 
         LOGGER.info("---EntityPutInPostgreSQL fillInEntity сама сущность-> " + LocalDateTime.now() + "\n" + entity);
         return entity;
     }
 
-    public static void insertIntoTables(EntityForPostgreSQL entity)
+    public static void insertIntoTables(String msgForWhatsap) //(EntityForPostgreSQL entity)
     {
+        EntityForPostgreSQL entity = EntityPutInPostgreSQL.fillInEntity(msgForWhatsap);
         // получить заполненную сущность и внести в РБД ПостгреСКуЭль
         try
         {
