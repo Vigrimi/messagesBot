@@ -35,7 +35,7 @@ public class CalculateQtyGTDPerMonth
                 writeInOutputFile(flag, fileNameFlag);
 
                 // отправить сообщение с общим кол-вом ДТ за прошлый месяц
-                String msg = "Было присвоено *" + qtyGTDFmFile + "* ДТ за прошлый месяц.";
+                String msg = "Было присвоено *" + qtyGTDFmFile + "* ДТ (в т.ч. ВТТ, ЗВ) за прошлый месяц.";
                 ChromeWhatsappThread.sendInWatsapWeb(msg);
 
                 // обнуляем счётчик в файле

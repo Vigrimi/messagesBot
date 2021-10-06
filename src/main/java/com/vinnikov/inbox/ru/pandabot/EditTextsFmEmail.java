@@ -78,6 +78,12 @@ public class EditTextsFmEmail
                 {msgToDiscord1 = getMessageDosmotr(tema,text);}
                 else if(tema.contains("Результаты фактического контроля") )
                 {msgToDiscord1 = getMessageDosmotr(tema,text);}
+                else if(tema.contains("НАЗНАЧИЛИ ИДК") )
+                {msgToDiscord1 = getMessageDosmotr(tema,text);}
+                else if(tema.contains("НАЗНАЧЕН ДОСМОТР") )
+                {msgToDiscord1 = getMessageDosmotr(tema,text);}
+                else if(tema.contains("назначен ДОСМОТР") )
+                {msgToDiscord1 = getMessageDosmotr(tema,text);}
                 else if(tema.contains("ТД зарегистрирована. Регистрация ЭТД") )
                 {msgToDiscord1 = getMessageRegistered(tema,text);}
                 else if(tema.contains("Выпуск товара. Выпуск товар") ) // BTT
@@ -141,10 +147,10 @@ public class EditTextsFmEmail
                     LOGGER.info("---EditTextsFmEmail---6:-> " + LocalDateTime.now() + "\n" + textDisc);
                 }
 
-                // если ДОСМОТР на балтика или санпит - добавить роль ПОРТ
-                if(textDisc.contains("ДОСМОТР"))
+                // если ДОСМОТР или НАЗНАЧИЛИ ИДК на балтика или санпит - добавить роль ПОРТ
+                if(textDisc.contains("ДОСМОТР") || textDisc.contains("ИДК!"))
                 {
-                    if(textDisc.contains("10216170") && textDisc.contains("10228010"))
+                    if(textDisc.contains("10216170") || textDisc.contains("10228010"))
                     {
                         textDisc = textDisc + " <@&785808375782309908>";
                     }
@@ -165,7 +171,8 @@ public class EditTextsFmEmail
                 {
                     String msgToWhatsapp = msgToDiscord1.replaceAll("@","")
                             .replaceAll("Контейнеры: ","");
-                    msgToWhatsapp = msgToWhatsapp.replaceAll("ДОСМОТР!","*ДОСМОТР!*");
+                    msgToWhatsapp = msgToWhatsapp.replaceAll("ДОСМОТР!","*ДОСМОТР!*")
+                            .replaceAll("ИДК!","*ИДК!*");
                     ChromeWhatsappThread.sendInWatsapWeb(msgToWhatsapp);
                 } catch (NoSuchElementException e)
                 {
@@ -251,7 +258,7 @@ public class EditTextsFmEmail
                         msgToDiscord1 = msgToDiscord1 + " " + arrText[j + 1] + ", ";
                     } else if (!arrText[j + 1].contains("АВТОРЕГИСТРАЦ")) {
                         msgToDiscord1 = msgToDiscord1 + " " + inspektor + " " + arrText[j + 1] + " " + arrText[j + 2]
-                                + " " + arrText[j + 3];
+                                + " " + arrText[j + 3] + ", ";
                     }
                 }
             }
@@ -324,7 +331,7 @@ public class EditTextsFmEmail
                 } else if (!arrText[j+1].contains("АВТОРЕГИСТРАЦ"))
                 {
                     msgToDiscord1 = msgToDiscord1 + " " + inspektor + " " + arrText[j+1] + " " + arrText[j+2]
-                            + " " + arrText[j+3];
+                            + " " + arrText[j+3] + ", ";
                 }
             }
         }
@@ -408,7 +415,7 @@ public class EditTextsFmEmail
                     } else if (!arrText[j+2].contains("000"))
                     {
                         msgToDiscord1 = msgToDiscord1 + " " + inspektor + " " + arrText[j+1] + " " + arrText[j+2]
-                            + " " + arrText[j+3];
+                            + " " + arrText[j+3] + ", ";
                     }
                 }
             }
@@ -488,7 +495,7 @@ public class EditTextsFmEmail
                 } else if (!arrText[j+2].contains("000"))
                 {
                     msgToDiscord1 = msgToDiscord1 + " " + inspektor + " " + arrText[j+1] + " " + arrText[j+2]
-                            + " " + arrText[j+3];
+                            + " " + arrText[j+3] + ", ";
                 }
             }
         }
@@ -521,9 +528,13 @@ public class EditTextsFmEmail
             if(arrTema[3+i].startsWith("10"))
             {
                 numberDT = arrTema[3+i];
-                if(tema.contains("Досмотр товара"))
+                if(tema.contains("НАЗНАЧИЛИ ИДК"))
                 {
-                    msgToDiscord1 = role + ", " + numberDT + ", ДОСМОТР! " ;
+                    msgToDiscord1 = role + ", " + numberDT + ", ИДК! " ;
+                } else if(tema.contains("Досмотр товара") || tema.contains("НАЗНАЧЕН ДОСМОТР")
+                        || tema.contains("назначен ДОСМОТР"))
+                {
+                    msgToDiscord1 = role + ", " + numberDT + ", ДОСМОТР! , " ;
                 } else if (tema.contains("Результаты фактического контроля"))
                 {
                     msgToDiscord1 = role + ", " + numberDT + " , Прилетел акт досмотра, " ;
@@ -571,7 +582,7 @@ public class EditTextsFmEmail
                 } else if (!arrText[j+1].contains("АВТОРЕГИСТРАЦ"))
                 {
                     msgToDiscord1 = msgToDiscord1 + " " + inspektor + " " + arrText[j+1] + " " + arrText[j+2]
-                            + " " + arrText[j+3];
+                            + " " + arrText[j+3] + ", ";
                 }
             }
         }
@@ -654,6 +665,7 @@ public class EditTextsFmEmail
         if (roleForDiscord.contains("ПИЩЕВОЙ") && roleForDiscord.contains("КОМБИНАТ")) roleForDiscord = "*ПК АЗОВСКИЙ*";
         if (roleForDiscord.contains("УНИТРОН") && roleForDiscord.contains("ПРОМ")) roleForDiscord = "*УНИТРОН ПРОМ*";
         if (roleForDiscord.contains("УНИТРОН") && roleForDiscord.contains("ФИРМА")) roleForDiscord = "*Ф.УНИ*";
+        if (roleForDiscord.contains("АЛЬФА") && roleForDiscord.contains("ФУД")) roleForDiscord = "*АЛЬФА ФУД ИНГРЕДИЕНТС*";
 
         return roleForDiscord;
     }
