@@ -11,7 +11,7 @@ import static java.lang.Thread.sleep;
 
 public class ChromeWhatsappThread
 {
-    // нужно установить chromedriver на Windows OS https://sites.google.com/a/chromium.org/chromedriver/downloads
+    // нужно установить chromedriver на Windows OS https://sites.google.com/chromium.org/driver/downloads
     // у меня он лежит по адресу C:\Program Files (x86)\Google\Chrome\Application
 
     // xpath //*[@id="main"]/footer/div[1]/div[2]/div/div[1]/div/div[2]
@@ -31,8 +31,11 @@ public class ChromeWhatsappThread
     public void runWhatsapWeb()
     {
         //определение пути до драйвера и его настройка
-        System.setProperty("webdriver.chrome.driver"
-                , "C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe" ); //ConfProperties.getProperty("chromedriver"));
+        System.setProperty("webdriver.chrome.driver",
+        //        "C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe" // при запуске jar похоже нет
+                //        доступа к диску С:
+                "D:\\grIdea\\pandabot\\chromedriver.exe"
+        ); //ConfProperties.getProperty("chromedriver"));
         //создание экземпляра драйвера
         /*WebDriver*/ driver = new ChromeDriver();
 

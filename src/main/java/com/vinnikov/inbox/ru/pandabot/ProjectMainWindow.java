@@ -1,6 +1,7 @@
 package com.vinnikov.inbox.ru.pandabot;
 
 import lombok.SneakyThrows;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriverException;
 import javax.security.auth.login.LoginException;
@@ -56,7 +57,16 @@ public class ProjectMainWindow extends JFrame
             new WatchDirectory().run();
             //https://youtu.be/9S0-vDSf5Rw
             System.out.println("555");
-        } catch (NoSuchElementException ns)
+        } catch (InsufficientPermissionException ie)
+        {
+            ChromeWhatsappThread chromeWhatsappThread = new ChromeWhatsappThread();
+            chromeWhatsappThread.runWhatsapWeb();
+            sleep(6_000);
+            ChromeWhatsappThread.sendInWatsapWeb("БОТ в дискорде не работает. Возможно добавлен новый канал " +
+                    "и цифровой индекс канала ДТ-СТАТУСа съехал.");
+            LOGGER.error("---EditTextsFmEmail---!!-catch 169-> " + LocalDateTime.now() + "\n" + ie);
+        }
+        catch (NoSuchElementException ns)
         {
             LOGGER.error("----надо войти в ватсап-вэб! NoSuchElementException -> " + LocalDateTime.now() + "\n" + ns);
         } catch (WebDriverException wd)

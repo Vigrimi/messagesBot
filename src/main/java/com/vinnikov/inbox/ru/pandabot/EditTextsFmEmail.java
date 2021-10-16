@@ -1,5 +1,6 @@
 package com.vinnikov.inbox.ru.pandabot;
 
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.openqa.selenium.NoSuchElementException;
 
 import java.time.LocalDateTime;
@@ -157,8 +158,17 @@ public class EditTextsFmEmail
                 }
                 LOGGER.info("---EditTextsFmEmail---!!-textDisc--888-> " + LocalDateTime.now() + "\n" + textDisc);
                 LOGGER.info("---EditTextsFmEmail---!!-msgToDiscord1-whatsap-999-> " + LocalDateTime.now() + "\n" + msgToDiscord1);
-                AppMsgToDiscordBot bot = new AppMsgToDiscordBot(textDisc);
-                bot.run();
+                try {
+                    LOGGER.info("---EditTextsFmEmail---ОТПРАВЛЯЮ ДИСКОРД-> " + LocalDateTime.now());
+                    AppMsgToDiscordBot bot = new AppMsgToDiscordBot(textDisc);
+                    bot.run();
+                    LOGGER.info("---EditTextsFmEmail---ОТПРАВЛЕНО В ДИСКОРД-> " + LocalDateTime.now());
+                } catch (InsufficientPermissionException ie)
+                {
+                    ChromeWhatsappThread.sendInWatsapWeb("БОТ в дискорде не работает. Возможно добавлен новый канал " +
+                            "и цифровой индекс канала ДТ-СТАТУСа съехал.");
+                    LOGGER.error("---EditTextsFmEmail---!!-catch 169-> " + LocalDateTime.now() + "\n" + ie);
+                }
 
                 // если ВТТ и есть роль ПОРТ - то убрать её из сообщения для Ватсапа
                 if(msgToDiscord1.contains("ВТТ") && msgToDiscord1.contains("<@&785808375782309908>"))
@@ -173,7 +183,9 @@ public class EditTextsFmEmail
                             .replaceAll("Контейнеры: ","");
                     msgToWhatsapp = msgToWhatsapp.replaceAll("ДОСМОТР!","*ДОСМОТР!*")
                             .replaceAll("ИДК!","*ИДК!*");
+                    LOGGER.info("---EditTextsFmEmail---!!-ОТПРАВЛЯЮ ВАТСАП-> " + LocalDateTime.now());
                     ChromeWhatsappThread.sendInWatsapWeb(msgToWhatsapp);
+                    LOGGER.info("---EditTextsFmEmail---!!-ОТПРАВЛЕНО В ВАТСАП-> " + LocalDateTime.now());
                 } catch (NoSuchElementException e)
                 {
                     LOGGER.error("---EditTextsFmEmail--!** ватсап не работает-> " + LocalDateTime.now() + "\n" + e);

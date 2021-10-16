@@ -31,7 +31,11 @@ public class GetBTTIdFromMonitoringGoogleDocs
         HashSet<String> nameOfGoodsSet = new HashSet<>();
         ArrayList<String> foundInfoFmMonitoringList = new ArrayList<>();
 
-        System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver",
+                //        "C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe" // при запуске jar похоже нет
+                //        доступа к диску С:
+                "D:\\grIdea\\pandabot\\chromedriver.exe"
+        );
         WebDriver driverMonitoring = new ChromeDriver();
         driverMonitoring.manage().window().maximize();
 
