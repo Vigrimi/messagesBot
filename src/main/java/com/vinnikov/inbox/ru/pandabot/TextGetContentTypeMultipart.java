@@ -44,7 +44,8 @@ public class TextGetContentTypeMultipart
             }
             else if (type.contains("text/"))
             {
-                text = part1.getContent().toString().trim();
+                text = part1.getContent().toString().trim()
+                        .replaceAll("\r"," ").replaceAll("\n"," ");
 
                 //String text1 = text.substring(0, 11);//endIndex) // взять часть букв из фразы
                 //System.out.println("\n105-> " + text1);
@@ -56,6 +57,13 @@ public class TextGetContentTypeMultipart
             }
         }
         LOGGER.info("---TextGetContentTypeMultipart 58 text-> " + LocalDateTime.now() + "\n" + text);
+
+        if(text.contains("Присвоен номер ДТ") ||
+                text.contains("ыпуск товаров разреше"))
+        {
+            System.out.println("------TextGetContentTypeMultipart---AAAAAAAA:");
+        }
+
         return text;
     }
 
