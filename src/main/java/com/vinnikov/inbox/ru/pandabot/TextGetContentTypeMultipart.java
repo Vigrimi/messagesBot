@@ -61,7 +61,7 @@ public class TextGetContentTypeMultipart
         if(text.contains("Присвоен номер ДТ") ||
                 text.contains("ыпуск товаров разреше"))
         {
-            System.out.println("------TextGetContentTypeMultipart---AAAAAAAA:");
+            System.out.println("------TextGetContentTypeMultipart---AAAAAAAA:" + text);
         }
 
         return text;

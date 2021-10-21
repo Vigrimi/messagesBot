@@ -172,18 +172,24 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                                 TextGetContentTypeMultipart textGetContentTypeMultipart = new TextGetContentTypeMultipart();
                                 Multipart part = (Multipart) message.getContent();
 
-                                arrTextsFmEmail[index] = textGetContentTypeMultipart.parseMultiparted(part);
+                                String textFmTypeMultipart = textGetContentTypeMultipart.parseMultiparted(part);
+
+
 
                                 // проверка, если сообщение из Альты, но не для обработки, то понизить индекс
                                 if(flagAlta == 1)
                                 {
-                                    System.out.println("---7777:" + arrTextsFmEmail[index]);
-                                    if(!arrTextsFmEmail[index].contains("Присвоен номер ДТ") ||
-                                    !arrTextsFmEmail[index].contains("ыпуск товаров разреше"))
+                                    System.out.println("---7777:" + textFmTypeMultipart);
+                                    if( (!textFmTypeMultipart.contains("Присвоен номер ДТ")) ||
+                                            (!textFmTypeMultipart.contains("ыпуск товаров разреше")) )
                                     {
-                                        arrTextsFmEmail[index] = null;
+                                        textFmTypeMultipart = null;
+                                        arrTextsFmEmail[index] = textFmTypeMultipart;
                                         System.out.println("---8888:" + arrTextsFmEmail[index]);
                                         index--;
+                                    } else
+                                    {
+                                        arrTextsFmEmail[index] = textFmTypeMultipart;
                                     }
                                 }
                                 if(index < 0)

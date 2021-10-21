@@ -30,7 +30,7 @@ public class EditTextsFmEmailAlta
 
                 // взять 7 слов из комментария
                 String[] arrTextForComment = text.split(" ");
-                LOGGER.info("----EditTextsFmEmail-----arrTextForComment-> " + LocalDateTime.now() + "\n"
+                LOGGER.info("----EditTextsFmEmailAlta-----arrTextForComment-> " + LocalDateTime.now() + "\n"
                         + Arrays.toString(arrTextForComment));
                 int flagComment = 0;
                 for (int jj = 0; jj < arrTextForComment.length; jj++)
@@ -48,7 +48,7 @@ public class EditTextsFmEmailAlta
                         break;
                     }
                 }
-                LOGGER.info("---EditTextsFmEmail-----commentFmTKS-> " + LocalDateTime.now() + "\n" + commentFmTKS);
+                LOGGER.info("---EditTextsFmEmailAlta-----commentFmTKS-> " + LocalDateTime.now() + "\n" + commentFmTKS);
 
                 if(text.contains("новый статус: \"Присвоен номер ДТ"))
                 {msgToDiscord1 = getMessageRegisteredAlta(text);}
@@ -100,11 +100,11 @@ public class EditTextsFmEmailAlta
 //Вариант без айди ролей: передаём для отправки в дискорд и меняем звёздочки в названии фирмы для ватсапа на собачку
                     String textDiscBuffer = msgToDiscord1, regEx = "\\*", rep = "@";
                     textDiscBuffer = textDiscBuffer.replaceFirst(regEx, rep);
-                    LOGGER.info("---EditTextsFmEmail----5-1:-> " + LocalDateTime.now() + "\n" + textDiscBuffer);
+                    LOGGER.info("---EditTextsFmEmailAlta----5-1:-> " + LocalDateTime.now() + "\n" + textDiscBuffer);
                     textDiscBuffer = textDiscBuffer.replaceAll(regEx, "");
                     textDisc = textDiscBuffer;
-                    LOGGER.info("---EditTextsFmEmail----5-2:-> " + LocalDateTime.now() + "\n" + textDiscBuffer);
-                    LOGGER.info("---EditTextsFmEmail---6:-> " + LocalDateTime.now() + "\n" + textDisc);
+                    LOGGER.info("---EditTextsFmEmailAlta----5-2:-> " + LocalDateTime.now() + "\n" + textDiscBuffer);
+                    LOGGER.info("---EditTextsFmEmailAlta---6:-> " + LocalDateTime.now() + "\n" + textDisc);
                 }
 
                 // если ДОСМОТР или НАЗНАЧИЛИ ИДК на балтика или санпит - добавить роль ПОРТ
@@ -115,18 +115,18 @@ public class EditTextsFmEmailAlta
                         textDisc = textDisc + " <@&785808375782309908>";
                     }
                 }
-                LOGGER.info("---EditTextsFmEmail---!!-textDisc--888-> " + LocalDateTime.now() + "\n" + textDisc);
-                LOGGER.info("---EditTextsFmEmail---!!-msgToDiscord1-whatsap-999-> " + LocalDateTime.now() + "\n" + msgToDiscord1);
+                LOGGER.info("---EditTextsFmEmailAlta---!!-textDisc--888-> " + LocalDateTime.now() + "\n" + textDisc);
+                LOGGER.info("---EditTextsFmEmailAlta---!!-msgToDiscord1-whatsap-999-> " + LocalDateTime.now() + "\n" + msgToDiscord1);
                 try {
-                    LOGGER.info("---EditTextsFmEmail---ОТПРАВЛЯЮ ДИСКОРД-> " + LocalDateTime.now());
+                    LOGGER.info("---EditTextsFmEmailAlta---ОТПРАВЛЯЮ ДИСКОРД-> " + LocalDateTime.now());
                     AppMsgToDiscordBot bot = new AppMsgToDiscordBot(textDisc);
                     bot.run();
-                    LOGGER.info("---EditTextsFmEmail---ОТПРАВЛЕНО В ДИСКОРД-> " + LocalDateTime.now());
+                    LOGGER.info("---EditTextsFmEmailAlta---ОТПРАВЛЕНО В ДИСКОРД-> " + LocalDateTime.now());
                 } catch (InsufficientPermissionException ie)
                 {
                     ChromeWhatsappThread.sendInWatsapWeb("БОТ в дискорде не работает. Возможно добавлен новый канал " +
                             "и цифровой индекс канала ДТ-СТАТУСа съехал.");
-                    LOGGER.error("---EditTextsFmEmail---!!-catch 169-> " + LocalDateTime.now() + "\n" + ie);
+                    LOGGER.error("---EditTextsFmEmailAlta---!!-catch 169-> " + LocalDateTime.now() + "\n" + ie);
                 }
 
                 // если ВТТ и есть роль ПОРТ - то убрать её из сообщения для Ватсапа
@@ -142,12 +142,12 @@ public class EditTextsFmEmailAlta
                             .replaceAll("Контейнеры: ","");
                     msgToWhatsapp = msgToWhatsapp.replaceAll("ДОСМОТР!","*ДОСМОТР!*")
                             .replaceAll("ИДК!","*ИДК!*");
-                    LOGGER.info("---EditTextsFmEmail---!!-ОТПРАВЛЯЮ ВАТСАП-> " + LocalDateTime.now());
+                    LOGGER.info("---EditTextsFmEmailAlta---!!-ОТПРАВЛЯЮ ВАТСАП-> " + LocalDateTime.now());
                     ChromeWhatsappThread.sendInWatsapWeb(msgToWhatsapp);
-                    LOGGER.info("---EditTextsFmEmail---!!-ОТПРАВЛЕНО В ВАТСАП-> " + LocalDateTime.now());
+                    LOGGER.info("---EditTextsFmEmailAlta---!!-ОТПРАВЛЕНО В ВАТСАП-> " + LocalDateTime.now());
                 } catch (NoSuchElementException e)
                 {
-                    LOGGER.error("---EditTextsFmEmail--!** ватсап не работает-> " + LocalDateTime.now() + "\n" + e);
+                    LOGGER.error("---EditTextsFmEmailAlta--!** ватсап не работает-> " + LocalDateTime.now() + "\n" + e);
                     AppMsgToDiscordBot bot1 =
                             new AppMsgToDiscordBot("<@&785778541060292628> ВНИМАНИЕ!!! Ватсап не работает. " +
                                     "Надо проверить подключён ли ватсап на компьютере при помощи QR-кода? "); // @декларант
@@ -175,7 +175,7 @@ public class EditTextsFmEmailAlta
 
             // берём нужное из тела письма
             String[] arrText = text.split(" ");
-            LOGGER.info("---EditTextsFmEmail---911-> " + LocalDateTime.now() + "\n" + Arrays.toString(arrText));
+            LOGGER.info("---EditTextsFmEmailAlta---911-> " + LocalDateTime.now() + "\n" + Arrays.toString(arrText));
             for (int j = 0; j < arrText.length; j++)
             {
                 // получить номер ДТ
@@ -215,14 +215,14 @@ public class EditTextsFmEmailAlta
                     } else
                         if (arrText[j].contains("ТС:") && a == 2 && text.contains("РУСАГРО"))
                         {
-                        LOGGER.info("---EditTextsFmEmail--присвоено ищу конос РАС-> " + LocalDateTime.now());
+                        LOGGER.info("---EditTextsFmEmailAlta--присвоено ищу конос РАС-> " + LocalDateTime.now());
                         for (int w = 0; w < arrText.length; w++)
                         {
                             if ((arrText[w].contains("ТН:")) || (arrText[w].contains("TH:"))) // сначала на рус + на англ
                             {
                                 conosamentPAC = arrText[w + 1];
                                 msgToDiscord1 = msgToDiscord1 + " " + arrText[w] + " " + conosamentPAC + ",";
-                                LOGGER.info("---EditTextsFmEmail----msgToDiscord1-> " + LocalDateTime.now() + "\n" + msgToDiscord1);
+                                LOGGER.info("---EditTextsFmEmailAlta----msgToDiscord1-> " + LocalDateTime.now() + "\n" + msgToDiscord1);
                             }
                         }
                 }
@@ -238,7 +238,7 @@ public class EditTextsFmEmailAlta
             }
         } catch (ArrayIndexOutOfBoundsException ai)
         {
-            LOGGER.error("---EditTextsFmEmail--REGISTERED вылезли из массива-> " + LocalDateTime.now() + "\n" + ai);
+            LOGGER.error("---EditTextsFmEmailAlta--REGISTERED вылезли из массива-> " + LocalDateTime.now() + "\n" + ai);
         }
         return msgToDiscord1;
     }
@@ -352,12 +352,12 @@ public class EditTextsFmEmailAlta
                     role = getRoleFmCompanyNameAlta(companyName); // "@" + companyName + ",";
                 }
                 msgToDiscord1 = role + ", " + numberDT + ", Выпуск,";
-            LOGGER.info("---EditTextsFmEmail--!!!--159-> " + LocalDateTime.now() + "\n" + Arrays.toString(arrText));
+            LOGGER.info("---EditTextsFmEmailAlta--!!!--159-> " + LocalDateTime.now() + "\n" + Arrays.toString(arrText));
 
             if(arrText[j].contains("онтейнер") && a == 1)
                 {
                     msgToDiscord1 = getAllContainersNumbersAlta(arrText);
-                    LOGGER.info("---EditTextsFmEmail--!!!--160-> " + LocalDateTime.now() + "\n" + msgToDiscord1);
+                    LOGGER.info("---EditTextsFmEmailAlta--!!!--160-> " + LocalDateTime.now() + "\n" + msgToDiscord1);
                 } else if(arrText[j].contains("ТС:") && a == 2 && !text.contains("РУСАГРО"))
                 {
                     msgToDiscord1 = msgToDiscord1 + " " + arrText[j-1].replaceAll("/>","") +
@@ -385,7 +385,7 @@ public class EditTextsFmEmailAlta
             }
         } catch (ArrayIndexOutOfBoundsException ai)
         {
-            LOGGER.error("---EditTextsFmEmail-RELEASED вылезли из массива-> " + LocalDateTime.now() + "\n" + ai);
+            LOGGER.error("---EditTextsFmEmailAlta-RELEASED вылезли из массива-> " + LocalDateTime.now() + "\n" + ai);
         }
         return msgToDiscord1;
     }
@@ -555,7 +555,7 @@ public class EditTextsFmEmailAlta
 
     public String getAllContainersNumbersAlta(String[] arrText) // получить текст со всеми номерами контейнеров
     {
-        LOGGER.info("---EditTextsFmEmail-*getAllContainersNumb arrText-> " + LocalDateTime.now() + "\n"
+        LOGGER.info("---EditTextsFmEmailAlta-*getAllContainersNumb arrText-> " + LocalDateTime.now() + "\n"
                 + Arrays.toString(arrText));
         String container = "";
         for (int j = 0; j < arrText.length; j++)
@@ -604,7 +604,7 @@ public class EditTextsFmEmailAlta
     public String getRoleFmCompanyNameAlta(String companyNameFmMail)
     {
         String roleForDiscord = "*" + companyNameFmMail + "*";
-        LOGGER.info("---EditTextsFmEmail--getRoleFmCompanyNam-> " + LocalDateTime.now() + "\n" + roleForDiscord);
+        LOGGER.info("---EditTextsFmEmailAlta--getRoleFmCompanyNam-> " + LocalDateTime.now() + "\n" + roleForDiscord);
 
         if (roleForDiscord.contains("ДЕТСКОЕ") && roleForDiscord.contains("ПИТАНИЕ")) roleForDiscord = "*НУТРИЦИЯ*";
         if (roleForDiscord.contains("КОМПАНИЯ") && roleForDiscord.contains("ПРОДУКТ")
