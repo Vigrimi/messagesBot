@@ -174,31 +174,35 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
 
                                 String textFmTypeMultipart = textGetContentTypeMultipart.parseMultiparted(part);
 
-
-
                                 // проверка, если сообщение из Альты, но не для обработки, то понизить индекс
                                 if(flagAlta == 1)
                                 {
+                                    BCheckDoesItWork bot = new BCheckDoesItWork(textFmTypeMultipart);
+                                    bot.run();
+
                                     System.out.println("---7777:" + textFmTypeMultipart);
-                                    if( (!textFmTypeMultipart.contains("Присвоен номер ДТ")) ||
-                                            (!textFmTypeMultipart.contains("ыпуск товаров разреше")) )
+                                    if( textFmTypeMultipart.contains("Присвоен номер ДТ") ||
+                                            textFmTypeMultipart.contains("ыпуск товаров разреше") )
+                                    {
+                                        arrTextsFmEmail[index] = textFmTypeMultipart;
+                                    } else
                                     {
                                         textFmTypeMultipart = null;
                                         arrTextsFmEmail[index] = textFmTypeMultipart;
                                         System.out.println("---8888:" + arrTextsFmEmail[index]);
                                         index--;
-                                    } else
-                                    {
-                                        arrTextsFmEmail[index] = textFmTypeMultipart;
                                     }
+                                } else
+                                {
+                                    arrTextsFmEmail[index] = textFmTypeMultipart;
                                 }
+
                                 if(index < 0)
                                 LOGGER.info("---WatchEmailRunnable if(TEXTgetContentType.contains(\"multipart\") 222 -> "
                                         + LocalDateTime.now() + "\n" + arrTextsFmEmail[index+1]);
                                 else LOGGER.info("---WatchEmailRunnable if(TEXTgetContentType.contains(\"multipart\") 222 -> "
                                         + LocalDateTime.now() + "\n" + arrTextsFmEmail[index]);
                             }
-
 
                             //Multipart part = (Multipart) (new MimeMessage(session)).getContent();
                             //           Multipart part = (Multipart) message.getContent();

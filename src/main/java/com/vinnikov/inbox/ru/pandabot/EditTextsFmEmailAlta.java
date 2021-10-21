@@ -14,9 +14,9 @@ public class EditTextsFmEmailAlta
 
     public void getResultAlta(String[] arrSubjectFmEmail, String[] arrTextsFmEmail) throws Exception
     {
-        for (int i = 0; i < arrSubjectFmEmail.length; i++)
+        for (int i = 0; i < arrTextsFmEmail.length; i++)
         {
-            if(arrSubjectFmEmail[i] != null)
+            if(arrTextsFmEmail[i] != null)
             {
                 msgToDiscord1 = "";
                 String tema = arrSubjectFmEmail[i];
@@ -180,9 +180,11 @@ public class EditTextsFmEmailAlta
             {
                 // получить номер ДТ
                 String numberDT = "";
+                System.out.println("--regist--arrText[j]:" + arrText[j]);
                 if (arrText[j].startsWith("10"))
                 {
                     numberDT = arrText[j];
+                    msgToDiscord1 = numberDT;
 //                    if (arrTema[3 + i + 1].contains("ТД")) msgToDiscord1 = role + ", " + numberDT
 //                            + ", присвоили ВТТ, <@&785808375782309908>,";
 //                    else
@@ -193,16 +195,17 @@ public class EditTextsFmEmailAlta
                 // слова из названия импортёра
                 if(arrText[j].contains("Декларант"))
                 {
-                    String companyName = arrText[j+2].replaceAll("\"", "");
+                    String companyName = arrText[j+2].replaceAll("\"", "").trim();
                     int errorInCompName = 0;
                     if(companyName.isEmpty()) errorInCompName++;
                     if (!arrText[j+3].contains("Номер")) companyName = companyName + " "
                             + arrText[j+3].replaceAll("\"", "")
                             .replaceAll(" ", "").replaceAll(",", "");
                     if(errorInCompName > 0) companyName = companyName.replaceAll(" ","");
+                    companyName = companyName.trim();
                     role = getRoleFmCompanyNameAlta(companyName); // "@" + companyName + ",";
+                    msgToDiscord1 = role + ", " + msgToDiscord1 + ", ДТ зарегистрирована,";
                 }
-                msgToDiscord1 = role + ", " + numberDT + ", ДТ зарегистрирована,";
 
                 if (arrText[j].contains("онтейнер") && a == 1)
                 {
@@ -319,8 +322,8 @@ public class EditTextsFmEmailAlta
             String conosamentPAC = "";
             String role = "";
             int a = 0;
-            if(text.contains("Контейнеры")) a = 1 ;
-            if(!text.contains("Контейнеры")) a = 2 ;
+            if(text.contains("онтейнер")) a = 1 ;
+            if(!text.contains("онтейнер")) a = 2 ;
 
             // берём нужное из тела письма
             String[] arrText = text.split(" ");
@@ -329,9 +332,12 @@ public class EditTextsFmEmailAlta
             {
                 // получить номер ДТ
                 String numberDT = "";
+                System.out.println("--releas--arrText[j]:" + arrText[j]);
                 if (arrText[j].startsWith("10"))
                 {
                     numberDT = arrText[j];
+                    System.out.println("-----numberDT:" + numberDT);
+                    msgToDiscord1 = numberDT;
 //                    if (arrTema[3 + i + 1].contains("ТД")) msgToDiscord1 = role + ", " + numberDT
 //                            + ", присвоили ВТТ, <@&785808375782309908>,";
 //                    else
@@ -349,10 +355,12 @@ public class EditTextsFmEmailAlta
                             + arrText[j+3].replaceAll("\"", "")
                             .replaceAll(" ", "").replaceAll(",", "");
                     if(errorInCompName > 0) companyName = companyName.replaceAll(" ","");
+                    companyName = companyName.trim();
                     role = getRoleFmCompanyNameAlta(companyName); // "@" + companyName + ",";
+                    msgToDiscord1 = role + ", " + msgToDiscord1 + ", Выпуск,";
                 }
-                msgToDiscord1 = role + ", " + numberDT + ", Выпуск,";
-            LOGGER.info("---EditTextsFmEmailAlta--!!!--159-> " + LocalDateTime.now() + "\n" + Arrays.toString(arrText));
+
+            //LOGGER.info("---EditTextsFmEmailAlta--!!!--159-> " + LocalDateTime.now() + "\n" + Arrays.toString(arrText));
 
             if(arrText[j].contains("онтейнер") && a == 1)
                 {
@@ -387,6 +395,7 @@ public class EditTextsFmEmailAlta
         {
             LOGGER.error("---EditTextsFmEmailAlta-RELEASED вылезли из массива-> " + LocalDateTime.now() + "\n" + ai);
         }
+        LOGGER.info("---EditTextsFmEmailAlta-Released-!!!--msgToDiscord1-> " + LocalDateTime.now() + "\n" + msgToDiscord1);
         return msgToDiscord1;
     }
 
@@ -562,9 +571,7 @@ public class EditTextsFmEmailAlta
         {
             if(arrText[j].contains("онтейнер"))
             {
-                if(arrText[j].contains("/>"))
-                {container = arrText[j].replaceAll("/>","");}
-                else container = arrText[j];
+                container = "Контейнеры:";
                 msgToDiscord1 = msgToDiscord1 + " " + container + " ";
                 for (int k = 0; k < 100; k++)
                 {
@@ -598,6 +605,8 @@ public class EditTextsFmEmailAlta
         }
         msgToDiscord1 = msgToDiscord1.replaceAll("\\(000\\)","");
         msgToDiscord1 = msgToDiscord1.replaceAll("АВТОРЕГИСТРАЦИЯ","");
+        LOGGER.info("---EditTextsFmEmailAlta-*getAllContainersNumb 600 msgToDiscord1-> " + LocalDateTime.now() + "\n"
+                + msgToDiscord1);
         return msgToDiscord1;
     }
 
