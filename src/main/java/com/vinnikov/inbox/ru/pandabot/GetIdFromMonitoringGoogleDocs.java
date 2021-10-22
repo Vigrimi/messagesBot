@@ -121,7 +121,7 @@ public class GetIdFromMonitoringGoogleDocs
                             Robot robott = null;
                             try
                             {
-                                for (int k1 = 0; k1 < 6; k1++)
+                                for (int k1 = 0; k1 < 4; k1++)
                                 {
                                     robott = new Robot();
                                     robott.keyPress(KeyEvent.VK_LEFT);
@@ -245,6 +245,7 @@ public class GetIdFromMonitoringGoogleDocs
                                     int qty = 0;
                                     if (where > 3) qty = where - 3;
                                     else if (where < 3) qty = 3 - where;
+        System.out.println("----if(!yacheyka.startsWith(C) && nameOfGood != null)--qty:" + qty);
                                     Robot robott1 = null;
                                     for (int rr = 0; rr < qty; rr++)
                                     {
@@ -372,6 +373,7 @@ public class GetIdFromMonitoringGoogleDocs
         // формируем товары после айди для текста
         for (String st : nameOfGoodsSet)
         {
+            st = st.replaceAll("\r",", ").replaceAll("\n",", ");
             idFromYacheika1 = idFromYacheika1 + st + ", ";
         }
 
@@ -400,6 +402,10 @@ public class GetIdFromMonitoringGoogleDocs
                         {
                             coordinataYacheyki = j;
                             break;
+                        }
+                        else
+                        {
+                            coordinataYacheyki = i;
                         }
                     }
                 } else

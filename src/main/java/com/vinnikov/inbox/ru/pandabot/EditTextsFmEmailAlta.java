@@ -180,7 +180,7 @@ public class EditTextsFmEmailAlta
             {
                 // получить номер ДТ
                 String numberDT = "";
-                System.out.println("--regist--arrText[j]:" + arrText[j]);
+                //System.out.println("--regist--arrText[j]:" + arrText[j]);
                 if (arrText[j].startsWith("10"))
                 {
                     numberDT = arrText[j];
@@ -234,7 +234,8 @@ public class EditTextsFmEmailAlta
                 {
                     String inspektor = " Инспектор:"+ " " + arrText[j + 1] + " " + arrText[j + 2]
                             + " " + arrText[j + 3] + ", ";
-                    if (inspektor.contains("аможн")) inspektor = " АВТОРЕГИСТРАЦИЯ,";
+                    if (inspektor.contains("аможн") || inspektor.contains("Кругликов Евгений Викторович"))
+                        inspektor = " АВТОРЕГИСТРАЦИЯ,";
 
                     msgToDiscord1 = msgToDiscord1 + " " + inspektor;
                 }
@@ -332,7 +333,7 @@ public class EditTextsFmEmailAlta
             {
                 // получить номер ДТ
                 String numberDT = "";
-                System.out.println("--releas--arrText[j]:" + arrText[j]);
+                //System.out.println("--releas--arrText[j]:" + arrText[j]);
                 if (arrText[j].startsWith("10"))
                 {
                     numberDT = arrText[j];
@@ -386,7 +387,8 @@ public class EditTextsFmEmailAlta
                 {
                     String inspektor = " Инспектор:"+ " " + arrText[j + 1] + " " + arrText[j + 2]
                             + " " + arrText[j + 3] + ", ";
-                    if (inspektor.contains("аможн")) inspektor = " АВТОВЫПУСК,";
+                    if (inspektor.contains("аможн") || inspektor.contains("Кругликов Евгений Викторович"))
+                        inspektor = " АВТОВЫПУСК,";
 
                     msgToDiscord1 = msgToDiscord1 + " " + inspektor;
                 }

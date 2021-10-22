@@ -4,13 +4,10 @@ import javax.activation.CommandMap;
 import javax.activation.MailcapCommandMap;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeUtility;
 import javax.management.RuntimeErrorException;
 import javax.management.RuntimeOperationsException;
 import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -20,15 +17,19 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
 {
     public int countOld;
     private String textFmEmail;
-    public String[] arrSubjectFmEmail;
-    public String[] arrTextsFmEmail;
+    public String[] arrSubjectFmEmailTKS;
+    public String[] arrSubjectFmEmailAlta;
+    public String[] arrTextsFmEmailTKS;
+    public String[] arrTextsFmEmailAlta;
     private FileWriteInOldCountEmails fileWriteInOldCountEmails;
 
     public WatchEmailRunnable(int countOld) {
         this.countOld = countOld;
         textFmEmail = "";
-        arrSubjectFmEmail = new String[300];
-        arrTextsFmEmail = new String[700];
+        arrSubjectFmEmailTKS = new String[300];
+        arrSubjectFmEmailAlta = new String[300];
+        arrTextsFmEmailTKS = new String[700];
+        arrTextsFmEmailAlta = new String[700];
         fileWriteInOldCountEmails = new FileWriteInOldCountEmails (new File("countOld.txt"));
 ///////
         MailcapCommandMap mc = (MailcapCommandMap) CommandMap.getDefaultCommandMap();
@@ -42,7 +43,7 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
     @Override
     public void run()
     {
-        String textFmEmail = "";
+        //String textFmEmail = "";
         LOGGER.info("---поехали WatchEmailRunnable-> " + LocalDateTime.now());
         //Объект properties содержит параметры соединения
         Properties properties = new Properties();
@@ -91,7 +92,8 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
 
                     fileWriteInOldCountEmails.writeToFileString(countNew);
                     int flagAlta = 0;
-                    int index = 0;
+                    int indexTKS = 0;
+                    int indexAlta = 0;
                     //Циклом пробегаемся по всем сообщениям
                     for (Message message : messages)
                     {
@@ -103,7 +105,6 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
 //                        System.out.println(message.getSubject());
 //                        System.out.println(message.getFrom().toString());
 //                        System.out.println(message.getSession());
-
                         if(message.getSubject().contains("ДТ подана. Регистрационный номер заявления о выпуске товаров до подачи"))
                         { // ЗВ, пока не обрабатывается, просто увеличить кол-во присвоенных ДТ
                             CalculateQtyGTDPerMonth.getCalculateQtyGTDPerMonth();
@@ -136,15 +137,14 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                                 message.getSubject().contains("НАЗНАЧИЛИ ИДК") ||
                                 message.getSubject().contains("НАЗНАЧЕН ДОСМОТР") ||
                                 message.getSubject().contains("назначен ДОСМОТР") ||
-                                        // для Альты
-                                        message.getSubject().contains("Уведомление об изменении статуса процедуры ЭД")
-//                                message.getContent().toString().contains("новый статус: \"Присвоен номер ДТ") ||
-//                                message.getContent().toString().contains("Решение по товарам: Выпуск товаров разрешен")
+                                // для Альты
+                                message.getSubject().contains("Уведомление об изменении статуса процедуры ЭД")
                         )
                         {
                             System.out.println("-----ЗАШЁЛ---");
+                            flagAlta = 0;
                             //От кого
-                            String from = ((InternetAddress) message.getFrom()[0]).getAddress();
+                            //String from = ((InternetAddress) message.getFrom()[0]).getAddress();
                             //System.out.println("\nFROM: " + from);
 
                             //Тема письма
@@ -154,10 +154,12 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                                 flagAlta = 1;
                             LOGGER.info("---WatchEmailRunnable TEXTgetSubject-> " + LocalDateTime.now() + "\n"
                                     + TEXTgetSubject);
-                            arrSubjectFmEmail[index] = TEXTgetSubject;
+                            // Альта или ТКС - добавить в свой нужный массив
+                            if(flagAlta == 1) arrSubjectFmEmailAlta[indexAlta] = TEXTgetSubject;
+                            else arrSubjectFmEmailTKS[indexTKS] = TEXTgetSubject;
                             // тело письма
                             String TEXTgetContent = message.getContent().toString();
-                            arrTextsFmEmail[index] = TEXTgetContent;
+                            //arrTextsFmEmailTKS[index] = TEXTgetContent;
                             LOGGER.info("---WatchEmailRunnable TEXTgetContent-> " + LocalDateTime.now() + "\n"
                                     + TEXTgetContent); // да, для панды так как хтмл и показывает, а простой текст нет
 
@@ -184,24 +186,31 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                                     if( textFmTypeMultipart.contains("Присвоен номер ДТ") ||
                                             textFmTypeMultipart.contains("ыпуск товаров разреше") )
                                     {
-                                        arrTextsFmEmail[index] = textFmTypeMultipart;
+                                        arrTextsFmEmailAlta[indexAlta] = textFmTypeMultipart;
                                     } else
                                     {
                                         textFmTypeMultipart = null;
-                                        arrTextsFmEmail[index] = textFmTypeMultipart;
-                                        System.out.println("---8888:" + arrTextsFmEmail[index]);
-                                        index--;
+                                        arrTextsFmEmailAlta[indexAlta] = textFmTypeMultipart;
+                                        System.out.println("---8888:" + arrTextsFmEmailAlta[indexAlta]);
+                                        indexAlta--;
                                     }
-                                } else
-                                {
-                                    arrTextsFmEmail[index] = textFmTypeMultipart;
+                                } else // если ткс в теме: "ЭД:  10"
+                                { // arrSubjectFmEmail[index] = TEXTgetSubject;
+                                    if (TEXTgetSubject.contains("ЭД:  10"))
+                                    {
+                                        arrSubjectFmEmailTKS[indexTKS] = null;
+                                        arrTextsFmEmailTKS[indexTKS] = null;
+                                        System.out.println("---9999:" + arrTextsFmEmailTKS[indexTKS]);
+                                        indexTKS--;
+                                    } else
+                                    arrTextsFmEmailTKS[indexTKS] = textFmTypeMultipart;
                                 }
 
-                                if(index < 0)
+                                if(indexAlta < 0)
                                 LOGGER.info("---WatchEmailRunnable if(TEXTgetContentType.contains(\"multipart\") 222 -> "
-                                        + LocalDateTime.now() + "\n" + arrTextsFmEmail[index+1]);
+                                        + LocalDateTime.now() + "\n" + arrTextsFmEmailAlta[indexAlta+1]);
                                 else LOGGER.info("---WatchEmailRunnable if(TEXTgetContentType.contains(\"multipart\") 222 -> "
-                                        + LocalDateTime.now() + "\n" + arrTextsFmEmail[index]);
+                                        + LocalDateTime.now() + "\n" + arrTextsFmEmailAlta[indexAlta]);
                             }
 
                             //Multipart part = (Multipart) (new MimeMessage(session)).getContent();
@@ -261,24 +270,30 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
 
                     // *************************************   */
                             LOGGER.info("---приехали1 WatchEmailRunnable-> " + LocalDateTime.now());
-                            index++;
-                            System.out.println("---------------index:" + index);
+                            if(flagAlta == 0) indexTKS++;
+                            else if(flagAlta == 1) indexAlta++;
+                            System.out.println(indexTKS + "-indexTKS--------------indexAlta:" + indexAlta);
                         }
                     }
 // !!!!!!!!!!!!!! тут по идее можно закрыть сторе и инбокс
                     LOGGER.info("---WatchEmailRunnable 154WER-> " + LocalDateTime.now() + "\n"
-                            + Arrays.toString(arrSubjectFmEmail));
+                            + Arrays.toString(arrSubjectFmEmailTKS));
                     LOGGER.info("---WatchEmailRunnable 155WER-> " + LocalDateTime.now() + "\n"
-                            + Arrays.toString(arrTextsFmEmail));
+                            + Arrays.toString(arrTextsFmEmailTKS));
+                    LOGGER.info("---WatchEmailRunnable 954WER-> " + LocalDateTime.now() + "\n"
+                            + Arrays.toString(arrSubjectFmEmailAlta));
+                    LOGGER.info("---WatchEmailRunnable 955WER-> " + LocalDateTime.now() + "\n"
+                            + Arrays.toString(arrTextsFmEmailAlta));
                     // если мэйл из ТКС или Альты
-                    if(flagAlta == 1) // мэйл из Альты
-                    {
-                        EditTextsFmEmailAlta editTextsFmEmailAlta = new EditTextsFmEmailAlta();
-                        editTextsFmEmailAlta.getResultAlta(arrSubjectFmEmail,arrTextsFmEmail);
-                    } else // мэйл из ТКС
+                    if(arrTextsFmEmailTKS[0] != null) // мэйл из ТКС
                     {
                         EditTextsFmEmail editTextsFmEmail = new EditTextsFmEmail();
-                        editTextsFmEmail.getResult(arrSubjectFmEmail,arrTextsFmEmail);
+                        editTextsFmEmail.getResult(arrSubjectFmEmailTKS, arrTextsFmEmailTKS);
+                    }
+                    if(arrTextsFmEmailAlta[0] != null) // мэйл из Альты
+                    {
+                        EditTextsFmEmailAlta editTextsFmEmailAlta = new EditTextsFmEmailAlta();
+                        editTextsFmEmailAlta.getResultAlta(arrSubjectFmEmailAlta, arrTextsFmEmailAlta);
                     }
                 }
             } catch (InterruptedException | ClassCastException e) {
