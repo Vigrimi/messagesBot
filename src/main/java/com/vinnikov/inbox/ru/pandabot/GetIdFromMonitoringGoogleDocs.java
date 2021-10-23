@@ -49,7 +49,7 @@ public class GetIdFromMonitoringGoogleDocs
         // перебираем мониторинг, вдруг есть одинаковые записи по контейнеру или фуре
         for (int i = 0; i < words.length; i++)
         {
-            if (words[i].contains("онтейнеры") || (words[i].contains("Номер") && words[i+1].contains("ТС")) )
+            if (words[i].contains("онтейнер") || (words[i].contains("Номер") && words[i+1].contains("ТС")) )
             {
                 //System.out.println("99999999000 " + words[i]);
                 for (int j = 1; j < words.length; j++)
@@ -68,6 +68,7 @@ public class GetIdFromMonitoringGoogleDocs
                     LOGGER.info("---getIdFromMonitoring 64-> " + LocalDateTime.now() + "\n" + words[a]);
                     //System.out.println("99999999444 " + contNumber + " ** " + contNumber.length());
                     if(msgToDiscord1.contains("онтейнеры") && contNumber.length() != 11) break;
+                    if(words[a].equalsIgnoreCase(" ") || words[a].isEmpty()) break;
                     if(words[a].contains("нспектор") || words[a].contains("АВТОРЕГИСТРАЦ")
                             || words[a].contains("АВТОВЫПУС") ) break;
                     else
@@ -116,12 +117,13 @@ public class GetIdFromMonitoringGoogleDocs
                         Thread.sleep(500);  // Let the user actually see something!
 
                         nameOfGood = null;
+                        int goLeft = 4;
                         while (flag) // NoSuchSessionException ???
                         { // получаем айди и название товара
                             Robot robott = null;
                             try
                             {
-                                for (int k1 = 0; k1 < 4; k1++)
+                                for (int k1 = 0; k1 < goLeft; k1++)
                                 {
                                     robott = new Robot();
                                     robott.keyPress(KeyEvent.VK_LEFT);
@@ -163,6 +165,7 @@ public class GetIdFromMonitoringGoogleDocs
                                 WebElement strokaFormulMonitor = driverMonitoring
                                         .findElement(By.xpath("//*[@id=\"t-formula-bar-input\"]/div"));
                                 nameOfGood = strokaFormulMonitor.getText();
+                                goLeft = 6;
                             } else if (!yacheyka.startsWith("I") && nameOfGood == null) // если не попали в I и
                                 // название товара ещё не взяли
                             {
@@ -235,6 +238,7 @@ public class GetIdFromMonitoringGoogleDocs
                                         WebElement strokaFormulMonitor = driverMonitoring
                                                 .findElement(By.xpath("//*[@id=\"t-formula-bar-input\"]/div"));
                                         nameOfGood = strokaFormulMonitor.getText();
+                                        goLeft = 6;
                                     }
                                 }
                             } else if(!yacheyka.startsWith("C") && nameOfGood != null)

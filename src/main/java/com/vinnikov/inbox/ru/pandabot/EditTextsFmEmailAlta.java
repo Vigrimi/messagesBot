@@ -234,8 +234,9 @@ public class EditTextsFmEmailAlta
                 {
                     String inspektor = " Инспектор:"+ " " + arrText[j + 1] + " " + arrText[j + 2]
                             + " " + arrText[j + 3] + ", ";
-                    if (inspektor.contains("аможн") || inspektor.contains("Кругликов Евгений Викторович"))
-                        inspektor = " АВТОРЕГИСТРАЦИЯ,";
+                    if (inspektor.contains("аможн") || inspektor.contains("АМОЖН")
+                            || inspektor.contains("Кругликов Евгений Викторович"))
+                        inspektor = "АВТОРЕГИСТРАЦИЯ,";
 
                     msgToDiscord1 = msgToDiscord1 + " " + inspektor;
                 }
@@ -363,21 +364,23 @@ public class EditTextsFmEmailAlta
 
             //LOGGER.info("---EditTextsFmEmailAlta--!!!--159-> " + LocalDateTime.now() + "\n" + Arrays.toString(arrText));
 
-            if(arrText[j].contains("онтейнер") && a == 1)
+                if (arrText[j].contains("онтейнер") && a == 1)
                 {
                     msgToDiscord1 = getAllContainersNumbersAlta(arrText);
                     LOGGER.info("---EditTextsFmEmailAlta--!!!--160-> " + LocalDateTime.now() + "\n" + msgToDiscord1);
-                } else if(arrText[j].contains("ТС:") && a == 2 && !text.contains("РУСАГРО"))
+                } else
+                    if (arrText[j].contains("ТС:") && a == 2 && !text.contains("РУСАГРО"))
                 {
-                    msgToDiscord1 = msgToDiscord1 + " " + arrText[j-1].replaceAll("/>","") +
-                            " " + arrText[j] + " " + arrText[j+1].replaceAll("<br","") + ", ";
-                } else if(arrText[j].contains("ТС:") && a == 2 && text.contains("РУСАГРО"))
+                    msgToDiscord1 = msgToDiscord1 + " " + arrText[j - 1].replaceAll("/>", "") +
+                            " " + arrText[j] + " " + arrText[j + 1].replaceAll("<br", "") + ",";
+                } else
+                    if (arrText[j].contains("ТС:") && a == 2 && text.contains("РУСАГРО"))
                 {
                     for (int w = 0; w < arrText.length; w++)
                     {
-                        if( (arrText[w].contains("ТН:")) || (arrText[w].contains("TH:")) ) // сначала на рус + на англ
+                        if ((arrText[w].contains("ТН:")) || (arrText[w].contains("TH:"))) // сначала на рус + на англ
                         {
-                            conosamentPAC = arrText[w+1];
+                            conosamentPAC = arrText[w + 1];
                             msgToDiscord1 = msgToDiscord1 + arrText[w] + " " + conosamentPAC + ",";
                         }
                     }
@@ -387,7 +390,8 @@ public class EditTextsFmEmailAlta
                 {
                     String inspektor = " Инспектор:"+ " " + arrText[j + 1] + " " + arrText[j + 2]
                             + " " + arrText[j + 3] + ", ";
-                    if (inspektor.contains("аможн") || inspektor.contains("Кругликов Евгений Викторович"))
+                    if (inspektor.contains("аможн") || inspektor.contains("АМОЖН")
+                            || inspektor.contains("Кругликов Евгений Викторович"))
                         inspektor = " АВТОВЫПУСК,";
 
                     msgToDiscord1 = msgToDiscord1 + " " + inspektor;
