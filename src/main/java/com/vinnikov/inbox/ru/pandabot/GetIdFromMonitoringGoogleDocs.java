@@ -17,6 +17,7 @@ public class GetIdFromMonitoringGoogleDocs
 
     public static String getIdFromMonitoringGoogleDocs(String msgToDiscord1) throws InterruptedException
     {
+        LOGGER.info("---getIdFromMonitoring 20-> " + LocalDateTime.now() + "\n" + msgToDiscord1);
         String idFromYacheika = "";
         String idFromYacheika1 = "";
         String findBar1of1String = "";

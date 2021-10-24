@@ -86,6 +86,7 @@ public class EditTextsFmEmailAlta
                         msgToDiscord1 = idNumbersFmMonitoring + msgToDiscord1;
                     } else
                     {
+                        System.out.println("---------------4444msgToDiscord1:" + msgToDiscord1);
                         String idNumbersFmMonitoring = GetIdFromMonitoringGoogleDocs
                                 .getIdFromMonitoringGoogleDocs(msgToDiscord1);
                         msgToDiscord1 = idNumbersFmMonitoring + msgToDiscord1;
@@ -183,13 +184,12 @@ public class EditTextsFmEmailAlta
                 //System.out.println("--regist--arrText[j]:" + arrText[j]);
                 if (arrText[j].startsWith("10"))
                 {
-                    numberDT = arrText[j];
-                    msgToDiscord1 = numberDT;
-//                    if (arrTema[3 + i + 1].contains("ТД")) msgToDiscord1 = role + ", " + numberDT
-//                            + ", присвоили ВТТ, <@&785808375782309908>,";
-//                    else
-//                        msgToDiscord1 = role + ", " + numberDT + ", " + arrTema[3 + i + 1] + " " + arrTema[3 + i + 2] + ",";
-//                    break;
+                    if(arrText[j].contains("10:")) System.out.println("========ой, это время 10 часов");
+                    else
+                    {
+                        numberDT = arrText[j];
+                        msgToDiscord1 = numberDT;
+                    }
                 }
 
                 // слова из названия импортёра
@@ -206,15 +206,17 @@ public class EditTextsFmEmailAlta
                     role = getRoleFmCompanyNameAlta(companyName); // "@" + companyName + ",";
                     msgToDiscord1 = role + ", " + msgToDiscord1 + ", ДТ зарегистрирована,";
                 }
+                //System.out.println("--------aaa--msgToDiscord1:" + msgToDiscord1);
 
                 if (arrText[j].contains("онтейнер") && a == 1)
                 {
                     msgToDiscord1 = getAllContainersNumbersAlta(arrText);
+                    //System.out.println("--------bbb--msgToDiscord1:" + msgToDiscord1);
                 } else
                     if (arrText[j].contains("ТС:") && a == 2 && !text.contains("РУСАГРО"))
                     {
-                        msgToDiscord1 = msgToDiscord1 + " " + arrText[j - 1].replaceAll("/>", "") +
-                                " " + arrText[j] + " " + arrText[j + 1].replaceAll("<br", "") + ",";
+                    msgToDiscord1 = msgToDiscord1 + " " + arrText[j - 1].replaceAll("/>", "") +
+                            " " + arrText[j] + " " + arrText[j + 1].replaceAll("<br", "") + ",";
                     } else
                         if (arrText[j].contains("ТС:") && a == 2 && text.contains("РУСАГРО"))
                         {
@@ -223,13 +225,13 @@ public class EditTextsFmEmailAlta
                         {
                             if ((arrText[w].contains("ТН:")) || (arrText[w].contains("TH:"))) // сначала на рус + на англ
                             {
-                                conosamentPAC = arrText[w + 1];
-                                msgToDiscord1 = msgToDiscord1 + " " + arrText[w] + " " + conosamentPAC + ",";
-                                LOGGER.info("---EditTextsFmEmailAlta----msgToDiscord1-> " + LocalDateTime.now() + "\n" + msgToDiscord1);
+                            conosamentPAC = arrText[w + 1];
+                            msgToDiscord1 = msgToDiscord1 + " " + arrText[w] + " " + conosamentPAC + ",";
+                            LOGGER.info("---EditTextsFmEmailAlta----msgToDiscord1-> " + LocalDateTime.now() + "\n" + msgToDiscord1);
                             }
                         }
-                }
-
+                        }
+                //System.out.println("--------ccc--msgToDiscord1:" + msgToDiscord1);
                 if (arrText[j].contains("нспектор"))
                 {
                     String inspektor = " Инспектор:"+ " " + arrText[j + 1] + " " + arrText[j + 2]
@@ -238,13 +240,17 @@ public class EditTextsFmEmailAlta
                             || inspektor.contains("Кругликов Евгений Викторович"))
                         inspektor = "АВТОРЕГИСТРАЦИЯ,";
 
-                    msgToDiscord1 = msgToDiscord1 + " " + inspektor;
+                    msgToDiscord1 = msgToDiscord1 + inspektor;
+                    //System.out.println("--------ddd--msgToDiscord1:" + msgToDiscord1);
+                    break;
                 }
+                //System.out.println("--------eee--msgToDiscord1:" + msgToDiscord1);
             }
         } catch (ArrayIndexOutOfBoundsException ai)
         {
             LOGGER.error("---EditTextsFmEmailAlta--REGISTERED вылезли из массива-> " + LocalDateTime.now() + "\n" + ai);
         }
+        LOGGER.info("---EditTextsFmEmailAlta--REGISTERED msgToDiscord1-> " + LocalDateTime.now() + "\n" + msgToDiscord1);
         return msgToDiscord1;
     }
 
@@ -337,14 +343,12 @@ public class EditTextsFmEmailAlta
                 //System.out.println("--releas--arrText[j]:" + arrText[j]);
                 if (arrText[j].startsWith("10"))
                 {
-                    numberDT = arrText[j];
-                    System.out.println("-----numberDT:" + numberDT);
-                    msgToDiscord1 = numberDT;
-//                    if (arrTema[3 + i + 1].contains("ТД")) msgToDiscord1 = role + ", " + numberDT
-//                            + ", присвоили ВТТ, <@&785808375782309908>,";
-//                    else
-//                        msgToDiscord1 = role + ", " + numberDT + ", " + arrTema[3 + i + 1] + " " + arrTema[3 + i + 2] + ",";
-//                    break;
+                    if(arrText[j].contains("10:")) System.out.println("========ой, это время 10 часов");
+                    else
+                    {
+                        numberDT = arrText[j];
+                        msgToDiscord1 = numberDT;
+                    }
                 }
 
                 // слова из названия импортёра
@@ -392,9 +396,10 @@ public class EditTextsFmEmailAlta
                             + " " + arrText[j + 3] + ", ";
                     if (inspektor.contains("аможн") || inspektor.contains("АМОЖН")
                             || inspektor.contains("Кругликов Евгений Викторович"))
-                        inspektor = " АВТОВЫПУСК,";
+                        inspektor = "АВТОВЫПУСК,";
 
                     msgToDiscord1 = msgToDiscord1 + " " + inspektor;
+                    break;
                 }
             }
         } catch (ArrayIndexOutOfBoundsException ai)
@@ -577,8 +582,8 @@ public class EditTextsFmEmailAlta
         {
             if(arrText[j].contains("онтейнер"))
             {
-                container = "Контейнеры:";
-                msgToDiscord1 = msgToDiscord1 + " " + container + " ";
+                container = "Контейнеры: ";
+                msgToDiscord1 = msgToDiscord1 + " " + container;
                 for (int k = 0; k < 100; k++)
                 {
                     String containerNumber = arrText[j+1+k].replaceAll(" ","")

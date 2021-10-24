@@ -142,6 +142,7 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                         )
                         {
                             System.out.println("-----ЗАШЁЛ---");
+                            String textFmTypeMultipart = "";
                             flagAlta = 0;
                             //От кого
                             //String from = ((InternetAddress) message.getFrom()[0]).getAddress();
@@ -174,44 +175,48 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                                 TextGetContentTypeMultipart textGetContentTypeMultipart = new TextGetContentTypeMultipart();
                                 Multipart part = (Multipart) message.getContent();
 
-                                String textFmTypeMultipart = textGetContentTypeMultipart.parseMultiparted(part);
-
-                                // проверка, если сообщение из Альты, но не для обработки, то понизить индекс
-                                if(flagAlta == 1)
-                                {
-                                    BCheckDoesItWork bot = new BCheckDoesItWork(textFmTypeMultipart);
-                                    bot.run();
-
-                                    System.out.println("---7777:" + textFmTypeMultipart);
-                                    if( textFmTypeMultipart.contains("Присвоен номер ДТ") ||
-                                            textFmTypeMultipart.contains("ыпуск товаров разреше") )
-                                    {
-                                        arrTextsFmEmailAlta[indexAlta] = textFmTypeMultipart;
-                                    } else
-                                    {
-                                        textFmTypeMultipart = null;
-                                        arrTextsFmEmailAlta[indexAlta] = textFmTypeMultipart;
-                                        System.out.println("---8888:" + arrTextsFmEmailAlta[indexAlta]);
-                                        indexAlta--;
-                                    }
-                                } else // если ткс в теме: "ЭД:  10"
-                                { // arrSubjectFmEmail[index] = TEXTgetSubject;
-                                    if (TEXTgetSubject.contains("ЭД:  10"))
-                                    {
-                                        arrSubjectFmEmailTKS[indexTKS] = null;
-                                        arrTextsFmEmailTKS[indexTKS] = null;
-                                        System.out.println("---9999:" + arrTextsFmEmailTKS[indexTKS]);
-                                        indexTKS--;
-                                    } else
-                                    arrTextsFmEmailTKS[indexTKS] = textFmTypeMultipart;
-                                }
-
-                                if(indexAlta < 0)
-                                LOGGER.info("---WatchEmailRunnable if(TEXTgetContentType.contains(\"multipart\") 222 -> "
-                                        + LocalDateTime.now() + "\n" + arrTextsFmEmailAlta[indexAlta+1]);
-                                else LOGGER.info("---WatchEmailRunnable if(TEXTgetContentType.contains(\"multipart\") 222 -> "
-                                        + LocalDateTime.now() + "\n" + arrTextsFmEmailAlta[indexAlta]);
+                                textFmTypeMultipart = textGetContentTypeMultipart.parseMultiparted(part);
+                            } else // TEXTgetContent
+                            {
+                                textFmTypeMultipart = TEXTgetContent.replaceAll("\r"," ")
+                                        .replaceAll("\n"," ");
                             }
+                            // проверка, если сообщение из Альты, но не для обработки, то понизить индекс
+                            if (flagAlta == 1)
+                            {
+                                BCheckDoesItWork bot = new BCheckDoesItWork(textFmTypeMultipart);
+                                bot.run();
+
+                                System.out.println("---7777:" + textFmTypeMultipart);
+                                if (textFmTypeMultipart.contains("Присвоен номер ДТ") ||
+                                        textFmTypeMultipart.contains("ыпуск товаров разреше"))
+                                {
+                                    arrTextsFmEmailAlta[indexAlta] = textFmTypeMultipart;
+                                } else
+                                {
+                                    textFmTypeMultipart = null;
+                                    arrTextsFmEmailAlta[indexAlta] = textFmTypeMultipart;
+                                    System.out.println("---8888:" + arrTextsFmEmailAlta[indexAlta]);
+                                    indexAlta--;
+                                }
+                            } else // если ткс в теме: "ЭД:  10"
+                            { // arrSubjectFmEmail[index] = TEXTgetSubject;
+                                if (TEXTgetSubject.contains("ЭД:  10"))
+                                {
+                                    arrSubjectFmEmailTKS[indexTKS] = null;
+                                    arrTextsFmEmailTKS[indexTKS] = null;
+                                    System.out.println("---9999:" + arrTextsFmEmailTKS[indexTKS]);
+                                    indexTKS--;
+                                } else
+                                    arrTextsFmEmailTKS[indexTKS] = textFmTypeMultipart;
+                            }
+
+                            if (indexAlta < 0)
+                                LOGGER.info("---WatchEmailRunnable if(TEXTgetContentType.contains(\"multipart\") 222 -> "
+                                        + LocalDateTime.now() + "\n" + arrTextsFmEmailAlta[indexAlta + 1]);
+                            else
+                                LOGGER.info("---WatchEmailRunnable if(TEXTgetContentType.contains(\"multipart\") 222 -> "
+                                        + LocalDateTime.now() + "\n" + arrTextsFmEmailAlta[indexAlta]);
 
                             //Multipart part = (Multipart) (new MimeMessage(session)).getContent();
                             //           Multipart part = (Multipart) message.getContent();
@@ -316,7 +321,7 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                 }
             }
         } catch (MessagingException /*| IOException*/ e) {
-            fileWriteInOldCountEmails.writeToFileString(countOld);
+            //fileWriteInOldCountEmails.writeToFileString(countOld);
             LOGGER.error("---WatchEmailRunnable 247 catch-> " + LocalDateTime.now() + "\n" + e);
         } catch (ClassCastException cse) {
             LOGGER.error("---WatchEmailRunnable 249 catch-> " + LocalDateTime.now() + "\n" + cse);
