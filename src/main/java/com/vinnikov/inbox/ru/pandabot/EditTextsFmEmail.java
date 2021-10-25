@@ -95,6 +95,8 @@ public class EditTextsFmEmail
                 {msgToDiscord1 = getMessageReleased(tema,text);}
                 else if(tema.contains("Выпуск при условии обеспечения уплаты таможенных платежей. Решение по товарам") )
                 {msgToDiscord1 = getMessageUslovnoReleased(tema,text);}
+                else if(tema.contains("Рекомендовано уплатить  ввозные таможенные пошлины, налоги") )
+                {msgToDiscord1 = getMessageReleased(tema,text);}
 
                 arrSubjectFmEmail[i] = null;
                 arrTextsFmEmail[i] = null;
@@ -383,6 +385,9 @@ public class EditTextsFmEmail
                         + ", Выпуск ВТТ, <@&785808375782309908>,";
                     else if(tema.contains("Отказано в выпуске товаров. Решение по товарам ДТ"))
                         msgToDiscord1 = role + ", " + numberDT + ", Отказано в выпуске ДТ,";
+                    else if(tema.contains("Рекомендовано уплатить  ввозные таможенные пошлины, налоги"))
+                        msgToDiscord1 = role + ", " + numberDT
+                                + ", Рекомендовано уплатить ввозные таможенные пошлины, налоги,";
                     else if(tema.contains("Подтверждение о прибытии. Подтверждение о прибытии")) msgToDiscord1 = role + ", "
                         + numberDT + ", ВТТ в пункте назначения,";
                     else if(tema.contains("Транзит завершен. Завершение таможенного транзит")) msgToDiscord1 = role + ", "

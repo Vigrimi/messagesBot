@@ -218,7 +218,7 @@ public class EditTextsFmEmailAlta
                     if (arrText[j].contains("ТС:") && a == 2 && !text.contains("РУСАГРО"))
                     {
                     msgToDiscord1 = msgToDiscord1 + " " + arrText[j - 1].replaceAll("/>", "") +
-                            " " + arrText[j] + " " + arrText[j + 1].replaceAll("<br", "") + ",";
+                            " " + arrText[j] + " " + arrText[j + 1].replaceAll("<br", "") + ", ";
                     } else
                         if (arrText[j].contains("ТС:") && a == 2 && text.contains("РУСАГРО"))
                         {
