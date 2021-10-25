@@ -187,9 +187,11 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                                 BCheckDoesItWork bot = new BCheckDoesItWork(textFmTypeMultipart);
                                 bot.run();
 
+                                // !!!!!!! что надо обрабатывать из Альты
                                 System.out.println("---7777:" + textFmTypeMultipart);
                                 if (textFmTypeMultipart.contains("Присвоен номер ДТ") ||
-                                        textFmTypeMultipart.contains("ыпуск товаров разреше"))
+                                        textFmTypeMultipart.contains("ыпуск товаров разреше") ||
+                                        textFmTypeMultipart.contains("Доп. проверка по классификации")  )
                                 {
                                     arrTextsFmEmailAlta[indexAlta] = textFmTypeMultipart;
                                 } else
@@ -201,7 +203,7 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                                 }
                             } else // если ткс в теме: "ЭД:  10"
                             { // arrSubjectFmEmail[index] = TEXTgetSubject;
-                                if (TEXTgetSubject.contains("ЭД:  10"))
+                                if (TEXTgetSubject.contains("ЭД:  10")) // такое игнорить
                                 {
                                     arrSubjectFmEmailTKS[indexTKS] = null;
                                     arrTextsFmEmailTKS[indexTKS] = null;

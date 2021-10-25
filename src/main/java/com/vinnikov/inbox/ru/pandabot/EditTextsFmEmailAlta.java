@@ -204,7 +204,9 @@ public class EditTextsFmEmailAlta
                     if(errorInCompName > 0) companyName = companyName.replaceAll(" ","");
                     companyName = companyName.trim();
                     role = getRoleFmCompanyNameAlta(companyName); // "@" + companyName + ",";
-                    msgToDiscord1 = role + ", " + msgToDiscord1 + ", ДТ зарегистрирована,";
+                    if(text.contains("Доп. проверка по классификации"))
+                        msgToDiscord1 = role + ", " + msgToDiscord1 + ", Доп. проверка по классификации,";
+                    else msgToDiscord1 = role + ", " + msgToDiscord1 + ", ДТ зарегистрирована,";
                 }
                 //System.out.println("--------aaa--msgToDiscord1:" + msgToDiscord1);
 
@@ -392,7 +394,7 @@ public class EditTextsFmEmailAlta
 
                 if(arrText[j].contains("нспектор"))
                 {
-                    String inspektor = " Инспектор:"+ " " + arrText[j + 1] + " " + arrText[j + 2]
+                    String inspektor = "Инспектор:"+ " " + arrText[j + 1] + " " + arrText[j + 2]
                             + " " + arrText[j + 3] + ", ";
                     if (inspektor.contains("аможн") || inspektor.contains("АМОЖН")
                             || inspektor.contains("Кругликов Евгений Викторович"))
