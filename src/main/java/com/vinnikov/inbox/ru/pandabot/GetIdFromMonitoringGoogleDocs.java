@@ -69,7 +69,7 @@ public class GetIdFromMonitoringGoogleDocs
                     LOGGER.info("---getIdFromMonitoring 64-> " + LocalDateTime.now() + "\n" + words[a]);
                     //System.out.println("99999999444 " + contNumber + " ** " + contNumber.length());
                     if(msgToDiscord1.contains("онтейнеры") && contNumber.length() != 11) break;
-                    if(words[a].equalsIgnoreCase(" ") || words[a].isEmpty()) break;
+                    if(words[a].equalsIgnoreCase(" ") || words[a].isEmpty() || words[a].isBlank()) break;
                     if(words[a].contains("нспектор") || words[a].contains("АВТОРЕГИСТРАЦ")
                             || words[a].contains("АВТОВЫПУС") ) break;
                     else

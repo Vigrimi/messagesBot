@@ -240,7 +240,7 @@ public class EditTextsFmEmailAlta
                             + " " + arrText[j + 3] + ", ";
                     if (inspektor.contains("аможн") || inspektor.contains("АМОЖН")
                             || inspektor.contains("Кругликов Евгений Викторович"))
-                        inspektor = "АВТОРЕГИСТРАЦИЯ,";
+                        inspektor = " АВТОРЕГИСТРАЦИЯ,";
 
                     msgToDiscord1 = msgToDiscord1 + inspektor;
                     //System.out.println("--------ddd--msgToDiscord1:" + msgToDiscord1);
@@ -584,7 +584,7 @@ public class EditTextsFmEmailAlta
         {
             if(arrText[j].contains("онтейнер"))
             {
-                container = "Контейнеры: ";
+                container = "Контейнеры:";
                 msgToDiscord1 = msgToDiscord1 + " " + container;
                 for (int k = 0; k < 100; k++)
                 {
@@ -592,7 +592,7 @@ public class EditTextsFmEmailAlta
                             .replaceAll(",","");
                     if(containerNumber.length() == 11)
                     {
-                        msgToDiscord1 = msgToDiscord1 + containerNumber + ", ";
+                        msgToDiscord1 = msgToDiscord1 + " " + containerNumber + ",";
                     } else //if(containerNumber.length() != 11)
                     {
                         break;

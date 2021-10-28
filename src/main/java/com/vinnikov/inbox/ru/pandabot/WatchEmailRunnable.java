@@ -22,6 +22,7 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
     public String[] arrTextsFmEmailTKS;
     public String[] arrTextsFmEmailAlta;
     private FileWriteInOldCountEmails fileWriteInOldCountEmails;
+    private int flagAlta;
 
     public WatchEmailRunnable(int countOld) {
         this.countOld = countOld;
@@ -91,7 +92,7 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                     Message[] messages = inbox.getMessages(countOld+1, countNew);
 
                     fileWriteInOldCountEmails.writeToFileString(countNew);
-                    int flagAlta = 0;
+                    flagAlta = 0;
                     int indexTKS = 0;
                     int indexAlta = 0;
                     //Циклом пробегаемся по всем сообщениям
@@ -137,8 +138,13 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                                 message.getSubject().contains("НАЗНАЧИЛИ ИДК") ||
                                 message.getSubject().contains("НАЗНАЧЕН ДОСМОТР") ||
                                 message.getSubject().contains("назначен ДОСМОТР") ||
-                                // для Альты
-                                message.getSubject().contains("Уведомление об изменении статуса процедуры ЭД")
+                                message.getSubject().contains("Рекомендовано уплатить  ввозные таможенные пошлины, налоги") ||
+                                // для Альты svd-alta
+                                // message.getSubject().contains("Уведомление об изменении статуса процедуры ЭД") ||
+                                // для Альты (ГТД-Сервер)  Выпуск разрешен
+                                message.getSubject().contains("Присвоен номер") ||
+                                message.getSubject().contains("Отказано в выпуске") ||
+                                message.getSubject().contains("Выпуск разрешен") // + добавить ниже во флаг
                         )
                         {
                             System.out.println("-----ЗАШЁЛ---");
@@ -150,14 +156,17 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
 
                             //Тема письма
                             String TEXTgetSubject = message.getSubject();
-                            // проверка - если сообщение от альты, то флагАльта = 1
+                            // проверка - если сообщение от svd-альты, то флагАльта = 1; если альта-гтд-сервер = 2
                             if (TEXTgetSubject.contains("Уведомление об изменении статуса процедуры ЭД"))
                                 flagAlta = 1;
+                            if (TEXTgetSubject.contains("Присвоен номер") || TEXTgetSubject.contains("Отказано в выпуске")
+                            || TEXTgetSubject.contains("Выпуск разрешен") )
+                                flagAlta = 2;
                             LOGGER.info("---WatchEmailRunnable TEXTgetSubject-> " + LocalDateTime.now() + "\n"
                                     + TEXTgetSubject);
                             // Альта или ТКС - добавить в свой нужный массив
-                            if(flagAlta == 1) arrSubjectFmEmailAlta[indexAlta] = TEXTgetSubject;
-                            else arrSubjectFmEmailTKS[indexTKS] = TEXTgetSubject;
+                            if(flagAlta == 0) arrSubjectFmEmailTKS[indexTKS] = TEXTgetSubject;
+                            else arrSubjectFmEmailAlta[indexAlta] = TEXTgetSubject;
                             // тело письма
                             String TEXTgetContent = message.getContent().toString();
                             //arrTextsFmEmailTKS[index] = TEXTgetContent;
@@ -182,7 +191,7 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                                         .replaceAll("\n"," ");
                             }
                             // проверка, если сообщение из Альты, но не для обработки, то понизить индекс
-                            if (flagAlta == 1)
+                            if (flagAlta == 1) // svd-alta
                             {
                                 BCheckDoesItWork bot = new BCheckDoesItWork(textFmTypeMultipart);
                                 bot.run();
@@ -201,6 +210,15 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                                     System.out.println("---8888:" + arrTextsFmEmailAlta[indexAlta]);
                                     indexAlta--;
                                 }
+                            } else
+                            if (flagAlta == 2) // alta гтд сервер
+                            {
+                                BCheckDoesItWork bot = new BCheckDoesItWork(textFmTypeMultipart);
+                                bot.run();
+                                // !!!!!!! что надо обрабатывать из Альты
+                                System.out.println("---7777:" + textFmTypeMultipart);
+                                arrTextsFmEmailAlta[indexAlta] = textFmTypeMultipart;
+                                System.out.println("---8888:" + arrTextsFmEmailAlta[indexAlta]);
                             } else // если ткс в теме: "ЭД:  10"
                             { // arrSubjectFmEmail[index] = TEXTgetSubject;
                                 if (TEXTgetSubject.contains("ЭД:  10")) // такое игнорить
@@ -278,7 +296,7 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                     // *************************************   */
                             LOGGER.info("---приехали1 WatchEmailRunnable-> " + LocalDateTime.now());
                             if(flagAlta == 0) indexTKS++;
-                            else if(flagAlta == 1) indexAlta++;
+                            else /*if(flagAlta > 0)*/ indexAlta++;
                             System.out.println(indexTKS + "-indexTKS--------------indexAlta:" + indexAlta);
                         }
                     }
@@ -291,19 +309,24 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                             + Arrays.toString(arrSubjectFmEmailAlta));
                     LOGGER.info("---WatchEmailRunnable 955WER-> " + LocalDateTime.now() + "\n"
                             + Arrays.toString(arrTextsFmEmailAlta));
-                    // если мэйл из ТКС или Альты
+                    /*// если мэйл из ТКС или Альты
                     if(arrTextsFmEmailTKS[0] != null) // мэйл из ТКС
                     {
                         EditTextsFmEmail editTextsFmEmail = new EditTextsFmEmail();
                         editTextsFmEmail.getResult(arrSubjectFmEmailTKS, arrTextsFmEmailTKS);
                     }
-                    if(arrTextsFmEmailAlta[0] != null) // мэйл из Альты
+                    if(arrTextsFmEmailAlta[0] != null && flagAlta == 1) // мэйл из Альты svd-alta
                     {
                         EditTextsFmEmailAlta editTextsFmEmailAlta = new EditTextsFmEmailAlta();
                         editTextsFmEmailAlta.getResultAlta(arrSubjectFmEmailAlta, arrTextsFmEmailAlta);
                     }
+                    if(arrTextsFmEmailAlta[0] != null && flagAlta == 2) // мэйл из Альты гтд-сервер
+                    {
+                        EditTextsFmEmailAltaGTDServer editTextsFmEmailAltaGTDServer = new EditTextsFmEmailAltaGTDServer();
+                        editTextsFmEmailAltaGTDServer.getResultAltaGTDServer(arrSubjectFmEmailAlta, arrTextsFmEmailAlta);
+                    }*/
                 }
-            } catch (InterruptedException | ClassCastException e) {
+            } catch (/*InterruptedException |*/ ClassCastException e) {
                 LOGGER.error("---WatchEmailRunnable 226 catch-> " + LocalDateTime.now() + "\n" + e);
             } catch (RuntimeErrorException | RuntimeOperationsException re)
             {
@@ -340,6 +363,34 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                             "store.close-> " + LocalDateTime.now());
                 } catch (MessagingException e) {
                     LOGGER.error("---WatchEmailRunnable 262 catch-> " + LocalDateTime.now() + "\n" + e);
+                }
+            }
+            // если мэйл из ТКС или Альты
+            if(arrTextsFmEmailTKS[0] != null) // мэйл из ТКС
+            {
+                EditTextsFmEmail editTextsFmEmail = new EditTextsFmEmail();
+                try {
+                    editTextsFmEmail.getResult(arrSubjectFmEmailTKS, arrTextsFmEmailTKS);
+                } catch (Exception e) {
+                    LOGGER.error("---WatchEmailRunnable 374 catch-> " + LocalDateTime.now() + "\n" + e);
+                }
+            }
+            if(arrTextsFmEmailAlta[0] != null && flagAlta == 1) // мэйл из Альты svd-alta
+            {
+                EditTextsFmEmailAlta editTextsFmEmailAlta = new EditTextsFmEmailAlta();
+                try {
+                    editTextsFmEmailAlta.getResultAlta(arrSubjectFmEmailAlta, arrTextsFmEmailAlta);
+                } catch (Exception e) {
+                    LOGGER.error("---WatchEmailRunnable 383 catch-> " + LocalDateTime.now() + "\n" + e);
+                }
+            }
+            if(arrTextsFmEmailAlta[0] != null && flagAlta == 2) // мэйл из Альты гтд-сервер
+            {
+                EditTextsFmEmailAltaGTDServer editTextsFmEmailAltaGTDServer = new EditTextsFmEmailAltaGTDServer();
+                try {
+                    editTextsFmEmailAltaGTDServer.getResultAltaGTDServer(arrSubjectFmEmailAlta, arrTextsFmEmailAlta);
+                } catch (Exception e) {
+                    LOGGER.error("---WatchEmailRunnable 392 catch-> " + LocalDateTime.now() + "\n" + e);
                 }
             }
         }
