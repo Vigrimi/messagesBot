@@ -281,11 +281,11 @@ public class EditTextsFmEmailAltaGTDServer
                 //System.out.println("--------ccc--msgToDiscord1:" + msgToDiscord1);
                 if (arrText[j].contains("нспектор"))
                 {
-                    String inspektor = " Инспектор:"+ " " + arrText[j + 1] + " " + arrText[j + 2]
+                    String inspektor = "Инспектор:"+ " " + arrText[j + 1] + " " + arrText[j + 2]
                             + " " + arrText[j + 3];
                     if (inspektor.contains("аможн") || inspektor.contains("АМОЖН") || inspektor.isBlank()
                             || inspektor.contains("Кругликов Евгений Викторович") || inspektor.isEmpty() ||
-                            inspektor.contains("омментарий"))
+                            inspektor.contains("омментарий") || inspektor.contains("CUSTOM ROUTER"))
                         inspektor = "АВТОРЕГИСТРАЦИЯ";
                     entityMessage.setInspector(inspektor);
 //                    msgToDiscord1 = msgToDiscord1 + inspektor;
@@ -297,13 +297,13 @@ public class EditTextsFmEmailAltaGTDServer
             // что внести в транспорт: контейнеры или фуру или разнорядку
             // импорт+экспорт, фура
             System.out.println("---------------9999numberTC:" + numberTC);
-            if(contNumbers == null && !numberTC.isEmpty()) entityMessage.setTransportNumber(numberTC);
-            if(contNumbers == null && !numberTC.isBlank()) entityMessage.setTransportNumber(numberTC);
+            if(contNumbers == null && !numberTC.equalsIgnoreCase("Номер ТС: "))
+                entityMessage.setTransportNumber(numberTC);
             // импорт контейнеры
             if(contNumbers != null) entityMessage.setTransportNumber(contNumbers);
             // экспорт контейнеры - вносим ТН (в дт нет контейнеров и нет номера ТС)
-            if(contNumbers == null && numberTC.isEmpty()) entityMessage.setTransportNumber(conosamentPAC);
-            if(contNumbers == null && numberTC.isBlank()) entityMessage.setTransportNumber(conosamentPAC);
+            if(contNumbers == null && numberTC.equalsIgnoreCase("Номер ТС: "))
+                entityMessage.setTransportNumber(conosamentPAC);
 
             // аторегистрация или автовыпуск
             if (entityMessage.getInspector().contains("АВТОРЕГИСТРАЦИЯ")
