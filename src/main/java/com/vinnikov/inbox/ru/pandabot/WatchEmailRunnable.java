@@ -144,7 +144,8 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                                 // для Альты (ГТД-Сервер)  Выпуск разрешен
                                 message.getSubject().contains("Присвоен номер") ||
                                 message.getSubject().contains("Отказано в выпуске") ||
-                                message.getSubject().contains("Выпуск разрешен") // + добавить ниже во флаг
+                                message.getSubject().contains("Выпуск разрешен") ||
+                                message.getSubject().contains("Идет проверка") // + добавить ниже во флаг
                         )
                         {
                             System.out.println("-----ЗАШЁЛ---");
@@ -160,7 +161,7 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                             if (TEXTgetSubject.contains("Уведомление об изменении статуса процедуры ЭД"))
                                 flagAlta = 1;
                             if (TEXTgetSubject.contains("Присвоен номер") || TEXTgetSubject.contains("Отказано в выпуске")
-                            || TEXTgetSubject.contains("Выпуск разрешен") )
+                            || TEXTgetSubject.contains("Выпуск разрешен") || TEXTgetSubject.contains("Идет проверка") )
                                 flagAlta = 2;
                             LOGGER.info("---WatchEmailRunnable TEXTgetSubject-> " + LocalDateTime.now() + "\n"
                                     + TEXTgetSubject);
@@ -198,9 +199,10 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
 
                                 // !!!!!!! что надо обрабатывать из Альты
                                 System.out.println("---7777:" + textFmTypeMultipart);
-                                if (textFmTypeMultipart.contains("Присвоен номер ДТ") ||
+                                if ( textFmTypeMultipart.contains("Присвоен номер ДТ") ||
                                         textFmTypeMultipart.contains("ыпуск товаров разреше") ||
-                                        textFmTypeMultipart.contains("Доп. проверка по классификации")  )
+                                        textFmTypeMultipart.contains("Доп. проверка по классификации") )
+                                        //textFmTypeMultipart.contains("Статус процедуры: Сканирование оригиналов") )
                                 {
                                     arrTextsFmEmailAlta[indexAlta] = textFmTypeMultipart;
                                 } else
