@@ -21,6 +21,7 @@ public class EditTextsFmEmailAltaGTDServer
             {
                 entityMessage = new EntityMessage();
                 msgToDiscord1 = "";
+                Boolean flagStop = true;
                 String tema = arrSubjectFmEmail[i];
                 String text1 = arrTextsFmEmail[i];
                 String text2 = text1.replaceAll("\r"," ");
@@ -52,133 +53,167 @@ public class EditTextsFmEmailAltaGTDServer
                     }
                 }
                 entityMessage.setComment(commentFmTKS.trim());
-                LOGGER.info("---EditTextsFmEmailAltaGTDServer-----commentFmTKS-> " + LocalDateTime.now() + "\n" + commentFmTKS);
+                LOGGER.info("---EditTextsFmEmailAltaGTDServer-----commentFmTKS-> " + LocalDateTime.now()
+                        + "\n" + commentFmTKS);
 
                 if(tema.contains("Присвоен номер"))
                 {
                     entityMessage.setStatusDT(Enums.REGISTERED_DT.getTitle());
                     msgToDiscord1 = getMessageAltaGTDServer(tema, text);
                     System.out.println("---60 msgToDiscord1:" + msgToDiscord1);
+                    flagStop = false;
                 } else
                 if(tema.contains("Отказано в выпуске"))
                 {
                     entityMessage.setStatusDT(Enums.RELEAS_PROHIBITED_DT.getTitle());
                     msgToDiscord1 = getMessageAltaGTDServer(tema, text);
                     System.out.println("---61 msgToDiscord1:" + msgToDiscord1);
+                    flagStop = false;
                 } else
                 if(tema.contains("Выпуск разрешен"))
                 {
                     entityMessage.setStatusDT(Enums.RELEASED_DT.getTitle());
                     msgToDiscord1 = getMessageAltaGTDServer(tema, text);
                     System.out.println("---62 msgToDiscord1:" + msgToDiscord1);
+                    flagStop = false;
+                } else
+                if(text.contains("Статус процедуры: Сканирование оригиналов")) // брокер запросил таможню сканировать
+                {
+                    entityMessage.setStatusDT(Enums.BROKER_REQUEST_SCAN.getTitle());
+                    msgToDiscord1 = getMessageAltaGTDServer(tema, text);
+                    System.out.println("---63 msgToDiscord1:" + msgToDiscord1);
+                    flagStop = false;
+                } else
+                if(text.contains("Статус процедуры: Проверка ТНВЭД")) // брокер запросил таможню сканировать
+                {
+                    entityMessage.setStatusDT(Enums.CSTMS_CODE_CHECK.getTitle());
+                    msgToDiscord1 = getMessageAltaGTDServer(tema, text);
+                    System.out.println("---64 msgToDiscord1:" + msgToDiscord1);
+                    flagStop = false;
+                } else
+                if(text.contains("Статус процедуры: Проверка стоимости")) // брокер запросил таможню сканировать
+                {
+                    entityMessage.setStatusDT(Enums.CSTMS_PRICE_CHECK.getTitle());
+                    msgToDiscord1 = getMessageAltaGTDServer(tema, text);
+                    System.out.println("---65 msgToDiscord1:" + msgToDiscord1);
+                    flagStop = false;
                 }
 
                 arrSubjectFmEmail[i] = null;
                 arrTextsFmEmail[i] = null;
 
-                // присоединить айди из мониторинга
-                if(commentFmTKS != null) // если комментарий пришёл в мэйле
+                // остановить если сообщение не надо обрабатывать
+                if (flagStop)
                 {
-                    if(msgToDiscord1.contains("ВТТ"))
-                    {
-                        String BTTCompNameFmMonit = GetBTTIdFromMonitoringGoogleDocs
-                                .getBTTCompanyNameFromMonitoringGoogleDocs(msgToDiscord1);
-                        msgToDiscord1 = msgToDiscord1.replaceAll("\\*ПАНДА ТРАНС\\*,",BTTCompNameFmMonit);
-                        msgToDiscord1 = /*commentFmTKS + ", " +*/ msgToDiscord1;
-                    } else
-                    {
-                        msgToDiscord1 = /*commentFmTKS + ", " +*/ msgToDiscord1;
-                    }
-                } else // if(commentFmTKS == null) // если комментарий НЕ пришёл в мэйле
+                    LOGGER.info("---EditTextsFmEmailAltaGTDServer-не надо обрабатывать--flagStop-> "
+                            + LocalDateTime.now() + "\n" + flagStop);
+                } else
                 {
-                    if(msgToDiscord1.contains("ВТТ"))
+                    // присоединить айди из мониторинга
+                    if(commentFmTKS != null) // если комментарий пришёл в мэйле
                     {
-                        String idNumbersFmMonitoring = GetBTTIdFromMonitoringGoogleDocs
-                                .getBTTIdFromMonitoringGoogleDocs(msgToDiscord1);
-                        msgToDiscord1 = idNumbersFmMonitoring + msgToDiscord1;
-                        msgToDiscord1 = msgToDiscord1.replaceAll("\\*ПАНДА ТРАНС\\*,","");
-                    } else if(msgToDiscord1.contains("РАС"))
+                        if(msgToDiscord1.contains("ВТТ"))
+                        {
+                            String BTTCompNameFmMonit = GetBTTIdFromMonitoringGoogleDocs
+                                    .getBTTCompanyNameFromMonitoringGoogleDocs(msgToDiscord1);
+                            msgToDiscord1 = msgToDiscord1.replaceAll("\\*ПАНДА ТРАНС\\*,",BTTCompNameFmMonit);
+                            //msgToDiscord1 = commentFmTKS + ", " + msgToDiscord1;
+                        }
+//                    else
+//                    {
+//                        msgToDiscord1 = commentFmTKS + ", " + msgToDiscord1;
+//                    }
+                    } else // if(commentFmTKS == null) // если комментарий НЕ пришёл в мэйле
                     {
-                        String idNumbersFmMonitoring = GetPACIdFromMonitoringGoogleDocs
-                                .getPACIdFromMonitoringGoogleDocs(msgToDiscord1);
-                        msgToDiscord1 = idNumbersFmMonitoring + msgToDiscord1;
-                    } else
-                    {
-                        System.out.println("---------------4444msgToDiscord1:" + msgToDiscord1);
-                        String idNumbersFmMonitoring = GetIdFromMonitoringGoogleDocs
-                                .getIdFromMonitoringGoogleDocs(msgToDiscord1);
-                        msgToDiscord1 = idNumbersFmMonitoring + msgToDiscord1;
+                        if(msgToDiscord1.contains("ВТТ"))
+                        {
+                            String idNumbersFmMonitoring = GetBTTIdFromMonitoringGoogleDocs
+                                    .getBTTIdFromMonitoringGoogleDocs(msgToDiscord1);
+                            msgToDiscord1 = idNumbersFmMonitoring + msgToDiscord1;
+                            msgToDiscord1 = msgToDiscord1.replaceAll("\\*ПАНДА ТРАНС\\*,","");
+                        } else if(msgToDiscord1.contains("РАС"))
+                        {
+                            String idNumbersFmMonitoring = GetPACIdFromMonitoringGoogleDocs
+                                    .getPACIdFromMonitoringGoogleDocs(msgToDiscord1);
+                            msgToDiscord1 = idNumbersFmMonitoring + msgToDiscord1;
+                        } else
+                        {
+                            System.out.println("---------------4444msgToDiscord1:" + msgToDiscord1);
+                            String idNumbersFmMonitoring = GetIdFromMonitoringGoogleDocs
+                                    .getIdFromMonitoringGoogleDocs(msgToDiscord1);
+                            msgToDiscord1 = idNumbersFmMonitoring + msgToDiscord1;
+                        }
                     }
-                }
 
-                //передаём для отправки в дискорд Вариант если есть айди ролей
-                String textDisc = EditRoleForDiscord.getRoleForDiscord(msgToDiscord1);
-                // если не получилось найти айди такой роли
-                if(!textDisc.contains("<@&"))
-                {
+                    //передаём для отправки в дискорд Вариант если есть айди ролей
+                    String textDisc = EditRoleForDiscord.getRoleForDiscord(msgToDiscord1);
+                    // если не получилось найти айди такой роли
+                    if(!textDisc.contains("<@&"))
+                    {
 //Вариант без айди ролей: передаём для отправки в дискорд и меняем звёздочки в названии фирмы для ватсапа на собачку
-                    String textDiscBuffer = msgToDiscord1, regEx = "\\*", rep = "@";
-                    textDiscBuffer = textDiscBuffer.replaceFirst(regEx, rep);
-                    LOGGER.info("---EditTextsFmEmailAltaGTDServer----5-1:-> " + LocalDateTime.now() + "\n" + textDiscBuffer);
-                    textDiscBuffer = textDiscBuffer.replaceAll(regEx, "");
-                    textDisc = textDiscBuffer;
-                    LOGGER.info("---EditTextsFmEmailAltaGTDServer----5-2:-> " + LocalDateTime.now() + "\n" + textDiscBuffer);
-                    LOGGER.info("---EditTextsFmEmailAltaGTDServer---6:-> " + LocalDateTime.now() + "\n" + textDisc);
-                }
-
-                // если ДОСМОТР или НАЗНАЧИЛИ ИДК на балтика или санпит - добавить роль ПОРТ
-                if(textDisc.contains("ДОСМОТР") || textDisc.contains("ИДК!"))
-                {
-                    if(textDisc.contains("10216170") || textDisc.contains("10228010"))
-                    {
-                        textDisc = textDisc + " <@&785808375782309908>";
+                        String textDiscBuffer = msgToDiscord1, regEx = "\\*", rep = "@";
+                        textDiscBuffer = textDiscBuffer.replaceFirst(regEx, rep);
+                        LOGGER.info("---EditTextsFmEmailAltaGTDServer----5-1:-> " + LocalDateTime.now() + "\n" + textDiscBuffer);
+                        textDiscBuffer = textDiscBuffer.replaceAll(regEx, "");
+                        textDisc = textDiscBuffer;
+                        LOGGER.info("---EditTextsFmEmailAltaGTDServer----5-2:-> " + LocalDateTime.now() + "\n" + textDiscBuffer);
+                        LOGGER.info("---EditTextsFmEmailAltaGTDServer---6:-> " + LocalDateTime.now() + "\n" + textDisc);
                     }
-                }
-                LOGGER.info("---EditTextsFmEmailAltaGTDServer---!!-textDisc--888-> " + LocalDateTime.now() + "\n"
-                        + textDisc);
-                LOGGER.info("---EditTextsFmEmailAltaGTDServer---!!-msgToDiscord1-whatsap-999-> "
-                        + LocalDateTime.now() + "\n" + msgToDiscord1);
-                try {
-                    LOGGER.info("---EditTextsFmEmailAltaGTDServer---ОТПРАВЛЯЮ ДИСКОРД-> " + LocalDateTime.now());
-                    AppMsgToDiscordBot bot = new AppMsgToDiscordBot(textDisc);
-                    bot.run();
-                    LOGGER.info("---EditTextsFmEmailAltaGTDServer---ОТПРАВЛЕНО В ДИСКОРД-> " + LocalDateTime.now());
-                } catch (InsufficientPermissionException ie)
-                {
-                    ChromeWhatsappThread.sendInWatsapWeb("БОТ в дискорде не работает. Возможно добавлен новый канал " +
-                            "и цифровой индекс канала ДТ-СТАТУСа съехал.");
-                    LOGGER.error("---EditTextsFmEmailAltaGTDServer---!!-catch 169-> " + LocalDateTime.now() + "\n" + ie);
-                }
 
-                // если ВТТ и есть роль ПОРТ - то убрать её из сообщения для Ватсапа
-                if(msgToDiscord1.contains("ВТТ") && msgToDiscord1.contains("<@&785808375782309908>"))
-                {
-                    msgToDiscord1 = msgToDiscord1.replaceAll("<@&785808375782309908>, ","");
-                }
+                    // если ДОСМОТР или НАЗНАЧИЛИ ИДК на балтика или санпит - добавить роль ПОРТ
+                    if(textDisc.contains("ДОСМОТР") || textDisc.contains("ИДК!"))
+                    {
+                        if(textDisc.contains("10216170") || textDisc.contains("10228010"))
+                        {
+                            textDisc = textDisc + " <@&785808375782309908>";
+                        }
+                    }
+                    LOGGER.info("---EditTextsFmEmailAltaGTDServer---!!-textDisc--888-> " + LocalDateTime.now() + "\n"
+                            + textDisc);
+                    LOGGER.info("---EditTextsFmEmailAltaGTDServer---!!-msgToDiscord1-whatsap-999-> "
+                            + LocalDateTime.now() + "\n" + msgToDiscord1);
+                    try {
+                        LOGGER.info("---EditTextsFmEmailAltaGTDServer---ОТПРАВЛЯЮ ДИСКОРД-> " + LocalDateTime.now());
+                        AppMsgToDiscordBot bot = new AppMsgToDiscordBot(textDisc);
+                        bot.run();
+                        LOGGER.info("---EditTextsFmEmailAltaGTDServer---ОТПРАВЛЕНО В ДИСКОРД-> " + LocalDateTime.now());
+                    } catch (InsufficientPermissionException ie)
+                    {
+                        ChromeWhatsappThread.sendInWatsapWeb("БОТ в дискорде не работает. Возможно добавлен новый канал " +
+                                "и цифровой индекс канала ДТ-СТАТУСа съехал.");
+                        LOGGER.error("---EditTextsFmEmailAltaGTDServer---!!-catch 169-> " + LocalDateTime.now() + "\n" + ie);
+                    }
 
-                // передаём для отправки в Ватсап
-                try
-                {
-                    String msgToWhatsapp = msgToDiscord1.replaceAll("@","")
-                            .replaceAll("Контейнеры: ","");
-                    msgToWhatsapp = msgToWhatsapp.replaceAll("ДОСМОТР!","*ДОСМОТР!*")
-                            .replaceAll("ИДК!","*ИДК!*");
-                    LOGGER.info("---EditTextsFmEmailAltaGTDServer---!!-ОТПРАВЛЯЮ ВАТСАП-> " + LocalDateTime.now());
-                    ChromeWhatsappThread.sendInWatsapWeb(msgToWhatsapp);
-                    LOGGER.info("---EditTextsFmEmailAltaGTDServer---!!-ОТПРАВЛЕНО В ВАТСАП-> " + LocalDateTime.now());
-                } catch (NoSuchElementException e)
-                {
-                    LOGGER.error("---EditTextsFmEmailAltaGTDServer--!** ватсап не работает-> " + LocalDateTime.now() + "\n" + e);
-                    AppMsgToDiscordBot bot1 =
-                            new AppMsgToDiscordBot("<@&785778541060292628> ВНИМАНИЕ!!! Ватсап не работает. " +
-                                    "Надо проверить подключён ли ватсап на компьютере при помощи QR-кода? "); // @декларант
-                    bot1.run();
-                }
+                    // если ВТТ и есть роль ПОРТ - то убрать её из сообщения для Ватсапа
+                    if(msgToDiscord1.contains("ВТТ") && msgToDiscord1.contains("<@&785808375782309908>"))
+                    {
+                        msgToDiscord1 = msgToDiscord1.replaceAll("<@&785808375782309908>, ","");
+                    }
 
-                // посчитать общее кол-во присвоенных ДТ за месяц
-                if(msgToDiscord1.contains("зарегистрирован") || msgToDiscord1.contains("присво"))
-                {
-                    CalculateQtyGTDPerMonth.getCalculateQtyGTDPerMonth();
+                    // передаём для отправки в Ватсап
+                    try
+                    {
+                        String msgToWhatsapp = msgToDiscord1.replaceAll("@","")
+                                .replaceAll("Контейнеры: ","");
+                        msgToWhatsapp = msgToWhatsapp.replaceAll("ДОСМОТР!","*ДОСМОТР!*")
+                                .replaceAll("ИДК!","*ИДК!*");
+                        LOGGER.info("---EditTextsFmEmailAltaGTDServer---!!-ОТПРАВЛЯЮ ВАТСАП-> " + LocalDateTime.now());
+                        ChromeWhatsappThread.sendInWatsapWeb(msgToWhatsapp);
+                        LOGGER.info("---EditTextsFmEmailAltaGTDServer---!!-ОТПРАВЛЕНО В ВАТСАП-> " + LocalDateTime.now());
+                    } catch (NoSuchElementException e)
+                    {
+                        LOGGER.error("---EditTextsFmEmailAltaGTDServer--!** ватсап не работает-> " + LocalDateTime.now() + "\n" + e);
+                        AppMsgToDiscordBot bot1 =
+                                new AppMsgToDiscordBot("<@&785778541060292628> ВНИМАНИЕ!!! Ватсап не работает. " +
+                                        "Надо проверить подключён ли ватсап на компьютере при помощи QR-кода? "); // @декларант
+                        bot1.run();
+                    }
+
+                    // посчитать общее кол-во присвоенных ДТ за месяц
+                    if(msgToDiscord1.contains("зарегистрирован") || msgToDiscord1.contains("присво"))
+                    {
+                        CalculateQtyGTDPerMonth.getCalculateQtyGTDPerMonth();
+                    }
                 }
             } else if(arrSubjectFmEmail[i] == null) break;
         }
@@ -203,7 +238,7 @@ public class EditTextsFmEmailAltaGTDServer
             // слова из названия импортёра
             for (int i = 0; i < arrTema.length; i++)
             {
-                if(arrTema[i].contains("ООО") || arrTema[i].contains("АО"))
+                if(arrTema[i].equalsIgnoreCase("ООО") || arrTema[i].equalsIgnoreCase("АО"))
                 {
                     //flagExport = 1;
                     companyName = arrTema[i+1].replaceAll("\"", "").trim();
@@ -228,38 +263,6 @@ public class EditTextsFmEmailAltaGTDServer
             LOGGER.info("---EditTextsFmEmailAltaGTDServer---911-> " + LocalDateTime.now() + "\n" + Arrays.toString(arrText));
             for (int j = 0; j < arrText.length; j++)
             {
-                /*// слова из названия импортёра
-                if(arrText[j].contains("Получатель:"))
-                {
-                    companyName = arrText[j+1].replaceAll("\"", "").trim();
-                    int errorInCompName = 0;
-                    if(companyName.isEmpty()) errorInCompName++;
-                    if (!arrText[j+2].contains("Отправитель")) companyName = companyName + " "
-                            + arrText[j+2].replaceAll("\"", "")
-                            .replaceAll(" ", "").replaceAll(",", "");
-                    if(errorInCompName > 0) companyName = companyName.replaceAll(" ","");
-                    companyName = companyName.trim();
-                    role = getRoleFmCompanyNameAltaGTDServer(companyName); // "@" + companyName + ",";
-                    entityMessage.setCompanyName(role);
-                }
-                System.out.println("--------aaa--entityMessage:" + entityMessage);
-                if(arrText[j].contains("Отправитель:"))
-                {
-                    if(arrText[j+1].contains("ООО"))
-                    {
-                        flagExport = 1;
-                        companyName = arrText[j+2].replaceAll("\"", "").trim();
-                        int errorInCompName = 0;
-                        if(companyName.isEmpty()) errorInCompName++;
-                        if (!arrText[j+3].contains("Товаров")) companyName = companyName + " "
-                                + arrText[j+3].replaceAll("\"", "")
-                                .replaceAll(" ", "").replaceAll(",", "");
-                        if(errorInCompName > 0) companyName = companyName.replaceAll(" ","");
-                        companyName = companyName.trim();
-                        role = getRoleFmCompanyNameAltaGTDServer(companyName); // "@" + companyName + ",";
-                        entityMessage.setCompanyName(role);
-                    }
-                }*/
 
                 if (arrText[j].contains("ТС:") /*&& !text.contains("РУСАГРО")*/)
                 {
