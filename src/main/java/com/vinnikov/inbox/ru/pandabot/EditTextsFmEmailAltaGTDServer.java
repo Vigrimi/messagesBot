@@ -52,7 +52,9 @@ public class EditTextsFmEmailAltaGTDServer
                         break;
                     }
                 }
-                entityMessage.setComment(commentFmTKS.trim());
+                commentFmTKS = commentFmTKS.trim();
+                if(commentFmTKS.isBlank() || commentFmTKS.isEmpty()) commentFmTKS = null;
+                entityMessage.setComment(commentFmTKS);
                 LOGGER.info("---EditTextsFmEmailAltaGTDServer-----commentFmTKS-> " + LocalDateTime.now()
                         + "\n" + commentFmTKS);
 
@@ -96,6 +98,20 @@ public class EditTextsFmEmailAltaGTDServer
                     entityMessage.setStatusDT(Enums.CSTMS_PRICE_CHECK.getTitle());
                     msgToDiscord1 = getMessageAltaGTDServer(tema, text);
                     System.out.println("---65 msgToDiscord1:" + msgToDiscord1);
+                    flagStop = false;
+                } else // статьей 121 Таможенного - Выпуск условный по стоимости
+                if(text.contains("ВЫПУСК ТОВАРОВ С ОСОБЕННОСТЯМИ, ПРЕДУСМОТРЕННЫМИ СТАТЬЕЙ 121"))
+                {
+                    entityMessage.setStatusDT(Enums.RELEASED_USLOVNO_121.getTitle());
+                    msgToDiscord1 = getMessageAltaGTDServer(tema, text);
+                    System.out.println("---66 msgToDiscord1:" + msgToDiscord1);
+                    flagStop = false;
+                } else // статьей 122 Таможенного - Выпуск условный по экспертизе
+                if(text.contains("ВЫПУСК ТОВАРОВ С ОСОБЕННОСТЯМИ, ПРЕДУСМОТРЕННЫМИ СТАТЬЕЙ 122"))
+                {
+                    entityMessage.setStatusDT(Enums.RELEASED_USLOVNO_122.getTitle());
+                    msgToDiscord1 = getMessageAltaGTDServer(tema, text);
+                    System.out.println("---67 msgToDiscord1:" + msgToDiscord1);
                     flagStop = false;
                 }
 
