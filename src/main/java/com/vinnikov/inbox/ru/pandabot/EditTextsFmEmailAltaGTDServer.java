@@ -113,7 +113,14 @@ public class EditTextsFmEmailAltaGTDServer
                     msgToDiscord1 = getMessageAltaGTDServer(tema, text);
                     System.out.println("---67 msgToDiscord1:" + msgToDiscord1);
                     flagStop = false;
-                }
+                } else
+                    if(text.contains("Уведомление о досмотре"))
+                    {
+                        entityMessage.setStatusDT(Enums.DOSMOTR.getTitle());
+                        msgToDiscord1 = getMessageAltaGTDServer(tema, text);
+                        System.out.println("---68 msgToDiscord1:" + msgToDiscord1);
+                        flagStop = false;
+                    }
 
                 arrSubjectFmEmail[i] = null;
                 arrTextsFmEmail[i] = null;

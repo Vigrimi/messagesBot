@@ -9,6 +9,7 @@ public enum Enums
     RELEAS_PROHIBITED_DT ("Отказано в выпуске"),
     BROKER_REQUEST_SCAN ("Мы запросили тпфк сканирование"),
     CSTMS_CODE_CHECK ("Доп. проверка по ТНВЭД"),
+    DOSMOTR ("ДОСМОТР!"),
     CSTMS_PRICE_CHECK ("Доп. проверка по стоимости");
 
     private String title;
