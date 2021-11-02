@@ -169,6 +169,8 @@ public class EditTextsFmEmailAltaGTDServer
                     }
 
                     //передаём для отправки в дискорд Вариант если есть айди ролей
+                    if (entityMessage.getCompanyName() == null)
+                        entityMessage.setCompanyName("*ОЙ*");
                     String textDisc = EditRoleForDiscord.getRoleForDiscord(msgToDiscord1);
                     // если не получилось найти айди такой роли
                     if(!textDisc.contains("<@&"))
@@ -246,7 +248,7 @@ public class EditTextsFmEmailAltaGTDServer
     {
         try
         {
-            //int flagExport = 0;
+            int flagOOOorAO = 0;
             String conosamentPAC = "";
             String numberTC = "";
             String role = "";
@@ -277,6 +279,7 @@ public class EditTextsFmEmailAltaGTDServer
                     companyName = companyName.trim();
                     role = getRoleFmCompanyNameAltaGTDServer(companyName); // "@" + companyName + ",";
                     entityMessage.setCompanyName(role);
+                    flagOOOorAO = 1;
                 }
             }
 
@@ -320,6 +323,12 @@ public class EditTextsFmEmailAltaGTDServer
                 }
 
             }
+            // если в теме ни ООО, ни АО, надо что-то положить
+            if(flagOOOorAO == 0)
+                entityMessage.setCompanyName(getCompanyNotOOONotAO(arrTema));
+            LOGGER.info("---EditTextsFmEmailAltaGTDServer--329--REGISTERED entityMessage-> " + LocalDateTime.now()
+                    + "\n" + entityMessage);
+
             // что внести в транспорт: контейнеры или фуру или разнорядку
             // импорт+экспорт, фура
             System.out.println("---------------9999numberTC:" + numberTC);
@@ -351,6 +360,46 @@ public class EditTextsFmEmailAltaGTDServer
         LOGGER.info("---EditTextsFmEmailAltaGTDServer--REGISTERED msgToDiscord1-> " + LocalDateTime.now()
                 + "\n" + msgToDiscord1);
         return msgToDiscord1;
+    }
+
+    public String getCompanyNotOOONotAO(String[] arrTema)
+    {
+        // ДТ 10005030/021121/0570017 - Присвоен номер 5928 АГАПОВ СЕРГЕЙ ИГОРЕВИЧ ИНДИВИДУАЛЬНЫЙ ПРЕДПРИНИМАТЕЛЬ
+        // ДТ 10005030/021121/0570017 - Выпуск разрешен 5928 АГАПОВ СЕРГЕЙ ИГОРЕВИЧ ИНДИВИДУАЛЬНЫЙ ПРЕДПРИНИМАТЕЛЬ
+        String comment = entityMessage.getComment();
+        String companyName = "";
+        int index = 0;
+        if(comment == null)
+        {
+            companyName = arrTema[arrTema.length-1];
+            LOGGER.info("-375--EditTextsFmEmailAltaGTDServer--getCompanyNotOOONotAO--companyName-> " + LocalDateTime.now()
+                    + "\n" + companyName);
+        } else
+        {
+            String[] arrComment = comment.split(" ");
+            String controlWord = arrComment[arrComment.length-1].trim().replaceAll(",","");
+            for (int i = 0; i < arrTema.length; i++)
+            {
+                if(arrTema[i].contains(controlWord))
+                {
+                    index = i + 1;
+                    break;
+                }
+            }
+        }
+        for (int i = index; i < arrTema.length; i++)
+        {
+            companyName = companyName + arrTema[i] + " ";
+        }
+        LOGGER.info("-394--EditTextsFmEmailAltaGTDServer--getCompanyNotOOONotAO--companyName-> " + LocalDateTime.now()
+                + "\n" + companyName);
+        companyName = companyName.trim().replace("ИНДИВИДУАЛЬНЫЙ ПРЕДПРИНИМАТЕЛЬ", "ИП");
+        LOGGER.info("-397--EditTextsFmEmailAltaGTDServer--getCompanyNotOOONotAO--companyName-> " + LocalDateTime.now()
+                + "\n" + companyName);
+        String role = getRoleFmCompanyNameAltaGTDServer(companyName);
+        LOGGER.info("-400--EditTextsFmEmailAltaGTDServer--getCompanyNotOOONotAO--role-> " + LocalDateTime.now()
+                + "\n" + role);
+        return role;
     }
 
     public String getAllContainersNumbersAltaGTDServer(String[] arrText) // получить текст со всеми номерами контейнеров
