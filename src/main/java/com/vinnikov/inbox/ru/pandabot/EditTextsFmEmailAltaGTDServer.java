@@ -258,11 +258,17 @@ public class EditTextsFmEmailAltaGTDServer
 
                     // взять из темы: номер ДТ
             String[] arrTema = tema.split(" ");
-            String numberDT = arrTema[1];
-            entityMessage.setNumberDT(numberDT);
+            String numberDT = "";
+
             // слова из названия импортёра
             for (int i = 0; i < arrTema.length; i++)
             {
+                if(arrTema[i].equalsIgnoreCase("ДТ"))
+                {
+                    numberDT = arrTema[i+1];
+                    entityMessage.setNumberDT(numberDT);
+                }
+
                 if(arrTema[i].equalsIgnoreCase("ООО") || arrTema[i].equalsIgnoreCase("АО"))
                 {
                     //flagExport = 1;
