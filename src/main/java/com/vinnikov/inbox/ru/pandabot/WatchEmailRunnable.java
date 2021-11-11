@@ -68,7 +68,7 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
             {
                 LOGGER.info("---Подключаемся к почтовому ящику-> " + LocalDateTime.now());
                 //Подключаемся к почтовому ящику
-                store.connect("imap.yandex.ru", 993, "v.ru", "t5");
+                store.connect("imap.yandex.ru", 993, "vasiu", "t5");
                 LOGGER.info("---Подключились к почтовому ящику-> " + LocalDateTime.now());
 
                 LOGGER.info("---Читаем папку Входящие сообщения-> " + LocalDateTime.now());
@@ -145,7 +145,8 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                                 message.getSubject().contains("Присвоен номер") ||
                                 message.getSubject().contains("Отказано в выпуске") ||
                                 message.getSubject().contains("Выпуск разрешен") ||
-                                message.getSubject().contains("Идет проверка") // + добавить ниже во флаг
+                                message.getSubject().contains("Идет проверка") ||
+                                message.getSubject().contains("Выпуск с обеспечением") // + добавить ниже во флаг
                         )
                         {
                             System.out.println("-----ЗАШЁЛ---");
@@ -161,7 +162,8 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                             if (TEXTgetSubject.contains("Уведомление об изменении статуса процедуры ЭД"))
                                 flagAlta = 1;
                             if (TEXTgetSubject.contains("Присвоен номер") || TEXTgetSubject.contains("Отказано в выпуске")
-                            || TEXTgetSubject.contains("Выпуск разрешен") || TEXTgetSubject.contains("Идет проверка") )
+                            || TEXTgetSubject.contains("Выпуск разрешен") || TEXTgetSubject.contains("Идет проверка")
+                            || TEXTgetSubject.contains("Выпуск с обеспечением") )
                                 flagAlta = 2;
                             LOGGER.info("---WatchEmailRunnable TEXTgetSubject-> " + LocalDateTime.now() + "\n"
                                     + TEXTgetSubject);
@@ -194,8 +196,8 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                             // проверка, если сообщение из Альты, но не для обработки, то понизить индекс
                             if (flagAlta == 1) // svd-alta
                             {
-                                BCheckDoesItWork bot = new BCheckDoesItWork(textFmTypeMultipart);
-                                bot.run();
+//                                BCheckDoesItWork bot = new BCheckDoesItWork(textFmTypeMultipart);
+//                                bot.run();
 
                                 // !!!!!!! что надо обрабатывать из Альты
                                 System.out.println("---7777:" + textFmTypeMultipart);
@@ -215,8 +217,8 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                             } else
                             if (flagAlta == 2) // alta гтд сервер
                             {
-                                BCheckDoesItWork bot = new BCheckDoesItWork(textFmTypeMultipart);
-                                bot.run();
+//                                BCheckDoesItWork bot = new BCheckDoesItWork(textFmTypeMultipart);
+//                                bot.run();
                                 // !!!!!!! что надо обрабатывать из Альты
                                 System.out.println("---7777:" + textFmTypeMultipart);
                                 arrTextsFmEmailAlta[indexAlta] = textFmTypeMultipart;
