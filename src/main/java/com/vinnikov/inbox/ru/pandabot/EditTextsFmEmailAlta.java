@@ -636,6 +636,7 @@ public class EditTextsFmEmailAlta
         if (roleForDiscord.contains("АГРОИМПЭКС")) roleForDiscord = "*АИ*";
         if (roleForDiscord.contains("АБ-МАРКЕТ")) roleForDiscord = "*АБ МАРКЕТ*";
         if (roleForDiscord.contains("РУСАГРО-САХАР")) roleForDiscord = "*РАС*";
+        if (roleForDiscord.contains("ГРУППА") && roleForDiscord.contains("КОМПАНИЙ")) roleForDiscord = "*РАС*";
         if (roleForDiscord.contains("ЦЕНТРСНАБ")) roleForDiscord = "*ЦентрСнаб*";
         if (roleForDiscord.contains("ФРУТИМПЭКС")) roleForDiscord = "*Фрутимпэкс*";
         if (roleForDiscord.contains("ЛЕКС")) roleForDiscord = "*ЛЕКС*";
