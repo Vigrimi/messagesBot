@@ -314,7 +314,8 @@ public class EditTextsFmEmailAltaGTDServer
                             + " " + arrText[j + 3];
                     if (inspektor.contains("аможн") || inspektor.contains("АМОЖН") || inspektor.isBlank()
                             || inspektor.contains("Кругликов Евгений Викторович") || inspektor.isEmpty() ||
-                            inspektor.contains("омментарий") || inspektor.contains("CUSTOM ROUTER"))
+                            inspektor.contains("омментарий") || inspektor.contains("CUSTOM ROUTER")
+                            || inspektor.contains("ТАМОЖЕН") || inspektor.contains("таможен"))
                         inspektor = "АВТОРЕГИСТРАЦИЯ";
                     entityMessage.setInspector(inspektor);
 //                    msgToDiscord1 = msgToDiscord1 + inspektor;
@@ -469,6 +470,7 @@ public class EditTextsFmEmailAltaGTDServer
         if (roleForDiscord.contains("АГРОИМПЭКС")) roleForDiscord = "*АИ*";
         if (roleForDiscord.contains("АБ-МАРКЕТ")) roleForDiscord = "*АБ МАРКЕТ*";
         if (roleForDiscord.contains("РУСАГРО-САХАР")) roleForDiscord = "*РАС*";
+        if (roleForDiscord.contains("ГРУППА") && roleForDiscord.contains("КОМПАНИЙ")) roleForDiscord = "*РАС*";
         if (roleForDiscord.contains("ЦЕНТРСНАБ")) roleForDiscord = "*ЦентрСнаб*";
         if (roleForDiscord.contains("ФРУТИМПЭКС")) roleForDiscord = "*Фрутимпэкс*";
         if (roleForDiscord.contains("ЛЕКС")) roleForDiscord = "*ЛЕКС*";
