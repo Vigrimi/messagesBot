@@ -95,6 +95,7 @@ public class EditRoleForDiscord
         companyAndRole2.put("ИМПЭНЕРГО","<@&788359646204395531>");
         companyAndRole3.put("КОНКОРД","<@&789137474609479690>");
         companyAndRole4.put("ПК АЗОВСКИЙ","<@&867777557063008347>");
+        companyAndRole4.put("ЛЕНТА","<@&910087940552675368>");
         companyAndRole5.put("СДМ","<@&893036349773475840>");
         companyAndRole5.put("СКМ","<@&904676081112604682>");
         companyAndRole5.put("РосПродукт","<@&849651401071525948>");

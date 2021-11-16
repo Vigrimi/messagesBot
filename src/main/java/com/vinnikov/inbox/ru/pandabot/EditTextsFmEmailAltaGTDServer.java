@@ -318,10 +318,12 @@ public class EditTextsFmEmailAltaGTDServer
                 {
                     String inspektor = "Инспектор:"+ " " + arrText[j + 1] + " " + arrText[j + 2]
                             + " " + arrText[j + 3];
+
                     if (inspektor.contains("аможн") || inspektor.contains("АМОЖН") || inspektor.isBlank()
                             || inspektor.contains("Кругликов Евгений Викторович") || inspektor.isEmpty() ||
                             inspektor.contains("омментарий") || inspektor.contains("CUSTOM ROUTER")
-                            || inspektor.contains("ТАМОЖЕН") || inspektor.contains("таможен"))
+                            || inspektor.contains("ТАМОЖЕН") || inspektor.contains("таможен")
+                            || inspektor.contains("КРУГЛИКОВ ЕВГЕНИЙ ВИКТОРОВИЧ"))
                         inspektor = "АВТОРЕГИСТРАЦИЯ";
                     entityMessage.setInspector(inspektor);
 //                    msgToDiscord1 = msgToDiscord1 + inspektor;
