@@ -295,6 +295,20 @@ public class EditTextsFmEmailAltaGTDServer
             LOGGER.info("---EditTextsFmEmailAltaGTDServer---911-> " + LocalDateTime.now() + "\n" + Arrays.toString(arrText));
             for (int j = 0; j < arrText.length; j++)
             {
+                if (arrText[j].contains("Цена:") || arrText[j].contains("цена:") || arrText[j].contains("ЦЕНА:"))
+                {
+                    String dollarKg = arrText[j];
+                    for (int k = j + 1; k < arrText.length; k++)
+                    {
+                        if(arrText[k].contains("олучатель") || arrText[k].contains("ОЛУЧАТЕЛЬ")) break;
+                        if(arrText[k].contains("тправитель") || arrText[k].contains("ТПРАВИТЕЛЬ")) break;
+                        if(arrText[k].contains("тоимость") || arrText[k].contains("СТОИМОСТЬ")) break;
+                        if(arrText[k].contains("омментарий") || arrText[k].contains("ОММЕНТАРИЙ")) break;
+                        dollarKg = dollarKg + " " + arrText[k];
+                    }
+                    dollarKg = dollarKg.trim();
+                    entityMessage.setDolKgRbn(dollarKg);
+                }
 
                 if (arrText[j].contains("ТС:") /*&& !text.contains("РУСАГРО")*/)
                 {
@@ -364,6 +378,8 @@ public class EditTextsFmEmailAltaGTDServer
         }
         LOGGER.info("---EditTextsFmEmailAltaGTDServer--REGISTERED entityMessage-> " + LocalDateTime.now()
                 + "\n" + entityMessage);
+
+        if(entityMessage.getDolKgRbn() == null) entityMessage.setDolKgRbn("");
         msgToDiscord1 = entityMessage.toString();
 
         LOGGER.info("---EditTextsFmEmailAltaGTDServer--REGISTERED msgToDiscord1-> " + LocalDateTime.now()
