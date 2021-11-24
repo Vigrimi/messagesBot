@@ -295,7 +295,8 @@ public class EditTextsFmEmailAltaGTDServer
             LOGGER.info("---EditTextsFmEmailAltaGTDServer---911-> " + LocalDateTime.now() + "\n" + Arrays.toString(arrText));
             for (int j = 0; j < arrText.length; j++)
             {
-                if (arrText[j].contains("Цена:") || arrText[j].contains("цена:") || arrText[j].contains("ЦЕНА:"))
+                if (arrText[j].contains("Цена:") || arrText[j].contains("цена:") || arrText[j].contains("ЦЕНА:")
+                        || arrText[j].contains("ИТС:") )
                 {
                     String dollarKg = arrText[j];
                     for (int k = j + 1; k < arrText.length; k++)
@@ -337,8 +338,11 @@ public class EditTextsFmEmailAltaGTDServer
                             || inspektor.contains("Кругликов Евгений Викторович") || inspektor.isEmpty() ||
                             inspektor.contains("омментарий") || inspektor.contains("CUSTOM ROUTER")
                             || inspektor.contains("ТАМОЖЕН") || inspektor.contains("таможен")
-                            || inspektor.contains("КРУГЛИКОВ ЕВГЕНИЙ ВИКТОРОВИЧ"))
+                            || inspektor.contains("КРУГЛИКОВ ЕВГЕНИЙ ВИКТОРОВИЧ") || inspektor.contains("АВТОМАТ"))
+                    {
+                        System.out.println("---8888-----ddd--inspektor:" + inspektor);
                         inspektor = "АВТОРЕГИСТРАЦИЯ";
+                    }
                     entityMessage.setInspector(inspektor);
 //                    msgToDiscord1 = msgToDiscord1 + inspektor;
                     System.out.println("--------ddd--entityMessage:" + entityMessage);
