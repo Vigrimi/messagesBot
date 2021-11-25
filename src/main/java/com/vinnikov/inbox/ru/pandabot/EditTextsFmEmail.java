@@ -268,9 +268,12 @@ public class EditTextsFmEmail
                     if (arrText[j].contains("/>")) inspektor = arrText[j].replaceAll("/>", "");
                     else inspektor = arrText[j];
 
-                    if (arrText[j + 1].contains("АВТОРЕГИСТРАЦ")) {
+                    if (arrText[j + 1].contains("АВТОРЕГИСТРАЦ") || arrText[j + 1].contains("АВТОМАТ"))
+                    {
                         msgToDiscord1 = msgToDiscord1 + " " + arrText[j + 1] + ", ";
-                    } else if (!arrText[j + 1].contains("АВТОРЕГИСТРАЦ")) {
+                    } else
+                        //if (!arrText[j + 1].contains("АВТОРЕГИСТРАЦ"))
+                        {
                         msgToDiscord1 = msgToDiscord1 + " " + inspektor + " " + arrText[j + 1] + " " + arrText[j + 2]
                                 + " " + arrText[j + 3] + ", ";
                     }
@@ -426,10 +429,11 @@ public class EditTextsFmEmail
                 if(arrText[j].contains("Инспектор"))
                 {
                     String inspektor = arrText[j].replaceAll("/>","");
-                    if (arrText[j+2].contains("000"))
+                    if (arrText[j+2].contains("000") || arrText[j+1].contains("АВТОМАТ"))
                     {
                         msgToDiscord1 = msgToDiscord1 + " АВТОВЫПУСК. ";
-                    } else if (!arrText[j+2].contains("000"))
+                    } else
+                        //if (!arrText[j+2].contains("000"))
                     {
                         msgToDiscord1 = msgToDiscord1 + " " + inspektor + " " + arrText[j+1] + " " + arrText[j+2]
                             + " " + arrText[j+3] + ", ";
