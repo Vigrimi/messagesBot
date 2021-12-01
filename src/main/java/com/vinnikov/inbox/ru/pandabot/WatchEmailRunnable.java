@@ -68,7 +68,7 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
             {
                 LOGGER.info("---Подключаемся к почтовому ящику-> " + LocalDateTime.now());
                 //Подключаемся к почтовому ящику
-                store.connect("imap.yandex.ru", 993, "vasiu", "t5");
+                store.connect("imap.yandex.ru", 993, "v.ru", "t5");
                 LOGGER.info("---Подключились к почтовому ящику-> " + LocalDateTime.now());
 
                 LOGGER.info("---Читаем папку Входящие сообщения-> " + LocalDateTime.now());
@@ -146,7 +146,8 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                                 message.getSubject().contains("Отказано в выпуске") ||
                                 message.getSubject().contains("Выпуск разрешен") ||
                                 message.getSubject().contains("Идет проверка") ||
-                                message.getSubject().contains("Выпуск с обеспечением") // + добавить ниже во флаг
+                                message.getSubject().contains("Выпуск с обеспечением") ||
+                                message.getSubject().contains("Решение различно по товарам") // + добавить ниже во флаг
                         )
                         {
                             System.out.println("-----ЗАШЁЛ---");
@@ -163,7 +164,8 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                                 flagAlta = 1;
                             if (TEXTgetSubject.contains("Присвоен номер") || TEXTgetSubject.contains("Отказано в выпуске")
                             || TEXTgetSubject.contains("Выпуск разрешен") || TEXTgetSubject.contains("Идет проверка")
-                            || TEXTgetSubject.contains("Выпуск с обеспечением") )
+                            || TEXTgetSubject.contains("Выпуск с обеспечением") || TEXTgetSubject
+                                    .contains("Решение различно по товарам") )
                                 flagAlta = 2;
                             LOGGER.info("---WatchEmailRunnable TEXTgetSubject-> " + LocalDateTime.now() + "\n"
                                     + TEXTgetSubject);
