@@ -338,7 +338,9 @@ public class EditTextsFmEmailAltaGTDServer
                             || inspektor.contains("Кругликов Евгений Викторович") || inspektor.isEmpty() ||
                             inspektor.contains("омментарий") || inspektor.contains("CUSTOM ROUTER")
                             || inspektor.contains("ТАМОЖЕН") || inspektor.contains("таможен")
-                            || inspektor.contains("КРУГЛИКОВ ЕВГЕНИЙ ВИКТОРОВИЧ") || inspektor.contains("АВТОМАТ"))
+                            || inspektor.contains("КРУГЛИКОВ ЕВГЕНИЙ ВИКТОРОВИЧ") || inspektor.contains("АВТОМАТ")
+                            || inspektor.contains("КУДРО ЮРИЙ ВИКТОРОВИЧ") || inspektor.contains("кудро юрий викторович")
+                            || inspektor.contains("Кудро Юрий Викторович") )
                     {
                         System.out.println("---8888-----ddd--inspektor:" + inspektor);
                         inspektor = "АВТОРЕГИСТРАЦИЯ";
