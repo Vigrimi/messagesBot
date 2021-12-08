@@ -239,6 +239,8 @@ public class EditTextsFmEmailAltaGTDServer
                     {
                         CalculateQtyGTDPerMonth.getCalculateQtyGTDPerMonth();
                     }
+                    // .....
+                    entityMessage.saveInFile(entityMessage);
                 }
             } else if(arrSubjectFmEmail[i] == null) break;
         }
