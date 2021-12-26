@@ -17,7 +17,8 @@ public interface EntMsgInFileCSVInterf
                 entityMessage.getNumberDT() + ";" + entityMessage.getDolKgRbn() + ";" + entityMessage.getStatusDT()
                 + ";" + entityMessage.getTransportNumber() + ";" + entityMessage.getInspector() + "\n";
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("source.csv",true));
+            BufferedWriter writer = new BufferedWriter(new FileWriter
+                    ("D:\\grIdea\\pandabot\\source.csv",true));
             sleep(200);
             writer.write(lineForCSV);
             sleep(200);

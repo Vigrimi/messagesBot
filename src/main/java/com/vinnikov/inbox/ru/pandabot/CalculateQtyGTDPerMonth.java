@@ -2,14 +2,14 @@ package com.vinnikov.inbox.ru.pandabot;
 
 import java.io.*;
 import java.time.LocalDateTime;
-
 import static com.vinnikov.inbox.ru.pandabot.PandabotApplication.LOGGER;
 import static java.lang.Thread.sleep;
 
 public class CalculateQtyGTDPerMonth
 {
-    private static final String fileNameFlag = "flag.txt";
-    private static final String fileNameQtyGTD = "countQtyGTDPerMonth.txt";
+    private static final String fileNameFlag = "D:\\grIdea\\pandabot\\flag.txt";
+    private static final String fileNameQtyGTD = "D:\\grIdea\\pandabot\\countQtyGTDPerMonth.txt";
+    private static final int tenthDayOfMonth = 10;
 
     public static void getCalculateQtyGTDPerMonth()
     {
@@ -23,7 +23,7 @@ public class CalculateQtyGTDPerMonth
 
         // записать в файл текущее кол-во дт или обнулить, если месяц закончился
         // если первые числа месяца - проверка обнулить или записать кол-во в файл
-        if (rightNow.getDayOfMonth() <= 10)
+        if (rightNow.getDayOfMonth() <= tenthDayOfMonth)
         {
             // считать из файла флаг
             int flag = readFmFile(fileNameFlag);

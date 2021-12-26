@@ -24,8 +24,7 @@ public class ChromeWhatsappThread
             //"//*[@id=\"main\"]/footer/div[1]/div/div/div[2]/div[1]/div/div[2]"; // в хроме 93
             "//*[@id=\"main\"]/footer/div[1]/div/span[2]/div/div[2]/div[1]/div/div[2]"; // в хроме 94
 
-    public ChromeWhatsappThread() {
-    }
+    public ChromeWhatsappThread() {}
 
     // @BeforeClass
    // @Override

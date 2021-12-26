@@ -100,7 +100,8 @@ public class EditTextsFmEmailAltaGTDServer
                     System.out.println("---65 msgToDiscord1:" + msgToDiscord1);
                     flagStop = false;
                 } else // статьей 121 Таможенного - Выпуск условный по стоимости
-                if(text.contains("ВЫПУСК ТОВАРОВ С ОСОБЕННОСТЯМИ, ПРЕДУСМОТРЕННЫМИ СТАТЬЕЙ 121"))
+                if(text.contains("ВЫПУСК ТОВАРОВ С ОСОБЕННОСТЯМИ, ПРЕДУСМОТРЕННЫМИ СТАТЬЕЙ 121") ||
+                        text.contains("ВЫПУСК ПРИ УСЛОВИИ ОБЕСПЕЧЕНИЯ УПЛАТЫ"))
                 {
                     entityMessage.setStatusDT(Enums.RELEASED_USLOVNO_121.getTitle());
                     msgToDiscord1 = getMessageAltaGTDServer(tema, text);
