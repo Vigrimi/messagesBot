@@ -18,10 +18,11 @@ public class WatchDirectory implements Runnable
 {
     //public String[] arrTextsFmEmail;
     private FileReadFromOldCountEmails fileReadFromOldCountEmails;
+    private final String countOldFilePathName = "D:\\grIdea\\pandabot\\countOld.txt";
 
     public WatchDirectory()
     {
-        fileReadFromOldCountEmails = new FileReadFromOldCountEmails(new File("countOld.txt"));
+        fileReadFromOldCountEmails = new FileReadFromOldCountEmails(new File(countOldFilePathName));
     }
 
     @Override
