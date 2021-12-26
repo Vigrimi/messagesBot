@@ -7,6 +7,7 @@ import static com.vinnikov.inbox.ru.pandabot.PandabotApplication.LOGGER;
 public class FileReadFromOldCountEmails
 {
     protected File file;
+    private final String countOldFilePathName = "D:\\grIdea\\pandabot\\countOld.txt";
 
     public FileReadFromOldCountEmails(File file)
     {
@@ -19,7 +20,7 @@ public class FileReadFromOldCountEmails
         if (file == null || !file.getName().endsWith("txt") || file.isDirectory() )
         // проверяем на НАЛ, гетнэйм - имя файла строкой, или директория
         {
-            this.file = new File("countOld.txt");
+            this.file = new File(countOldFilePathName);
         } else
         {
             this.file = file;

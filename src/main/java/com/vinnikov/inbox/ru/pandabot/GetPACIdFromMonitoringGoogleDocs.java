@@ -17,6 +17,7 @@ public class GetPACIdFromMonitoringGoogleDocs
 {
     public static String getPACIdFromMonitoringGoogleDocs(String msgToDiscord1) throws InterruptedException
     {
+        LOGGER.info("---getPACIdFromMonitoringGoogleDocs started-> " + LocalDateTime.now());
         String idFromYacheika = "";
         String idFromYacheika1 = "";
         String findBar1of1String = "";
@@ -204,7 +205,7 @@ driverBuffer.get("https://docs.google.com/spreadsheets/d/11kc0xpiVTHTMwhGTdSU94q
         idFromYacheika1 = idFromYacheika1 + nameOfGood + ", " ;
 
         driverMonitoring.quit(); // закрывает окно
-
+        LOGGER.info("---getPACIdFromMonitoringGoogleDocs finished-> " + LocalDateTime.now());
         return idFromYacheika1;
     }
 }
