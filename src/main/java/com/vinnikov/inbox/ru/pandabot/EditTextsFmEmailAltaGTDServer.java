@@ -2,11 +2,13 @@ package com.vinnikov.inbox.ru.pandabot;
 
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.openqa.selenium.NoSuchElementException;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import static com.vinnikov.inbox.ru.pandabot.PandabotApplication.LOGGER;
 
-public class EditTextsFmEmailAltaGTDServer implements EditTextsGetRoleFmCompanyNameInterf
+public class EditTextsFmEmailAltaGTDServer implements EditTextsGetRoleFmCompanyNameInterf, CheckIfItIsRegistrationMail
 {
     private String msgToDiscord1;
     private EntityMessage entityMessage;
@@ -247,8 +249,9 @@ public class EditTextsFmEmailAltaGTDServer implements EditTextsGetRoleFmCompanyN
         }
     }
 
-    public String getMessageAltaGTDServer(String tema, String text) // сообщение если номер присвоен
+    public String getMessageAltaGTDServer(String tema, String text) // сообщение если номер присвоен, выпуск
     {
+        //boolean THIS_IS_REGISTRATION_MAIL = true;
         try
         {
             int flagOOOorAO = 0;
@@ -328,7 +331,7 @@ public class EditTextsFmEmailAltaGTDServer implements EditTextsGetRoleFmCompanyN
                 if (arrText[j].contains("онтейнер"))
                 {
                     contNumbers = getAllContainersNumbersAltaGTDServer(arrText);
-                    System.out.println("--------bbb--msgToDiscord1:" + contNumbers);
+                    LOGGER.info("--------bbb--msgToDiscord1:" + contNumbers);
                 }
 
                 //System.out.println("--------ccc--msgToDiscord1:" + msgToDiscord1);
@@ -345,12 +348,12 @@ public class EditTextsFmEmailAltaGTDServer implements EditTextsGetRoleFmCompanyN
                             || inspektor.contains("КУДРО ЮРИЙ ВИКТОРОВИЧ") || inspektor.contains("кудро юрий викторович")
                             || inspektor.contains("Кудро Юрий Викторович") )
                     {
-                        System.out.println("---8888-----ddd--inspektor:" + inspektor);
+                        LOGGER.info("---8888-----ddd--inspektor:" + inspektor);
                         inspektor = "АВТОРЕГИСТРАЦИЯ";
                     }
                     entityMessage.setInspector(inspektor);
 //                    msgToDiscord1 = msgToDiscord1 + inspektor;
-                    System.out.println("--------ddd--entityMessage:" + entityMessage);
+                    LOGGER.info("--------ddd--entityMessage:" + entityMessage);
                     break;
                 }
 
@@ -363,7 +366,7 @@ public class EditTextsFmEmailAltaGTDServer implements EditTextsGetRoleFmCompanyN
 
             // что внести в транспорт: контейнеры или фуру или разнорядку
             // импорт+экспорт, фура
-            System.out.println("---------------9999numberTC:" + numberTC);
+            LOGGER.info("---------------9999numberTC:" + numberTC);
             if(contNumbers == null && !numberTC.equalsIgnoreCase("Номер ТС: "))
                 entityMessage.setTransportNumber(numberTC);
             // импорт контейнеры
@@ -379,7 +382,30 @@ public class EditTextsFmEmailAltaGTDServer implements EditTextsGetRoleFmCompanyN
                 entityMessage.setInspector("АВТОВЫПУСК");
             }
 
-            System.out.println("--------eee--entityMessage:" + entityMessage);
+            // проверка, если это присвоено - внести номер дт и инспектор в файл регистраций, если ВЫПУСК то
+            // проверить было ли БОТом обработано сообщение о присвоении и текущая ли дата в номере ДТ
+            String nowDateStr = LocalDate.now().getDayOfMonth() + "";
+            String secondPartDateFmNumberGTD = getsecondPartDateFmNumberGTD(entityMessage.getNumberDT());
+            // если дт присвоена - внести в файл регистраций номер и инспектор
+            if(entityMessage.getStatusDT().equalsIgnoreCase(Enums.REGISTERED_DT.getTitle()))
+            {
+                saveRegisteredNumbers(entityMessage.getNumberDT() + ";" + entityMessage.getInspector() + ";");
+            } else // альта гтд-сервер не может обрабатывать заявления УЭО о выпуске до подачи - при любых
+                // сообщениях (присвоено ЗВ, начата проверка, запросили доки, выпуск) - всегда пишет ВЫПУСК, надо
+                // считать, если в файле регистраций этот номер только один раз, значит присвоили, если два - Выпуск
+            if (entityMessage.getStatusDT().equalsIgnoreCase(Enums.RELEASED_DT.getTitle()) &&
+                    entityMessage.getNumberDT().contains("В")) // В кириллицей
+            {
+                entityMessage = isItRegMail(entityMessage);
+            } else // если сообщение о выпуске и номер ДТ от текущей даты, то надо проверить, было ли БОТом
+                // обработано сообщение о присвоении
+            if (secondPartDateFmNumberGTD.contains(nowDateStr) &&
+                    entityMessage.getStatusDT().equalsIgnoreCase(Enums.RELEASED_DT.getTitle()))
+            {
+                entityMessage = isItRegMail(entityMessage);
+            }
+
+            LOGGER.info("--------eee--entityMessage:" + entityMessage);
         } catch (ArrayIndexOutOfBoundsException ai)
         {
             LOGGER.error("---EditTextsFmEmailAltaGTDServer--REGISTERED вылезли из массива-> "
@@ -492,6 +518,12 @@ public class EditTextsFmEmailAltaGTDServer implements EditTextsGetRoleFmCompanyN
     public String getRoleFmCompanyNameAltaGTDServer(String companyNameFmMail)
     {
         return getRoleFmCompanyNameInterf(companyNameFmMail);
+    }
+
+    public String getsecondPartDateFmNumberGTD(String numberDT)
+    {
+        String[] arr = numberDT.split("/");
+        return arr[1].trim();
     }
 
 }
