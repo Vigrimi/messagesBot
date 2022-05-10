@@ -13,7 +13,6 @@ import static java.lang.Thread.sleep;
 public class BCheckDoesItWorkMsgToDiscord implements Runnable, MyDataHandler {
     private String mesToBot;
     private final String discordTokenFile = "./secrets/discord_token.txt"; // grisha
-                                        // = "./secrets/discord_token_panda.txt"; // panda
 
     public BCheckDoesItWorkMsgToDiscord(String mesToBot) {
         this.mesToBot = mesToBot;
