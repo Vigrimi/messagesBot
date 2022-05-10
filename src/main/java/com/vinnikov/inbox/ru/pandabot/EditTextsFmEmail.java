@@ -9,7 +9,7 @@ import java.util.Arrays;
 import static com.vinnikov.inbox.ru.pandabot.PandabotApplication.LOGGER;
 import static java.lang.Thread.sleep;
 
-public class EditTextsFmEmail
+public class EditTextsFmEmail implements EditTextsGetRoleFmCompanyNameInterf
 {
     private String msgToDiscord1;
 
@@ -268,9 +268,12 @@ public class EditTextsFmEmail
                     if (arrText[j].contains("/>")) inspektor = arrText[j].replaceAll("/>", "");
                     else inspektor = arrText[j];
 
-                    if (arrText[j + 1].contains("АВТОРЕГИСТРАЦ")) {
+                    if (arrText[j + 1].contains("АВТОРЕГИСТРАЦ") || arrText[j + 1].contains("АВТОМАТ"))
+                    {
                         msgToDiscord1 = msgToDiscord1 + " " + arrText[j + 1] + ", ";
-                    } else if (!arrText[j + 1].contains("АВТОРЕГИСТРАЦ")) {
+                    } else
+                        //if (!arrText[j + 1].contains("АВТОРЕГИСТРАЦ"))
+                        {
                         msgToDiscord1 = msgToDiscord1 + " " + inspektor + " " + arrText[j + 1] + " " + arrText[j + 2]
                                 + " " + arrText[j + 3] + ", ";
                     }
@@ -426,10 +429,11 @@ public class EditTextsFmEmail
                 if(arrText[j].contains("Инспектор"))
                 {
                     String inspektor = arrText[j].replaceAll("/>","");
-                    if (arrText[j+2].contains("000"))
+                    if (arrText[j+2].contains("000") || arrText[j+1].contains("АВТОМАТ"))
                     {
                         msgToDiscord1 = msgToDiscord1 + " АВТОВЫПУСК. ";
-                    } else if (!arrText[j+2].contains("000"))
+                    } else
+                        //if (!arrText[j+2].contains("000"))
                     {
                         msgToDiscord1 = msgToDiscord1 + " " + inspektor + " " + arrText[j+1] + " " + arrText[j+2]
                             + " " + arrText[j+3] + ", ";
@@ -656,35 +660,7 @@ public class EditTextsFmEmail
 
     public String getRoleFmCompanyName(String companyNameFmMail)
     {
-        String roleForDiscord = "*" + companyNameFmMail + "*";
-        LOGGER.info("---EditTextsFmEmail--getRoleFmCompanyNam-> " + LocalDateTime.now() + "\n" + roleForDiscord);
-
-        if (roleForDiscord.contains("ДЕТСКОЕ") && roleForDiscord.contains("ПИТАНИЕ")) roleForDiscord = "*НУТРИЦИЯ*";
-        if (roleForDiscord.contains("КОМПАНИЯ") && roleForDiscord.contains("ПРОДУКТ")
-                && roleForDiscord.contains("СЕРВИС")) roleForDiscord = "*ПСервис (ЛЕБО)*";
-        if (roleForDiscord.contains("ФИННПАК")) roleForDiscord = "*ФП*";
-        if (roleForDiscord.contains("ТПП") && roleForDiscord.contains("ВКУСНЫЕ")) roleForDiscord = "*КОНСЕРВЫ*";
-        if (roleForDiscord.contains("АГРОИМПЭКС")) roleForDiscord = "*АИ*";
-        if (roleForDiscord.contains("АБ-МАРКЕТ")) roleForDiscord = "*АБ МАРКЕТ*";
-        if (roleForDiscord.contains("РУСАГРО-САХАР")) roleForDiscord = "*РАС*";
-        if (roleForDiscord.contains("ЦЕНТРСНАБ")) roleForDiscord = "*ЦентрСнаб*";
-        if (roleForDiscord.contains("ФРУТИМПЭКС")) roleForDiscord = "*Фрутимпэкс*";
-        if (roleForDiscord.contains("ЛЕКС")) roleForDiscord = "*ЛЕКС*";
-        if (roleForDiscord.contains("ТД") && roleForDiscord.contains("ДОКТОР")) roleForDiscord = "*ДОКТОР АППЕТИТ*";
-        if (roleForDiscord.contains("@И") && roleForDiscord.contains("ГРУПП")) roleForDiscord = "*И Групп*";
-        if (roleForDiscord.contains("ГЛАТФЕЛТЕР")) roleForDiscord = "*Контейнершипс (ГЛАТФЕЛТЕР)*";
-        if (roleForDiscord.contains("МАКАЛПАЙН")) roleForDiscord = "*Контейнершипс (МАКАЛПАЙН)*";
-        if (roleForDiscord.contains("САМАРАМАЛТ")) roleForDiscord = "*Контейнершипс (САМАРАМАЛТ)*";
-        if (roleForDiscord.contains("ТД") && roleForDiscord.contains("АПРИКО")) roleForDiscord = "*Априко*";
-        if (roleForDiscord.contains("ФЕС") && roleForDiscord.contains("ПРОДУКТ")) roleForDiscord = "*ФЕС ПРОДУКТ*";
-        if (roleForDiscord.contains("АУТСПАН") && roleForDiscord.contains("ИНТЕРНЕШНЛ")) roleForDiscord = "*АУТСПАН*";
-        if (roleForDiscord.contains("ТОРГОВЫЙ") && roleForDiscord.contains("ДОМ")) roleForDiscord = "*ТДМ*";
-        if (roleForDiscord.contains("ПИЩЕВОЙ") && roleForDiscord.contains("КОМБИНАТ")) roleForDiscord = "*ПК АЗОВСКИЙ*";
-        if (roleForDiscord.contains("УНИТРОН") && roleForDiscord.contains("ПРОМ")) roleForDiscord = "*УНИТРОН ПРОМ*";
-        if (roleForDiscord.contains("УНИТРОН") && roleForDiscord.contains("ФИРМА")) roleForDiscord = "*Ф.УНИ*";
-        if (roleForDiscord.contains("АЛЬФА") && roleForDiscord.contains("ФУД")) roleForDiscord = "*АЛЬФА ФУД ИНГРЕДИЕНТС*";
-
-        return roleForDiscord;
+        return getRoleFmCompanyNameInterf(companyNameFmMail);
     }
 
 }

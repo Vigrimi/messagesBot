@@ -16,6 +16,7 @@ public class GetBTTIdFromMonitoringGoogleDocs
 
     public static String getBTTIdFromMonitoringGoogleDocs(String msgToDiscord1) throws InterruptedException
     {
+        LOGGER.info("----getBTTIdFromMonit started-> " + LocalDateTime.now());
         String idFromYacheika = "";
         String idFromYacheika1 = "";
         String findBar1of1String = "";
@@ -517,13 +518,14 @@ public class GetBTTIdFromMonitoringGoogleDocs
         LOGGER.info("---getBTTIdFromMonit 505 idFromYacheika1-> " + LocalDateTime.now() + "\n" + idFromYacheika1);
 
         driverMonitoring.quit(); // закрывает окно
-
+        LOGGER.info("----getBTTIdFromMonit finished-> " + LocalDateTime.now());
         //System.out.println("idFromYacheika1 " + idFromYacheika1);
         return idFromYacheika1;
     }
 
     public static String getBTTCompanyNameFromMonitoringGoogleDocs(String msgToDiscord1) throws InterruptedException
     {
+        LOGGER.info("----getBTTCompanyNameFromMonitoringGoogleDocs started-> " + LocalDateTime.now());
         String findBar1of1String = "";
         String nameOfCompany = "";
         String yacheyka = "";
@@ -736,12 +738,13 @@ public class GetBTTIdFromMonitoringGoogleDocs
         nameOfCompany = nameOfCompany + ", ";
         driverMonitoring.quit(); // закрывает окно
         LOGGER.info("---getBTTIdFromMonit getBTTCompanyName 726-> " + LocalDateTime.now() + "\n" + nameOfCompany);
-
+        LOGGER.info("----getBTTCompanyNameFromMonitoringGoogleDocs finished-> " + LocalDateTime.now());
         return nameOfCompany;
     }
 
     public static int checkBTTWhereItIs(String yacheyka) // находим порядковый номер столбца
     {
+        LOGGER.info("----getBTT checkBTTWhereItIs started-> " + LocalDateTime.now());
         String[] arr = new String[]{"0","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S"
                 ,"T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN"
                 ,"AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ","BA","BB","BC","BD","BE","BF","BG","BH"
@@ -767,12 +770,13 @@ public class GetBTTIdFromMonitoringGoogleDocs
         }
         LOGGER.info("---getBTTIdFromMonit checkBTTWhereItIs coordinataYacheyki-> " + LocalDateTime.now()
                 + "\n" + coordinataYacheyki);
-
+        LOGGER.info("----getBTTIdFromMonit checkBTTWhereItIs finished-> " + LocalDateTime.now());
         return coordinataYacheyki;
     }
 
     public static String getBTTYacheykaFmBuffer() throws InterruptedException
     {
+        LOGGER.info("----getBTTIdFromMonit getBTTYacheykaFmBuffer started-> " + LocalDateTime.now());
         String yacheyka1 = "";
         try
         {
@@ -803,6 +807,7 @@ public class GetBTTIdFromMonitoringGoogleDocs
             LOGGER.error("---getBTTIdFromMonit getBTTYacheykaFmBuffer catch-> "
                     + LocalDateTime.now() + "\n" + ne);
         }
+        LOGGER.info("----getBTTIdFromMonit getBTTYacheykaFmBuffer finished-> " + LocalDateTime.now());
         return yacheyka1;
     }
 }

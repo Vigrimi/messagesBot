@@ -3,7 +3,6 @@ package com.vinnikov.inbox.ru.pandabot;
 import javax.activation.CommandMap;
 import javax.activation.MailcapCommandMap;
 import javax.mail.*;
-import javax.mail.internet.InternetAddress;
 import javax.management.RuntimeErrorException;
 import javax.management.RuntimeOperationsException;
 import java.io.File;
@@ -13,7 +12,7 @@ import java.util.Properties;
 
 import static com.vinnikov.inbox.ru.pandabot.PandabotApplication.LOGGER;
 
-public class WatchEmailRunnable implements Runnable//, AutoCloseable
+public class WatchEmailRunnable implements Runnable, FileWriteInRegisteredNumbersInterf//, AutoCloseable
 {
     public int countOld;
     private String textFmEmail;
@@ -22,7 +21,11 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
     public String[] arrTextsFmEmailTKS;
     public String[] arrTextsFmEmailAlta;
     private FileWriteInOldCountEmails fileWriteInOldCountEmails;
-    private int flagAlta;
+    private int flagTKSorAlta;
+    private final int TKS = 0;
+    private final int SVD_ALTA = 1;
+    private final int ALTA_GTD_SERVER = 2;
+    private final String countOldFilePathName = "D:\\grIdea\\pandabot\\countOld.txt";
 
     public WatchEmailRunnable(int countOld) {
         this.countOld = countOld;
@@ -31,7 +34,7 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
         arrSubjectFmEmailAlta = new String[300];
         arrTextsFmEmailTKS = new String[700];
         arrTextsFmEmailAlta = new String[700];
-        fileWriteInOldCountEmails = new FileWriteInOldCountEmails (new File("countOld.txt"));
+        fileWriteInOldCountEmails = new FileWriteInOldCountEmails (new File(countOldFilePathName));
 ///////
         MailcapCommandMap mc = (MailcapCommandMap) CommandMap.getDefaultCommandMap();
         mc.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
@@ -69,6 +72,7 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                 LOGGER.info("---Подключаемся к почтовому ящику-> " + LocalDateTime.now());
                 //Подключаемся к почтовому ящику
                 store.connect("imap.yandex.ru", 993, "v.ru", "t5");
+                        //store.addConnectionListener(store.connect());
                 LOGGER.info("---Подключились к почтовому ящику-> " + LocalDateTime.now());
 
                 LOGGER.info("---Читаем папку Входящие сообщения-> " + LocalDateTime.now());
@@ -92,9 +96,9 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                     Message[] messages = inbox.getMessages(countOld+1, countNew);
 
                     fileWriteInOldCountEmails.writeToFileString(countNew);
-                    flagAlta = 0;
-                    int indexTKS = 0;
-                    int indexAlta = 0;
+                    flagTKSorAlta = TKS;
+                    int indexTKS = 0; // индекс элемента в массиве
+                    int indexAlta = 0; // индекс элемента в массиве
                     //Циклом пробегаемся по всем сообщениям
                     for (Message message : messages)
                     {
@@ -140,17 +144,19 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                                 message.getSubject().contains("назначен ДОСМОТР") ||
                                 message.getSubject().contains("Рекомендовано уплатить  ввозные таможенные пошлины, налоги") ||
                                 // для Альты svd-alta
-                                // message.getSubject().contains("Уведомление об изменении статуса процедуры ЭД") ||
+                                message.getSubject().contains("Уведомление об изменении статуса процедуры ЭД") ||
                                 // для Альты (ГТД-Сервер)  Выпуск разрешен
                                 message.getSubject().contains("Присвоен номер") ||
                                 message.getSubject().contains("Отказано в выпуске") ||
                                 message.getSubject().contains("Выпуск разрешен") ||
-                                message.getSubject().contains("Идет проверка") // + добавить ниже во флаг
+                                message.getSubject().contains("Идет проверка") ||
+                                message.getSubject().contains("Выпуск с обеспечением") ||
+                                message.getSubject().contains("Решение различно по товарам") // + добавить ниже во флаг
                         )
                         {
                             System.out.println("-----ЗАШЁЛ---");
                             String textFmTypeMultipart = "";
-                            flagAlta = 0;
+                            flagTKSorAlta = TKS;
                             //От кого
                             //String from = ((InternetAddress) message.getFrom()[0]).getAddress();
                             //System.out.println("\nFROM: " + from);
@@ -158,16 +164,24 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                             //Тема письма
                             String TEXTgetSubject = message.getSubject();
                             // проверка - если сообщение от svd-альты, то флагАльта = 1; если альта-гтд-сервер = 2
+
+                            /*// !!!!!!!!!! так как в данное время БОТ не обрабатывает мэйлы с svd-альты, то присваивание
+                            // этого флага отключено
                             if (TEXTgetSubject.contains("Уведомление об изменении статуса процедуры ЭД"))
-                                flagAlta = 1;
+                                flagTKSorAlta = SVD_ALTA;*/
+
                             if (TEXTgetSubject.contains("Присвоен номер") || TEXTgetSubject.contains("Отказано в выпуске")
-                            || TEXTgetSubject.contains("Выпуск разрешен") || TEXTgetSubject.contains("Идет проверка") )
-                                flagAlta = 2;
+                            || TEXTgetSubject.contains("Выпуск разрешен") || TEXTgetSubject.contains("Идет проверка")
+                            || TEXTgetSubject.contains("Выпуск с обеспечением") || TEXTgetSubject
+                                    .contains("Решение различно по товарам") )
+                                flagTKSorAlta = ALTA_GTD_SERVER;
                             LOGGER.info("---WatchEmailRunnable TEXTgetSubject-> " + LocalDateTime.now() + "\n"
                                     + TEXTgetSubject);
                             // Альта или ТКС - добавить в свой нужный массив
-                            if(flagAlta == 0) arrSubjectFmEmailTKS[indexTKS] = TEXTgetSubject;
-                            else arrSubjectFmEmailAlta[indexAlta] = TEXTgetSubject;
+                            if(flagTKSorAlta == TKS) arrSubjectFmEmailTKS[indexTKS] = TEXTgetSubject;
+                            else // если БОТ работает только по ALTA_GTD_SERVER
+                                if(flagTKSorAlta == ALTA_GTD_SERVER)
+                                    arrSubjectFmEmailAlta[indexAlta] = TEXTgetSubject;
                             // тело письма
                             String TEXTgetContent = message.getContent().toString();
                             //arrTextsFmEmailTKS[index] = TEXTgetContent;
@@ -190,21 +204,40 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                             {
                                 textFmTypeMultipart = TEXTgetContent.replaceAll("\r"," ")
                                         .replaceAll("\n"," ");
+                                System.out.println("------207 textFmTypeMultipart:" + textFmTypeMultipart);
                             }
+
+                            // для Альта ГТД Сервер - записать в файл регистраций выпуск ЗВ
+                            if (textFmTypeMultipart.contains("Выпуск заявления"))
+                                saveRegisteredNumbers(textFmTypeMultipart);
+
                             // проверка, если сообщение из Альты, но не для обработки, то понизить индекс
-                            if (flagAlta == 1) // svd-alta
+                            if (flagTKSorAlta == SVD_ALTA) // svd-alta
                             {
-                                BCheckDoesItWork bot = new BCheckDoesItWork(textFmTypeMultipart);
-                                bot.run();
+//                                BCheckDoesItWork bot = new BCheckDoesItWork(textFmTypeMultipart);
+//                                bot.run();
 
                                 // !!!!!!! что надо обрабатывать из Альты
                                 System.out.println("---7777:" + textFmTypeMultipart);
-                                if ( textFmTypeMultipart.contains("Присвоен номер ДТ") ||
-                                        textFmTypeMultipart.contains("ыпуск товаров разреше") ||
-                                        textFmTypeMultipart.contains("Доп. проверка по классификации") )
-                                        //textFmTypeMultipart.contains("Статус процедуры: Сканирование оригиналов") )
+                                if ( //textFmTypeMultipart.contains("Присвоен номер ДТ")
+                                        //textFmTypeMultipart.contains("Заявление зарегистрировано в ТО")
+                                        textFmTypeMultipart.contains("Выпуск заявления")
+                                        // || textFmTypeMultipart.contains("ыпуск товаров разреше")
+                                        // || textFmTypeMultipart.contains("Доп. проверка по классификации")
+                                        //textFmTypeMultipart.contains("Статус процедуры: Сканирование оригиналов")
+                                )
                                 {
-                                    arrTextsFmEmailAlta[indexAlta] = textFmTypeMultipart;
+                                    /* // разблокировать это если надо, чтобы БОТ обрабатывал текст из SVD_ALTA
+                                    arrTextsFmEmailAlta[indexAlta] = textFmTypeMultipart;*/
+
+                                    // сейчас сообщения из SVD_ALTA не обрабатываются БОТом, а нужны для статистики,
+                                    // чтобы присвоения записывать в файл и БОТ мог сверяться с выпусками из
+                                    // ГТД-СЕРВЕРА и если сообщение о регистрации прозевал, то написать его перед тем
+                                    // как написать о выпуске
+                                    // если ЗВ УЭО присвоено или выпущено - записать в файл регистраций
+                                    saveRegisteredNumbers(textFmTypeMultipart);
+                                    indexAlta--;
+                                    //int q = 1; // просто так
                                 } else
                                 {
                                     textFmTypeMultipart = null;
@@ -213,17 +246,19 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                                     indexAlta--;
                                 }
                             } else
-                            if (flagAlta == 2) // alta гтд сервер
+                            if (flagTKSorAlta == ALTA_GTD_SERVER) // alta гтд сервер
                             {
-                                BCheckDoesItWork bot = new BCheckDoesItWork(textFmTypeMultipart);
-                                bot.run();
+//                                BCheckDoesItWork bot = new BCheckDoesItWork(textFmTypeMultipart);
+//                                bot.run();
                                 // !!!!!!! что надо обрабатывать из Альты
                                 System.out.println("---7777:" + textFmTypeMultipart);
                                 arrTextsFmEmailAlta[indexAlta] = textFmTypeMultipart;
                                 System.out.println("---8888:" + arrTextsFmEmailAlta[indexAlta]);
-                            } else // если ткс в теме: "ЭД:  10"
+                            } else // если ткс в теме: "ЭД:  10" или "Уведомление об изменении статуса процедуры ЭД"
                             { // arrSubjectFmEmail[index] = TEXTgetSubject;
-                                if (TEXTgetSubject.contains("ЭД:  10")) // такое игнорить
+                                // такое игнорить
+                                if (TEXTgetSubject.contains("ЭД:  10")
+                                || TEXTgetSubject.contains("Уведомление об изменении статуса процедуры ЭД") )
                                 {
                                     arrSubjectFmEmailTKS[indexTKS] = null;
                                     arrTextsFmEmailTKS[indexTKS] = null;
@@ -297,9 +332,9 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
 
                     // *************************************   */
                             LOGGER.info("---приехали1 WatchEmailRunnable-> " + LocalDateTime.now());
-                            if(flagAlta == 0) indexTKS++;
-                            else /*if(flagAlta > 0)*/ indexAlta++;
-                            System.out.println(indexTKS + "-indexTKS--------------indexAlta:" + indexAlta);
+                            if(flagTKSorAlta == TKS) indexTKS++;
+                            else /*if(flagAlta != TKS)*/ indexAlta++;
+                            LOGGER.info(indexTKS + "-indexTKS--------------indexAlta:" + indexAlta);
                         }
                     }
 // !!!!!!!!!!!!!! тут по идее можно закрыть сторе и инбокс
@@ -377,7 +412,7 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                     LOGGER.error("---WatchEmailRunnable 374 catch-> " + LocalDateTime.now() + "\n" + e);
                 }
             }
-            if(arrTextsFmEmailAlta[0] != null && flagAlta == 1) // мэйл из Альты svd-alta
+            if(arrTextsFmEmailAlta[0] != null && flagTKSorAlta == SVD_ALTA) // мэйл из Альты svd-alta
             {
                 EditTextsFmEmailAlta editTextsFmEmailAlta = new EditTextsFmEmailAlta();
                 try {
@@ -386,7 +421,7 @@ public class WatchEmailRunnable implements Runnable//, AutoCloseable
                     LOGGER.error("---WatchEmailRunnable 383 catch-> " + LocalDateTime.now() + "\n" + e);
                 }
             }
-            if(arrTextsFmEmailAlta[0] != null && flagAlta == 2) // мэйл из Альты гтд-сервер
+            if(arrTextsFmEmailAlta[0] != null && flagTKSorAlta != SVD_ALTA) // мэйл из Альты гтд-сервер
             {
                 EditTextsFmEmailAltaGTDServer editTextsFmEmailAltaGTDServer = new EditTextsFmEmailAltaGTDServer();
                 try {

@@ -11,20 +11,26 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @Getter
 @Setter
-public class EntityMessage
+public class EntityMessage implements EntMsgInFileCSVInterf
 {
     private String comment;
     private String companyName;
     private String numberDT;
+    private String dolKgRbn;
     private String statusDT;
     private String transportNumber;
     private String inspector;
 
+//    public static void saveEntityInFileCSV(EntityMessage entityMessage)
+//    {
+//        String lineInFile =
+//    }
+
     @Override
     public String toString()
     {
-        return "" + comment + ", " + companyName + ", " + numberDT + ", " + statusDT + ", " + transportNumber + ", "
-                + inspector;
+        return "" + comment + ", " + companyName + ", " + numberDT + ", " + dolKgRbn + ", " +
+                statusDT + ", " + transportNumber + ", " + inspector;
 //                "EntityMessage{" +
 //                "comment='" + comment + '\'' +
 //                ", companyName='" + companyName + '\'' +

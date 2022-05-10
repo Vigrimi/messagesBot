@@ -250,7 +250,9 @@ public class GetIdFromMonitoringGoogleDocs
                                     int qty = 0;
                                     if (where > 3) qty = where - 3;
                                     else if (where < 3) qty = 3 - where;
-        System.out.println("----if(!yacheyka.startsWith(C) && nameOfGood != null)--qty:" + qty);
+   LOGGER.info("---getIdFromMonitoring 253-if(!yacheyka.startsWith(C) && nameOfGood != null)--qty:" + qty + "\n"
+           + LocalDateTime.now());
+//        System.out.println("----if(!yacheyka.startsWith(C) && nameOfGood != null)--qty:" + qty);
                                     Robot robott1 = null;
                                     for (int rr = 0; rr < qty; rr++)
                                     {
@@ -383,13 +385,14 @@ public class GetIdFromMonitoringGoogleDocs
         }
 
         driverMonitoring.quit(); // закрывает окно
-
+        LOGGER.info("---getIdFromMonitoring finished-> " + LocalDateTime.now());
         //System.out.println("idFromYacheika1 " + idFromYacheika1);
         return idFromYacheika1;
     }
 
     public static int checkWhereItIs(String yacheyka) // находим порядковый номер столбца
     {
+        LOGGER.info("---getIdFromMonitoring checkWhereItIs started-> " + LocalDateTime.now());
         String[] arr = new String[]{"0","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S"
                 ,"T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN"
                 ,"AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ","BA","BB","BC","BD","BE","BF","BG","BH"
@@ -422,11 +425,13 @@ public class GetIdFromMonitoringGoogleDocs
         }
         LOGGER.info("---getIdFromMonitoring checkWhereItIs 402 coordinataYacheyki-> " + LocalDateTime.now()
                 + "\n" + coordinataYacheyki);
+        LOGGER.info("---getIdFromMonitoring checkWhereItIs finished-> " + LocalDateTime.now());
         return coordinataYacheyki;
     }
 
     public static String getYacheykaFmBuffer() throws InterruptedException
     {
+        LOGGER.info("---getIdFromMonitoring getYacheykaFmBuffer started-> " + LocalDateTime.now());
         String yacheyka1 = "";
         try
         {
@@ -456,6 +461,7 @@ public class GetIdFromMonitoringGoogleDocs
             LOGGER.error("---getIdFromMonitoring getYacheykaFmBuffer 435 ЧТО-ТО С ГУГЛ-ЭКСЕЛЕМ catch-> "
                     + LocalDateTime.now() + "\n" + ne);
         }
+        LOGGER.info("---getIdFromMonitoring getYacheykaFmBuffer finished-> " + LocalDateTime.now());
         return yacheyka1;
     }
 }

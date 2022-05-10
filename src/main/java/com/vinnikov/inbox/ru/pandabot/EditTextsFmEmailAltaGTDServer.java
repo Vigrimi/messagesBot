@@ -2,11 +2,13 @@ package com.vinnikov.inbox.ru.pandabot;
 
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.openqa.selenium.NoSuchElementException;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import static com.vinnikov.inbox.ru.pandabot.PandabotApplication.LOGGER;
 
-public class EditTextsFmEmailAltaGTDServer
+public class EditTextsFmEmailAltaGTDServer implements EditTextsGetRoleFmCompanyNameInterf, CheckIfItIsRegistrationMail
 {
     private String msgToDiscord1;
     private EntityMessage entityMessage;
@@ -100,7 +102,8 @@ public class EditTextsFmEmailAltaGTDServer
                     System.out.println("---65 msgToDiscord1:" + msgToDiscord1);
                     flagStop = false;
                 } else // статьей 121 Таможенного - Выпуск условный по стоимости
-                if(text.contains("ВЫПУСК ТОВАРОВ С ОСОБЕННОСТЯМИ, ПРЕДУСМОТРЕННЫМИ СТАТЬЕЙ 121"))
+                if(text.contains("ВЫПУСК ТОВАРОВ С ОСОБЕННОСТЯМИ, ПРЕДУСМОТРЕННЫМИ СТАТЬЕЙ 121") ||
+                        text.contains("ВЫПУСК ПРИ УСЛОВИИ ОБЕСПЕЧЕНИЯ УПЛАТЫ"))
                 {
                     entityMessage.setStatusDT(Enums.RELEASED_USLOVNO_121.getTitle());
                     msgToDiscord1 = getMessageAltaGTDServer(tema, text);
@@ -239,13 +242,16 @@ public class EditTextsFmEmailAltaGTDServer
                     {
                         CalculateQtyGTDPerMonth.getCalculateQtyGTDPerMonth();
                     }
+                    // .....
+                    entityMessage.saveInFile(entityMessage);
                 }
             } else if(arrSubjectFmEmail[i] == null) break;
         }
     }
 
-    public String getMessageAltaGTDServer(String tema, String text) // сообщение если номер присвоен
+    public String getMessageAltaGTDServer(String tema, String text) // сообщение если номер присвоен, выпуск
     {
+        //boolean THIS_IS_REGISTRATION_MAIL = true;
         try
         {
             int flagOOOorAO = 0;
@@ -258,11 +264,17 @@ public class EditTextsFmEmailAltaGTDServer
 
                     // взять из темы: номер ДТ
             String[] arrTema = tema.split(" ");
-            String numberDT = arrTema[1];
-            entityMessage.setNumberDT(numberDT);
+            String numberDT = "";
+
             // слова из названия импортёра
             for (int i = 0; i < arrTema.length; i++)
             {
+                if(arrTema[i].equalsIgnoreCase("ДТ"))
+                {
+                    numberDT = arrTema[i+1];
+                    entityMessage.setNumberDT(numberDT);
+                }
+
                 if(arrTema[i].equalsIgnoreCase("ООО") || arrTema[i].equalsIgnoreCase("АО"))
                 {
                     //flagExport = 1;
@@ -289,6 +301,21 @@ public class EditTextsFmEmailAltaGTDServer
             LOGGER.info("---EditTextsFmEmailAltaGTDServer---911-> " + LocalDateTime.now() + "\n" + Arrays.toString(arrText));
             for (int j = 0; j < arrText.length; j++)
             {
+                if (arrText[j].contains("Цена:") || arrText[j].contains("цена:") || arrText[j].contains("ЦЕНА:")
+                        || arrText[j].contains("ИТС:") )
+                {
+                    String dollarKg = arrText[j];
+                    for (int k = j + 1; k < arrText.length; k++)
+                    {
+                        if(arrText[k].contains("олучатель") || arrText[k].contains("ОЛУЧАТЕЛЬ")) break;
+                        if(arrText[k].contains("тправитель") || arrText[k].contains("ТПРАВИТЕЛЬ")) break;
+                        if(arrText[k].contains("тоимость") || arrText[k].contains("СТОИМОСТЬ")) break;
+                        if(arrText[k].contains("омментарий") || arrText[k].contains("ОММЕНТАРИЙ")) break;
+                        dollarKg = dollarKg + " " + arrText[k];
+                    }
+                    dollarKg = dollarKg.trim();
+                    entityMessage.setDolKgRbn(dollarKg);
+                }
 
                 if (arrText[j].contains("ТС:") /*&& !text.contains("РУСАГРО")*/)
                 {
@@ -304,7 +331,7 @@ public class EditTextsFmEmailAltaGTDServer
                 if (arrText[j].contains("онтейнер"))
                 {
                     contNumbers = getAllContainersNumbersAltaGTDServer(arrText);
-                    System.out.println("--------bbb--msgToDiscord1:" + contNumbers);
+                    LOGGER.info("--------bbb--msgToDiscord1:" + contNumbers);
                 }
 
                 //System.out.println("--------ccc--msgToDiscord1:" + msgToDiscord1);
@@ -312,13 +339,21 @@ public class EditTextsFmEmailAltaGTDServer
                 {
                     String inspektor = "Инспектор:"+ " " + arrText[j + 1] + " " + arrText[j + 2]
                             + " " + arrText[j + 3];
+
                     if (inspektor.contains("аможн") || inspektor.contains("АМОЖН") || inspektor.isBlank()
                             || inspektor.contains("Кругликов Евгений Викторович") || inspektor.isEmpty() ||
-                            inspektor.contains("омментарий") || inspektor.contains("CUSTOM ROUTER"))
+                            inspektor.contains("омментарий") || inspektor.contains("CUSTOM ROUTER")
+                            || inspektor.contains("ТАМОЖЕН") || inspektor.contains("таможен")
+                            || inspektor.contains("КРУГЛИКОВ ЕВГЕНИЙ ВИКТОРОВИЧ") || inspektor.contains("АВТОМАТ")
+                            || inspektor.contains("КУДРО ЮРИЙ ВИКТОРОВИЧ") || inspektor.contains("кудро юрий викторович")
+                            || inspektor.contains("Кудро Юрий Викторович") )
+                    {
+                        LOGGER.info("---8888-----ddd--inspektor:" + inspektor);
                         inspektor = "АВТОРЕГИСТРАЦИЯ";
+                    }
                     entityMessage.setInspector(inspektor);
 //                    msgToDiscord1 = msgToDiscord1 + inspektor;
-                    System.out.println("--------ddd--entityMessage:" + entityMessage);
+                    LOGGER.info("--------ddd--entityMessage:" + entityMessage);
                     break;
                 }
 
@@ -331,7 +366,7 @@ public class EditTextsFmEmailAltaGTDServer
 
             // что внести в транспорт: контейнеры или фуру или разнорядку
             // импорт+экспорт, фура
-            System.out.println("---------------9999numberTC:" + numberTC);
+            LOGGER.info("---------------9999numberTC:" + numberTC);
             if(contNumbers == null && !numberTC.equalsIgnoreCase("Номер ТС: "))
                 entityMessage.setTransportNumber(numberTC);
             // импорт контейнеры
@@ -347,7 +382,30 @@ public class EditTextsFmEmailAltaGTDServer
                 entityMessage.setInspector("АВТОВЫПУСК");
             }
 
-            System.out.println("--------eee--entityMessage:" + entityMessage);
+            // проверка, если это присвоено - внести номер дт и инспектор в файл регистраций, если ВЫПУСК то
+            // проверить было ли БОТом обработано сообщение о присвоении и текущая ли дата в номере ДТ
+            String nowDateStr = LocalDate.now().getDayOfMonth() + "";
+            String secondPartDateFmNumberGTD = getsecondPartDateFmNumberGTD(entityMessage.getNumberDT());
+            // если дт присвоена - внести в файл регистраций номер и инспектор
+            if(entityMessage.getStatusDT().equalsIgnoreCase(Enums.REGISTERED_DT.getTitle()))
+            {
+                saveRegisteredNumbers(entityMessage.getNumberDT() + ";" + entityMessage.getInspector() + ";");
+            } else // альта гтд-сервер не может обрабатывать заявления УЭО о выпуске до подачи - при любых
+                // сообщениях (присвоено ЗВ, начата проверка, запросили доки, выпуск) - всегда пишет ВЫПУСК, надо
+                // считать, если в файле регистраций этот номер только один раз, значит присвоили, если два - Выпуск
+            if (entityMessage.getStatusDT().equalsIgnoreCase(Enums.RELEASED_DT.getTitle()) &&
+                    entityMessage.getNumberDT().contains("В")) // В кириллицей
+            {
+                entityMessage = isItRegMail(entityMessage);
+            } else // если сообщение о выпуске и номер ДТ от текущей даты, то надо проверить, было ли БОТом
+                // обработано сообщение о присвоении
+            if (secondPartDateFmNumberGTD.contains(nowDateStr) &&
+                    entityMessage.getStatusDT().equalsIgnoreCase(Enums.RELEASED_DT.getTitle()))
+            {
+                entityMessage = isItRegMail(entityMessage);
+            }
+
+            LOGGER.info("--------eee--entityMessage:" + entityMessage);
         } catch (ArrayIndexOutOfBoundsException ai)
         {
             LOGGER.error("---EditTextsFmEmailAltaGTDServer--REGISTERED вылезли из массива-> "
@@ -355,6 +413,8 @@ public class EditTextsFmEmailAltaGTDServer
         }
         LOGGER.info("---EditTextsFmEmailAltaGTDServer--REGISTERED entityMessage-> " + LocalDateTime.now()
                 + "\n" + entityMessage);
+
+        if(entityMessage.getDolKgRbn() == null) entityMessage.setDolKgRbn("");
         msgToDiscord1 = entityMessage.toString();
 
         LOGGER.info("---EditTextsFmEmailAltaGTDServer--REGISTERED msgToDiscord1-> " + LocalDateTime.now()
@@ -457,36 +517,13 @@ public class EditTextsFmEmailAltaGTDServer
 
     public String getRoleFmCompanyNameAltaGTDServer(String companyNameFmMail)
     {
-        String roleForDiscord = "*" + companyNameFmMail + "*";
-        LOGGER.info("---EditTextsFmEmailAltaGTDServer--getRoleFmCompanyNam-> " + LocalDateTime.now()
-                + "\n" + roleForDiscord);
+        return getRoleFmCompanyNameInterf(companyNameFmMail);
+    }
 
-        if (roleForDiscord.contains("ДЕТСКОЕ") && roleForDiscord.contains("ПИТАНИЕ")) roleForDiscord = "*НУТРИЦИЯ*";
-        if (roleForDiscord.contains("КОМПАНИЯ") && roleForDiscord.contains("ПРОДУКТ")
-                && roleForDiscord.contains("СЕРВИС")) roleForDiscord = "*ПСервис (ЛЕБО)*";
-        if (roleForDiscord.contains("ФИННПАК")) roleForDiscord = "*ФП*";
-        if (roleForDiscord.contains("ТПП") && roleForDiscord.contains("ВКУСНЫЕ")) roleForDiscord = "*КОНСЕРВЫ*";
-        if (roleForDiscord.contains("АГРОИМПЭКС")) roleForDiscord = "*АИ*";
-        if (roleForDiscord.contains("АБ-МАРКЕТ")) roleForDiscord = "*АБ МАРКЕТ*";
-        if (roleForDiscord.contains("РУСАГРО-САХАР")) roleForDiscord = "*РАС*";
-        if (roleForDiscord.contains("ЦЕНТРСНАБ")) roleForDiscord = "*ЦентрСнаб*";
-        if (roleForDiscord.contains("ФРУТИМПЭКС")) roleForDiscord = "*Фрутимпэкс*";
-        if (roleForDiscord.contains("ЛЕКС")) roleForDiscord = "*ЛЕКС*";
-        if (roleForDiscord.contains("ТД") && roleForDiscord.contains("ДОКТОР")) roleForDiscord = "*ДОКТОР АППЕТИТ*";
-        if (roleForDiscord.contains("@И") && roleForDiscord.contains("ГРУПП")) roleForDiscord = "*И Групп*";
-        if (roleForDiscord.contains("ГЛАТФЕЛТЕР")) roleForDiscord = "*Контейнершипс (ГЛАТФЕЛТЕР)*";
-        if (roleForDiscord.contains("МАКАЛПАЙН")) roleForDiscord = "*Контейнершипс (МАКАЛПАЙН)*";
-        if (roleForDiscord.contains("САМАРАМАЛТ")) roleForDiscord = "*Контейнершипс (САМАРАМАЛТ)*";
-        if (roleForDiscord.contains("ТД") && roleForDiscord.contains("АПРИКО")) roleForDiscord = "*Априко*";
-        if (roleForDiscord.contains("ФЕС") && roleForDiscord.contains("ПРОДУКТ")) roleForDiscord = "*ФЕС ПРОДУКТ*";
-        if (roleForDiscord.contains("АУТСПАН") && roleForDiscord.contains("ИНТЕРНЕШНЛ")) roleForDiscord = "*АУТСПАН*";
-        if (roleForDiscord.contains("ТОРГОВЫЙ") && roleForDiscord.contains("ДОМ")) roleForDiscord = "*ТДМ*";
-        if (roleForDiscord.contains("ПИЩЕВОЙ") && roleForDiscord.contains("КОМБИНАТ")) roleForDiscord = "*ПК АЗОВСКИЙ*";
-        if (roleForDiscord.contains("УНИТРОН") && roleForDiscord.contains("ПРОМ")) roleForDiscord = "*УНИТРОН ПРОМ*";
-        if (roleForDiscord.contains("УНИТРОН") && roleForDiscord.contains("ФИРМА")) roleForDiscord = "*Ф.УНИ*";
-        if (roleForDiscord.contains("АЛЬФА") && roleForDiscord.contains("ФУД")) roleForDiscord = "*АЛЬФА ФУД ИНГРЕДИЕНТС*";
-
-        return roleForDiscord;
+    public String getsecondPartDateFmNumberGTD(String numberDT)
+    {
+        String[] arr = numberDT.split("/");
+        return arr[1].trim();
     }
 
 }

@@ -15,7 +15,7 @@ public class EditRoleForDiscord
             "АУТСПАН","<@&788315732575911937>",
             "АИ","<@&791279992788877312>",
             "АЛЬФА ФУД ИНГРЕДИЕНТС", "<@&894976191927312407>",
-            "АНАНАС СПБ", "<@&894976191927312407>",
+            "АНАНАС СПБ", "<@&904739386132930641>",
             "БАРРИ КАЛЛЕБАУТ","<@&788317520250798129>",
             "БОГОРОДСКАЯ","<@&798079048802631720>"
     )));
@@ -81,6 +81,7 @@ public class EditRoleForDiscord
     )));
     private static final HashMap<String, String> companyAndRole7 = new HashMap<>((Map.of(
             "ХИМСПЕКТР","<@&819952014406058024>",
+            "ЦЕНТАВР","<@&898539665068539905>",
             "ЦентрСнаб","<@&818129215093604372>",
             "ЧАЙНО-КОФЕЙНАЯ МАНУФАКТУРА","<@&847849871507324928>",
             "ЯКОБС (МЕКСИКА)","<@&788066297434734603>",
@@ -92,10 +93,13 @@ public class EditRoleForDiscord
 
     public static String getRoleForDiscord(String msgToEdit)
     {
+        companyAndRole2.put("ЗУЛАЛ ФУД","<@&926080936754421810>");
         companyAndRole2.put("ИМПЭНЕРГО","<@&788359646204395531>");
         companyAndRole3.put("КОНКОРД","<@&789137474609479690>");
         companyAndRole4.put("ПК АЗОВСКИЙ","<@&867777557063008347>");
+        companyAndRole4.put("ЛЕНТА","<@&910087940552675368>");
         companyAndRole5.put("СДМ","<@&893036349773475840>");
+        companyAndRole5.put("СКМ","<@&904676081112604682>");
         companyAndRole5.put("РосПродукт","<@&849651401071525948>");
         String msgToDiscordWithRole = "";
 
@@ -121,8 +125,9 @@ public class EditRoleForDiscord
                 }
             }
         } else
-        if(compNameFmMessage.startsWith("В") || compNameFmMessage.startsWith("Г")
-                || compNameFmMessage.startsWith("Д") || compNameFmMessage.startsWith("И"))
+        if(compNameFmMessage.startsWith("В") || compNameFmMessage.startsWith("Г") || compNameFmMessage.startsWith("Д")
+                || compNameFmMessage.startsWith("Е") || compNameFmMessage.startsWith("Ё") || compNameFmMessage.startsWith("Ж")
+                || compNameFmMessage.startsWith("З") || compNameFmMessage.startsWith("И"))
         {
             for (HashMap.Entry entry: companyAndRole2.entrySet())
             {
@@ -195,8 +200,10 @@ public class EditRoleForDiscord
                 }
             }
         } else
-        if(compNameFmMessage.startsWith("Х") || compNameFmMessage.startsWith("Ц")
-                || compNameFmMessage.startsWith("Ч") || compNameFmMessage.startsWith("Я"))
+        if(compNameFmMessage.startsWith("Х") || compNameFmMessage.startsWith("Ц") || compNameFmMessage.startsWith("Ч")
+                || compNameFmMessage.startsWith("Ш") || compNameFmMessage.startsWith("Щ")
+                || compNameFmMessage.startsWith("Ы") || compNameFmMessage.startsWith("Э")
+                || compNameFmMessage.startsWith("Ю") || compNameFmMessage.startsWith("Я"))
         {
             for (HashMap.Entry entry: companyAndRole7.entrySet())
             {

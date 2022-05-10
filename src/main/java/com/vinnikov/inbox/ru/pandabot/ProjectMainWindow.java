@@ -16,8 +16,8 @@ import static java.lang.Thread.sleep;
 
 public class ProjectMainWindow extends JFrame
 {
-    private Image img = new ImageIcon("infoPng.png").getImage();
-    private ImageIcon imgIcon = new ImageIcon("rob1Png.png"); //.getImage();
+    private Image img = new ImageIcon("D:\\grIdea\\pandabot\\infoPng.png").getImage();
+    private ImageIcon imgIcon = new ImageIcon("D:\\grIdea\\pandabot\\rob1Png.png"); //.getImage();
     private final String helloMsgToDiscord =
             "<@&785778541060292628> ВНИМАНИЕ! ПандаБОТ перезапустился! Надо войти в ватсап-вэб по QR-коду!";
 
