@@ -1,6 +1,11 @@
-package com.vinnikov.inbox.ru.pandabot;
+package com.vinnikov.inbox.ru.pandabot.enums;
 
-public enum Enums 
+import lombok.Getter;
+import lombok.ToString;
+
+@Getter
+@ToString
+public enum EnumStatuses
 {
     REGISTERED_DT ("ДТ зарегистрирована"),
     RELEASED_DT ("Выпуск"),
@@ -12,20 +17,10 @@ public enum Enums
     DOSMOTR ("ДОСМОТР!"),
     CSTMS_PRICE_CHECK ("Доп. проверка по стоимости");
 
-    private String title;
+    private final String title;
 
-    Enums(String title) {
+    EnumStatuses(String title) {
         this.title = title;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    @Override
-    public String toString() {
-        return "Enums{" +
-                "title='" + title + '\'' +
-                '}';
-    }
 }
