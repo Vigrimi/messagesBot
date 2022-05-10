@@ -1,12 +1,11 @@
-package com.vinnikov.inbox.ru.pandabot;
+package com.vinnikov.inbox.ru.pandabot.serviceBot;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import static com.vinnikov.inbox.ru.pandabot.PandabotApplication.LOGGER;
 
-public class EditRoleForDiscord
-{ // формирование специальной формы роли для дискорда
+public class EditRoleForDiscord{ // формирование специальной формы роли для дискорда
     private static final HashMap<String, String> companyAndRole1 = new HashMap<>((Map.of(
             "АБ МАРКЕТ","<@&786263954664980522>",
             "АВЕНТА","<@&786263759110537266>",
@@ -91,8 +90,7 @@ public class EditRoleForDiscord
     private static String compNameFmMessage;
     private static String compNameRoleToDiscord;
 
-    public static String getRoleForDiscord(String msgToEdit)
-    {
+    public static String getRoleForDiscord(String msgToEdit){
         companyAndRole2.put("ЗУЛАЛ ФУД","<@&926080936754421810>");
         companyAndRole2.put("ИМПЭНЕРГО","<@&788359646204395531>");
         companyAndRole3.put("КОНКОРД","<@&789137474609479690>");
@@ -111,107 +109,66 @@ public class EditRoleForDiscord
 
         // по названию фирмы из сообщения взять нужную роль из хэшмапа
         compNameRoleToDiscord = null;
-        if(compNameFmMessage.startsWith("А") || compNameFmMessage.startsWith("Б"))
-        {
-            for (HashMap.Entry entry: companyAndRole1.entrySet())
-            {
-                if(entry.getKey().equals(compNameFmMessage))
-                {
-                    //System.out.println("-----22:" + entry.getValue());
+        if (compNameFmMessage.startsWith("А") || compNameFmMessage.startsWith("Б")) {
+            for (HashMap.Entry entry : companyAndRole1.entrySet()) {
+                if (entry.getKey().equals(compNameFmMessage)) {
                     compNameRoleToDiscord = entry.getValue().toString();
-                    //System.out.println("comp:" + comp + "!");
                     arrWordsFmMsgToEdit[1] = compNameRoleToDiscord;
                     break;
                 }
             }
-        } else
-        if(compNameFmMessage.startsWith("В") || compNameFmMessage.startsWith("Г") || compNameFmMessage.startsWith("Д")
+        } else if (compNameFmMessage.startsWith("В") || compNameFmMessage.startsWith("Г") || compNameFmMessage.startsWith("Д")
                 || compNameFmMessage.startsWith("Е") || compNameFmMessage.startsWith("Ё") || compNameFmMessage.startsWith("Ж")
-                || compNameFmMessage.startsWith("З") || compNameFmMessage.startsWith("И"))
-        {
-            for (HashMap.Entry entry: companyAndRole2.entrySet())
-            {
-                if(entry.getKey().equals(compNameFmMessage))
-                {
-                    //System.out.println("-----22:" + entry.getValue());
+                || compNameFmMessage.startsWith("З") || compNameFmMessage.startsWith("И")) {
+            for (HashMap.Entry entry : companyAndRole2.entrySet()) {
+                if (entry.getKey().equals(compNameFmMessage)) {
                     compNameRoleToDiscord = entry.getValue().toString();
-                    //System.out.println("comp:" + comp + "!");
                     arrWordsFmMsgToEdit[1] = compNameRoleToDiscord;
                     break;
                 }
             }
-        } else
-        if(compNameFmMessage.startsWith("К"))
-        {
-            for (HashMap.Entry entry: companyAndRole3.entrySet())
-            {
-                if(entry.getKey().equals(compNameFmMessage))
-                {
-                    //System.out.println("-----22:" + entry.getValue());
+        } else if (compNameFmMessage.startsWith("К")) {
+            for (HashMap.Entry entry : companyAndRole3.entrySet()) {
+                if (entry.getKey().equals(compNameFmMessage)) {
                     compNameRoleToDiscord = entry.getValue().toString();
-                    //System.out.println("comp:" + comp + "!");
                     arrWordsFmMsgToEdit[1] = compNameRoleToDiscord;
                     break;
                 }
             }
-        } else
-        if(compNameFmMessage.startsWith("Л") || compNameFmMessage.startsWith("М")
+        } else if (compNameFmMessage.startsWith("Л") || compNameFmMessage.startsWith("М")
                 || compNameFmMessage.startsWith("Н") || compNameFmMessage.startsWith("О")
-                || compNameFmMessage.startsWith("П"))
-        {
-            for (HashMap.Entry entry: companyAndRole4.entrySet())
-            {
-                if(entry.getKey().equals(compNameFmMessage))
-                {
-                    //System.out.println("-----22:" + entry.getValue());
+                || compNameFmMessage.startsWith("П")) {
+            for (HashMap.Entry entry : companyAndRole4.entrySet()) {
+                if (entry.getKey().equals(compNameFmMessage)) {
                     compNameRoleToDiscord = entry.getValue().toString();
-                    //System.out.println("comp:" + comp + "!");
                     arrWordsFmMsgToEdit[1] = compNameRoleToDiscord;
                     break;
                 }
             }
-        } else
-        if(compNameFmMessage.startsWith("Р") || compNameFmMessage.startsWith("С"))
-        {
-            for (HashMap.Entry entry: companyAndRole5.entrySet())
-            {
-                if(entry.getKey().equals(compNameFmMessage))
-                {
-                    //System.out.println("-----22:" + entry.getValue());
+        } else if (compNameFmMessage.startsWith("Р") || compNameFmMessage.startsWith("С")) {
+            for (HashMap.Entry entry : companyAndRole5.entrySet()) {
+                if (entry.getKey().equals(compNameFmMessage)) {
                     compNameRoleToDiscord = entry.getValue().toString();
-                    //System.out.println("comp:" + comp + "!");
                     arrWordsFmMsgToEdit[1] = compNameRoleToDiscord;
                     break;
                 }
             }
-        } else
-        if(compNameFmMessage.startsWith("Т") || compNameFmMessage.startsWith("У")
-                || compNameFmMessage.startsWith("Ф") )
-        {
-            for (HashMap.Entry entry: companyAndRole6.entrySet())
-            {
-                if(entry.getKey().equals(compNameFmMessage))
-                {
-                    //System.out.println("-----22:" + entry.getValue());
+        } else if (compNameFmMessage.startsWith("Т") || compNameFmMessage.startsWith("У")
+                || compNameFmMessage.startsWith("Ф")) {
+            for (HashMap.Entry entry : companyAndRole6.entrySet()) {
+                if (entry.getKey().equals(compNameFmMessage)) {
                     compNameRoleToDiscord = entry.getValue().toString();
-                    //System.out.println("comp:" + comp + "!");
                     arrWordsFmMsgToEdit[1] = compNameRoleToDiscord;
                     break;
                 }
             }
-        } else
-        if(compNameFmMessage.startsWith("Х") || compNameFmMessage.startsWith("Ц") || compNameFmMessage.startsWith("Ч")
+        } else if (compNameFmMessage.startsWith("Х") || compNameFmMessage.startsWith("Ц") || compNameFmMessage.startsWith("Ч")
                 || compNameFmMessage.startsWith("Ш") || compNameFmMessage.startsWith("Щ")
                 || compNameFmMessage.startsWith("Ы") || compNameFmMessage.startsWith("Э")
-                || compNameFmMessage.startsWith("Ю") || compNameFmMessage.startsWith("Я"))
-        {
-            for (HashMap.Entry entry: companyAndRole7.entrySet())
-            {
-                if(entry.getKey().equals(compNameFmMessage))
-                {
-                    //System.out.println("-----22:" + entry.getValue());
+                || compNameFmMessage.startsWith("Ю") || compNameFmMessage.startsWith("Я")) {
+            for (HashMap.Entry entry : companyAndRole7.entrySet()) {
+                if (entry.getKey().equals(compNameFmMessage)) {
                     compNameRoleToDiscord = entry.getValue().toString();
-                    //System.out.println("comp:" + comp + "!");
                     arrWordsFmMsgToEdit[1] = compNameRoleToDiscord;
                     break;
                 }
@@ -219,13 +176,10 @@ public class EditRoleForDiscord
         }
 
         // формирование итогового сообщения с ролью для отправки в дискорд
-        if(compNameRoleToDiscord == null)
-        {
+        if (compNameRoleToDiscord == null) {
             msgToDiscordWithRole = msgToEdit;
-        } else
-        {
-            for (int i = 0; i < arrWordsFmMsgToEdit.length; i++)
-            {
+        } else {
+            for (int i = 0; i < arrWordsFmMsgToEdit.length; i++) {
                 msgToDiscordWithRole = msgToDiscordWithRole + arrWordsFmMsgToEdit[i];
             }
         }
