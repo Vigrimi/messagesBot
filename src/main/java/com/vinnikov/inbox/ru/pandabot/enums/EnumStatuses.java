@@ -5,8 +5,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public enum EnumStatuses
-{
+public enum EnumStatuses{
     REGISTERED_DT ("ДТ зарегистрирована"),
     RELEASED_DT ("Выпуск"),
     RELEASED_USLOVNO_121 ("Выпуск условный по стоимости"),
