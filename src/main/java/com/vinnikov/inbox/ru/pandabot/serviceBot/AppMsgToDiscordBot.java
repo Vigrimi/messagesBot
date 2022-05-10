@@ -19,11 +19,9 @@ public class AppMsgToDiscordBot implements Runnable, MyDataHandler { //,AutoClos
     }
 
     @Override
-    public void run()
-    {
+    public void run(){
         String discordToken = getDataFromFile(discordTokenFile);
-        try
-        {
+        try{
             LOGGER.info("-----AppMsgToDiscordBot start it -> " + LocalDateTime.now());
             // гр дискорд
             JDABuilder jdaBuilder = JDABuilder.createDefault(discordToken);

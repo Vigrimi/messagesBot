@@ -20,11 +20,9 @@ public class BCheckDoesItWorkMsgToDiscord implements Runnable, MyDataHandler {
     }
 
     @Override
-    public void run()
-    {
+    public void run(){
         String discordToken = getDataFromFile(discordTokenFile);
-        try
-        { // гр дискорд
+        try{ // гр дискорд
             LOGGER.info("-----BCheckDoesItWorkMsgToDiscord start it -> " + LocalDateTime.now());
             JDABuilder jdaBuilder = JDABuilder.createDefault(discordToken);
             JDA jda = jdaBuilder.build();
