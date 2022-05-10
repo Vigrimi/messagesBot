@@ -1,12 +1,10 @@
-package com.vinnikov.inbox.ru.pandabot;
+package com.vinnikov.inbox.ru.pandabot.serviceBot;
 
 import java.time.LocalDateTime;
 import static com.vinnikov.inbox.ru.pandabot.PandabotApplication.LOGGER;
 
-public interface EditTextsGetRoleFmCompanyNameInterf
-{
-    public default String getRoleFmCompanyNameInterf(String companyNameFmMail)
-    {
+public interface IEditTextsGetRoleFmCompanyName{
+    default String getRoleFmCompanyNameInterf(String companyNameFmMail){
         String roleForDiscord = "*" + companyNameFmMail + "*";
         LOGGER.info("--Interf-EditTextsFmEmail--getRoleFmCompanyNam-> " + LocalDateTime.now() + "\n" + roleForDiscord);
 
