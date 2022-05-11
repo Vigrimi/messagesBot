@@ -13,7 +13,10 @@ public enum EnumStatuses{
     RELEAS_PROHIBITED_DT ("Отказано в выпуске"),
     BROKER_REQUEST_SCAN ("Таможня запросила фА"), //"Мы запросили тпфк сканирование"),
     CSTMS_CODE_CHECK ("Доп. проверка по ТНВЭД"),
+    CSTMS_CHECK_IS_GOING("Идёт проверка"),
     DOSMOTR ("ДОСМОТР!"),
+    INSPECTOR_NAME_AUTOREGISTRATION ("АВТОРЕГИСТРАЦИЯ"),
+    INSPECTOR_NAME_AUTORELEASED ("АВТОВЫПУСК"),
     CSTMS_PRICE_CHECK ("Доп. проверка по стоимости");
 
     private final String title;
